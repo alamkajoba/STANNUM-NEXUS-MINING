@@ -7,9 +7,32 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     protected $fillable = [
-        'employee_id', 'motif', 'totalAmount', 'netAmount', 'restDay', 
-        'overtimes', 'assudityBonus', 'riskBonus',
-        'performanceBonus', 'user_id'
+        'employee_id', 
+        'motif', 
+        'totalAmount', 
+        'netAmount', 
+        'restDay', 
+        'overtimes',
+        'overtimesPay ',
+        'assudityBonus',  
+        'riskBonus', 
+        'performanceBonus', 
+        'CNSS', 
+        'INPP', 
+        'ONEM', 
+        'IPR',
+        'refundAdvanceAmount',  
+        'deductionSalary',
+        'user_id'
+    ];
+
+    protected $casts = [
+        'totalAmount' => 'decimal:2', 
+        'netAmount' => 'decimal:2', 
+        'overtimesPay' => 'decimal:2', 
+        'assudityBonus' => 'decimal:2',  
+        'riskBonus' => 'decimal:2',
+        'performanceBonus' => 'decimal:2', 
     ];
 
     //RelationShips

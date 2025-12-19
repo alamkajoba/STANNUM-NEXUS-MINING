@@ -40,9 +40,6 @@ class EmployeeCreate extends Component
     #[Validate('required|min:3|max:100|regex:/^[\pL\pN\s,\.\-#\/]+$/u')]
     public $birthTown = '';
 
-    #[Validate('required|min:3|max:100|regex:/^[\pL\pN\s,\.\-#\/]+$/u')]
-    public $matricule = '';
-
     #[Validate('required')]
     public $category = '';
 
@@ -59,20 +56,47 @@ class EmployeeCreate extends Component
     private function dataEmployee(): array
     {
         $id = Auth::id();
-        return [
-            'firstName' => $this->firstName,
-            'middleName' => $this->middleName,
-            'lastName' => $this->lastName,
-            'gender' => $this->gender,
-            'birthDate' => $this->birthDate,
-            'birthTown' => $this->birthTown,
-            'matricule' => $this->matricule,
-            'category_id' => $this->category,
-            'mail' => $this->mail,
-            'address' => $this->address,
-            'phone' => $this->phone,
-            'user_id' => $id
-        ];
+
+        //Matricule generate
+        $last = Employee::latest()->first();
+        if($last)
+        {
+            $matricule = $last->id + 1;
+
+            $matricule = "STN-".$matricule;
+            return [
+                'firstName' => $this->firstName,
+                'middleName' => $this->middleName,
+                'lastName' => $this->lastName,
+                'gender' => $this->gender,
+                'birthDate' => $this->birthDate,
+                'birthTown' => $this->birthTown,
+                'matricule' => $matricule,
+                'category_id' => $this->category,
+                'mail' => $this->mail,
+                'address' => $this->address,
+                'phone' => $this->phone,
+                'user_id' => $id
+            ];
+        }
+        else{
+            return [
+                'firstName' => $this->firstName,
+                'middleName' => $this->middleName,
+                'lastName' => $this->lastName,
+                'gender' => $this->gender,
+                'birthDate' => $this->birthDate,
+                'birthTown' => $this->birthTown,
+                'matricule' => "STN-1",
+                'category_id' => $this->category,
+                'mail' => $this->mail,
+                'address' => $this->address,
+                'phone' => $this->phone,
+                'user_id' => $id
+            ];
+        }
+        
+        
     }
 
     public function submitEmployee()

@@ -23,8 +23,7 @@ class DeductionIndex extends Component
     public function render()
     {
 
-        $deduction = Deduction::where('firstName', 'like', '%' . $this->search . '%');
-
+        $deduction = Deduction::where('deduction', 'like', '%' . $this->search . '%');
 
         return view('livewire.module.deduction.deduction-index', [
             'deduction' => $deduction->latest()->paginate(5),

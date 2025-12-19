@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('nameCategory'); 
-            $table->float('amount'); 
-            $table->float('dayAmount'); 
-            $table->float('hourAmount'); 
+            $table->decimal('amount', 15, 2)->default(0.00);
+            $table->decimal('dayAmount', 15, 2)->default(0.00);
+            $table->decimal('hourAmount', 15, 2)->default(0.00);
             $table->integer('workDay'); 
-            $table->float('lunch'); 
-            $table->float('transportationCost'); 
+            $table->decimal('lunch', 15, 2)->default(0.00);
+            $table->decimal('transportationCost', 15, 2)->default(0.00); 
             $table->timestamps();
 
             $table->unsignedBigInteger('user_id');

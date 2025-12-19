@@ -26,7 +26,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
             <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-users"></i>
-            Liste des categories
+            Liste des paiements
         </h1>
         <div class="d-none d-sm-inline-block shadow-sm">
             <input wire:model.live="search" class="form-control" type="text" placeholder="Rechercher...">
@@ -37,7 +37,7 @@
     <div class="card-body">
         <div class="table-responsive ">
                 <table class="table table-bordered" id="dataTable" width="100%" >
-                    <thead style="background-color: rgb(97, 97, 156)" class="text-white">
+                    <thead style="background-color: rgb(46, 13, 167);" class="text-white">
                         <tr>
                             <th>n</th>
                             <th>Agent</th>
@@ -57,7 +57,7 @@
                                 <td>{{ $payments->netAmount }} $</td>
                                 <td>
                                     <div>
-                                        <a href="{{route('payment.print', $payments->id)}}" class="btn text-white" style="background-color: rgb(97, 97, 156)">
+                                        <a href="{{route('payment.print', $payments->id)}}" class="btn text-white" style="background-color: rgb(46, 13, 167);">
                                             <i style="color:rgb(255, 255, 255);" class="fas fa-fw fa-print"></i>
                                             Imprimer
                                         </a>

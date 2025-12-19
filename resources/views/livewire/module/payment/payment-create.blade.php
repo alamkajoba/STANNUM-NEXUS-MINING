@@ -22,9 +22,9 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Paiement</h1>
-        <button style="background-color: rgb(97, 97, 156)" class="btn text-white">
+        <a href="{{route('payment.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">
             Voir la liste
-        </button>
+        </a>
     </div>
 
 
@@ -81,14 +81,15 @@
                         <label for="overtimes">Heures supplementaires</label>
                         <input 
                             class="form-control"
-                            type="text"
+                            type="number"
                             wire:model="overtimes"
                         >
 
                         <label for="">Prime d'assudite</label>
                         <input 
                             class="form-control"
-                            type="text"
+                            type="number"
+                            step="0.01"
                             placeholder="en USD"
                             wire:model="assudityBonus"
                         >
@@ -98,7 +99,8 @@
                         <label for="">Prime de risque</label>
                         <input 
                             class="form-control"
-                            type="text"
+                            type="number"
+                            step="0.01"
                             placeholder="en USD"
                             wire:model="riskBonus"
                         >
@@ -106,7 +108,8 @@
                         <label for="">Prime de rendement</label>
                         <input 
                             class="form-control"
-                            type="text"
+                            type="number"
+                            step="0.01"
                             placeholder="en USD"
                             wire:model="performanceBonus"
                         >
@@ -114,7 +117,7 @@
                     </div>
                 </div>
                 <div>
-                    <button style="background-color: rgb(97, 97, 156)" class="btn text-white py-2 my-3">
+                    <button style="background-color: rgb(46, 13, 167);" class="btn text-white py-2 my-3">
                         Valider
                     </button>
                 </div>

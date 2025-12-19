@@ -37,7 +37,7 @@
     <div class="card-body">
         <div class="table-responsive ">
                 <table class="table table-bordered" id="dataTable" width="100%" >
-                    <thead style="background-color: rgb(97, 97, 156)" class="text-white">
+                    <thead style="background-color: rgb(46, 13, 167);" class="text-white">
                         <tr>
                             <th>n</th>
                             <th>Nom  Postnom  Prénom</th>
@@ -58,15 +58,14 @@
                                 <td>{{ $employees->matricule }}</td>
                                 <td>{{ $employees->category->nameCategory }}</td>
                                 <td>
-                                    <a href="{{route('employee.update', $employees->id)}}" class="btn text-white" style="background-color: rgb(97, 97, 156)">
-                                        Modifier
+                                    <a href="{{route('family.index')}}" class="btn text-white" style="background-color: rgb(0, 255, 21)">
+                                        Dossier
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="btn text-white" style="background-color: rgb(99, 7, 7)">
-                                        Supprimer
+                                    <a href="{{route('employee.update', $employees->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
+                                        Modifier
                                     </a>
-                                </td>
                                 </td>
                             </tr>
                         @empty

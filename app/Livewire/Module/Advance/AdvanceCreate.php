@@ -61,7 +61,7 @@ class AdvanceCreate extends Component
             'toRefund' => $this->amount, 
             'user_id' => $id
         ]);
-        session()->flash('success', $this->search." a prit une avance sur salaire de :".$this->amount);
+        session()->flash('success', $this->search." a prit une avance sur salaire de :".$this->amount."$");
         return redirect()->route('advance.create');
     }
 

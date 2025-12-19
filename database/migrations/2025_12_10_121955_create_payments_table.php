@@ -16,11 +16,18 @@ return new class extends Migration
             $table->string('motif'); 
             $table->integer('restDay');  
             $table->integer('overtimes'); 
-            $table->float('assudityBonus'); 
-            $table->float('totalAmount'); 
-            $table->float('netAmount'); 
-            $table->float('riskBonus'); 
-            $table->float('performanceBonus'); 
+            $table->decimal('overtimesPay', 15, 2)->default(0.00);
+            $table->decimal('assudityBonus', 15, 2)->default(0.00);
+            $table->decimal('totalAmount', 15, 2)->default(0.00);
+            $table->decimal('netAmount', 15, 2)->default(0.00);
+            $table->decimal('riskBonus', 15, 2)->default(0.00);
+            $table->decimal('performanceBonus', 10, 2)->default(0.00);
+            $table->float('CNSS'); 
+            $table->float('INPP');  
+            $table->float('ONEM'); 
+            $table->float('IPR'); 
+            $table->float('refundAdvanceAmount');   
+            $table->float('deductionSalary'); 
             $table->timestamps();
 
             $table->unsignedBigInteger('user_id');

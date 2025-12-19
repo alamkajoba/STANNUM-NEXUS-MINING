@@ -38,8 +38,7 @@ class EmployeeUpdate extends Component
     #[Validate('required|min:3|max:100|regex:/^[\pL\pN\s,\.\-#\/]+$/u')]
     public $matricule = '';
 
-    #[Validate('required')]
-    public $category = '';
+    public $categoryName = '';
 
     #[Validate('required|min:3|max:100|regex:/^[\pL\pN\s,\.\-#\/]+$/u')]
     public $address = '';
@@ -62,8 +61,7 @@ class EmployeeUpdate extends Component
             'gender' => $this->gender,
             'birthDate' => $this->birthDate,
             'birthTown' => $this->birthTown,
-            'matricule' => $this->matricule,
-            'category_id' => $this->category,
+            'category_id' => $this->categoryName,
             'mail' => $this->mail,
             'address' => $this->address,
             'phone' => $this->phone,
@@ -85,8 +83,9 @@ class EmployeeUpdate extends Component
     public function mount($id)
     {
 
-        $updateEmloyee = Employee::findOrFail($id);
-        
+        $updateEmloyee = Employee::find($id);
+        $updateCategory = Category::find($updateEmloyee->category_id);
+
         $this->sub = $updateEmloyee->id;
         $this->firstName = $updateEmloyee->firstName;
         $this->middleName = $updateEmloyee->middleName;
@@ -96,7 +95,7 @@ class EmployeeUpdate extends Component
         $this->birthTown = $updateEmloyee->birthTown;
         $this->address = $updateEmloyee->address;
         $this->matricule = $updateEmloyee->matricule;
-        $this->category = $updateEmloyee->category;
+        $this->categoryName = $updateCategory->nameCategory;
         $this->phone = $updateEmloyee->phone;
         $this->mail = $updateEmloyee->mail;
         $this->employeeId = $updateEmloyee->id;

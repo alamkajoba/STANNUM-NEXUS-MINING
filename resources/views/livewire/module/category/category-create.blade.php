@@ -6,7 +6,7 @@
             Gestion des categories
         </h1>
         <div>
-            <a href="{{ route('category.index')}}" style="background-color: rgb(97, 97, 156)" class="btn text-white">Voir la liste</a>
+            <a href="{{ route('category.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">Voir la liste</a>
         </div>
     </div>
 
@@ -45,7 +45,8 @@
                             required
                             id="amount"
                             class="form-control"
-                            type="text"
+                            type="number"
+                            step="0.01"
                             placeholder=""
                             wire:model="amount"
                         >
@@ -70,7 +71,8 @@
                         <input 
                             id="lunch"
                             class="form-control"
-                            type="text"
+                            type="number"
+                            step="0.01"
                             placeholder=""
                             wire:model="lunch"
                         >
@@ -82,7 +84,8 @@
                         <input 
                             id="transportationCost"
                             class="form-control"
-                            type="text"
+                            type="number"
+                            step="0.01"
                             placeholder=""
                             wire:model="transportationCost"
                         >
@@ -97,7 +100,7 @@
                     </div>
                 </div>
                 <div>
-                    <button type="submit" style="background-color: rgb(97, 97, 156)" class="btn text-white py-2 my-3">
+                    <button type="submit" style="background-color: rgb(46, 13, 167);" class="btn text-white py-2 my-3">
                         Valider
                     </button>
                 </div>

@@ -6,7 +6,7 @@
             Retenues sur salaire en pourcentage
         </h1>
         <div>
-            <a href="{{ route('deduction.index')}}" style="background-color: rgb(97, 97, 156)" class="btn text-white">Voir la liste</a>
+            <a href="{{ route('deduction.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">Voir la liste</a>
         </div>
     </div>
 
@@ -110,7 +110,7 @@
                     </div>
                 </div>
                 <div>
-                    <button type="submit" style="background-color: rgb(97, 97, 156)" class="btn text-white py-2 my-3">
+                    <button type="submit" style="background-color: rgb(46, 13, 167);" class="btn text-white py-2 my-3">
                         Valider
                     </button>
                 </div>

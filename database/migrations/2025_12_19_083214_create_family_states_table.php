@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\RelationTypeEnum;
+use App\Enums\GenderEnum;
 
 return new class extends Migration
 {
@@ -11,15 +13,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('advances', function (Blueprint $table) {
+        Schema::create('family_states', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount', 15, 2)->default(0.00);
-            $table->decimal('toRefund', 15, 2)->default(0.00);
-            $table->timestamps();
-
-            //foreign key
+            $table->string('middleName');
+            $table->string('lastName');
+            $table->string('firstName');
+            $table->enum('relationType', RelationTypeEnum::cases());
+            $table->enum('gender', GenderEnum::cases());
+            $table->unsignedBigInteger('employee_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('employee_id'); 
+            $table->timestamps();
 
             $table->foreign('user_id')
                     ->references('id')
@@ -38,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('advances');
+        Schema::dropIfExists('family_states');
     }
 };

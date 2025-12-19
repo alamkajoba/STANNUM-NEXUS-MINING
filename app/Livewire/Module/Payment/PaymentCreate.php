@@ -86,7 +86,8 @@ class PaymentCreate extends Component
         //Addiction
         $this->lunch = $category->lunch;
         $this->transportationCost = $category->transportationCost;
-        $this->overtimes = $this->overtimes * $category->hourAmount;
+        $overtimesPay = $this->overtimes * $category->hourAmount;
+        $totalAmount = $category->amount + $overtimesPay + $this->assudityBonus + $this->riskBonus + $this->performanceBonus;
 
         //Select deduction
         $deduction = Deduction::first();
@@ -109,17 +110,16 @@ class PaymentCreate extends Component
         //Make deduction if remaining advance is over refund amount
         if($this->remainToRefundAdvance >= $this->toRefundAdvance)
         {
-            $this->netToPay = $category->amount-($this->absence + $this->CNSS +$this->INPP + $this->IPR + $this->ONEM + $this->deductionSalary + $this->toRefundAdvance);
+            $this->netToPay = $totalAmount-($this->absence + $this->CNSS +$this->INPP + $this->IPR + $this->ONEM + $this->deductionSalary + $this->toRefundAdvance)+ $this->lunch + $this->transportationCost;
         }
 
         //Make deduction if remaining advance is over refund amount
         elseif($this->remainToRefundAdvance < $this->toRefundAdvance)
         {
-            $this->netToPay = $category->amount-($this->absence + $this->CNSS +$this->INPP + $this->IPR + $this->ONEM + $this->deductionSalary + $this->remainToRefundAdvance);
+            $this->netToPay = $totalAmount-($this->absence + $this->CNSS +$this->INPP + $this->IPR + $this->ONEM + $this->deductionSalary + $this->remainToRefundAdvance)+ $this->lunch + $this->transportationCost;
             $this->toRefundAdvance = $this->remainToRefundAdvance;
         }
-
-        $this->netToPay = $this->netToPay + $this->overtimes+$this->lunch+$this->transportationCost+$this->assudityBonus+$this->riskBonus+$this->performanceBonus;
+        // + $this->lunch + $this->transportationCost
         
         //Submit payment
         $check = Payment::where('employee_id', $this->employee_id)
@@ -134,13 +134,20 @@ class PaymentCreate extends Component
         Payment::create([
             'employee_id' => $this->employee_id, 
             'motif' => $this->motif, 
-            'totalAmount' => $category->amount,  
+            'totalAmount' => $totalAmount,  
             'netAmount' => $this->netToPay,  
             'restDay' => $this->restDay, 
-            'overtimes' => $this->overtimes, 
+            'overtimesPay' => $overtimesPay, 
+            'overtimes' => $this->overtimes,
             'assudityBonus' => $this->assudityBonus, 
             'riskBonus' => $this->riskBonus,
             'performanceBonus' => $this->performanceBonus, 
+            'CNSS'=> $deduction->CNSS, 
+            'INPP'=> $deduction->INPP, 
+            'ONEM'=> $deduction->ONEM,   
+            'IPR'=> $deduction->IPR,  
+            'refundAdvanceAmount' => $deduction->refundAdvanceAmount,   
+            'deductionSalary'=> $deduction->deductionSalary,  
             'user_id' => $id
         ]);
 

@@ -6,7 +6,7 @@
             Gestion des agents 
         </h1>
         <div>
-            <a href="{{ route('employee.index')}}" style="background-color: rgb(97, 97, 156)" class="btn text-white">Voir la liste</a>
+            <a href="{{ route('employee.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">Voir la liste</a>
         </div>
     </div>
 
@@ -106,19 +106,6 @@
 
                     <div class="col-md-6">
 
-                        <label for="matricule">Matricule</label>
-                        <input 
-                            required
-                            id="matricule"
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="matricule"
-                        >
-                        @error('matricule')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
-
                         <label for="type">Categorie</label>
                         <select wire:model="category" id="type" class="form-control">
                             <option>Selectionner...</option>
@@ -172,7 +159,7 @@
                     </div>
                 </div>
                 <div>
-                    <button type="submit" style="background-color: rgb(97, 97, 156)" class="btn text-white py-2 my-3">
+                    <button type="submit" style="background-color: rgb(46, 13, 167);" class="btn text-white py-2 my-3">
                         Valider
                     </button>
                 </div>

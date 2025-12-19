@@ -37,7 +37,7 @@
     <div class="card-body">
         <div class="table-responsive ">
                 <table class="table table-bordered" id="dataTable" width="100%" >
-                    <thead style="background-color: rgb(97, 97, 156)" class="text-white">
+                    <thead style="background-color: rgb(46, 13, 167);" class="text-white">
                         <tr>
                             <th>n</th>
                             <th>Categorie</th>
@@ -57,20 +57,20 @@
                                 <td>{{ $categories->nameCategory }}</td>
                                 <td>{{ $categories->amount }} $</td>
                                 <td>{{ $categories->workDay }} Jours</td>
-                                <td>{{ $categories->hourAmount }} $</td>
                                 <td>{{ $categories->dayAmount }} $</td>
+                                <td>{{ $categories->hourAmount }} $</td>
                                 <td>{{ $categories->lunch}} $</td>
                                 <td>{{ $categories->transportationCost}} $</td>
                                 <td>
-                                    <a href="{{route('category.update', $categories->id)}}" class="btn text-white" style="background-color: rgb(97, 97, 156)">
+                                    <a href="{{route('category.update', $categories->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
                                         Modifier
                                     </a>
                                 </td>
-                                <td>
+                                {{-- <td>
                                     <a class="btn text-white" style="background-color: rgb(99, 7, 7)">
                                         Supprimer
                                     </a>
-                                </td>
+                                </td> --}}
                             </tr>
                         @empty
                             <tr>

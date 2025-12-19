@@ -19,6 +19,9 @@ use App\Livewire\Module\Payment\PaymentUpdate;
 use App\Livewire\Module\Payment\PaySlipPrint;
 use App\Livewire\Module\Advance\AdvanceIndex;
 use App\Livewire\Module\Advance\AdvanceCreate;
+use App\Livewire\Module\Family\FamilyIndex;
+use App\Livewire\Module\Family\FamilyCreate;
+use App\Livewire\Module\Family\FamilyUpdate;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -41,6 +44,13 @@ Route::middleware('auth')->prefix('category')->name('category.')->group(function
     Route::get('index', CategoryIndex::class)->name('index');
     Route::get('create', CategoryCreate::class)->name('create');
     Route::get('update/{id}', CategoryUpdate::class)->name('update');
+});
+
+#FamilyState routes
+Route::middleware('auth')->prefix('family')->name('family.')->group(function () {
+    Route::get('index', FamilyIndex::class)->name('index');
+    Route::get('create', FamilyCreate::class)->name('create');
+    Route::get('update/{id}', FamilyUpdate::class)->name('update');
 });
 
 #advance routes

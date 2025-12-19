@@ -37,7 +37,7 @@
     <div class="card-body">
         <div class="table-responsive ">
                 <table class="table table-bordered" id="dataTable" width="100%" >
-                    <thead style="background-color: rgb(97, 97, 156)" class="text-white">
+                    <thead style="background-color: rgb(46, 13, 167);" class="text-white">
                         <tr>
                             <th>n</th>
                             <th>Agent</th>
@@ -57,10 +57,10 @@
                                 <td>{{ $advances->toRefund }} $</td>
                                 <td>
                                     <div>
-                                        <a href="#" class="btn text-white" style="background-color: rgb(97, 97, 156)">
+                                        {{-- <a href="#" class="btn text-white" style="background-color: rgb(97, 97, 156)">
                                             <i style="color:rgb(255, 255, 255);" class="fas fa-fw fa-print"></i>
                                             Imprimer
-                                        </a>
+                                        </a> --}}
                                     </div>
                                 </td>
                             </tr>
@@ -82,7 +82,7 @@
         <div class="modal fade" id="deleteStudentModal" tabindex="-1" aria-labelledby="deleteStudentModal" aria-hidden="true" wire:ignore.self>
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content rounded-0">
-                    <div style="background-color: rgb(97, 97, 156)" class="modal-header text-white rounded-0">
+                    <div style="background-color: rgb(46, 13, 167);" class="modal-header text-white rounded-0">
                         <h5 class="modal-title" id="deleteStudentModal">Confirmer l'action</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
                     </div>

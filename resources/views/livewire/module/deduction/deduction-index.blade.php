@@ -37,7 +37,7 @@
     <div class="card-body">
         <div class="table-responsive ">
                 <table class="table table-bordered" id="dataTable" width="100%" >
-                    <thead style="background-color: rgb(99, 7, 7)" class="text-white">
+                    <thead style="background-color: rgb(46, 13, 167);" class="text-white">
                         <tr>
                             <th>CNSS</th>
                             <th>INPP</th>
@@ -56,7 +56,7 @@
                                 <td>{{ $deductions->deductionSalary }} %</td>
                                 <td>{{ $deductions->refundAdvanceAmount}} %</td>
                                 <td>
-                                    <a href="{{ route('deduction.update', $deductions->id) }}" class="btn text-white" style="background-color: rgb(97, 97, 156)">
+                                    <a href="{{ route('deduction.update', $deductions->id) }}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
                                         Modifier
                                     </a>
                                 </td>

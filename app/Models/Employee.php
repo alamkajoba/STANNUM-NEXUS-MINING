@@ -24,6 +24,11 @@ class Employee extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function familyState()
+    {
+        return $this->hasMany(familyState::class);
+    }
+
     public function advence()
     {
         return $this->hasOne(Advence::class);

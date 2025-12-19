@@ -4,115 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* CONFIGURATION FORMAT A4 */
+        @media screen {
+            body { background-color: #525659; padding: 20px; margin: 0; }
+            .bulletin-container {
+                width: 21cm;
+                /* On retire le min-height fixe qui cause la page vide */
+                margin: 0 auto;
+                background-color: white;
+                padding: 1.2cm;
+                box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            }
+        }
+
+        @media print {
+            @page { 
+                size: A4; 
+                margin: 0; /* On laisse le padding du container gérer les marges */
+            }
+            body { background: white; margin: 0; padding: 0; }
+            .bulletin-container {
+                width: 21cm;
+                margin: 0;
+                padding: 1.2cm;
+                box-shadow: none;
+                /* Empêche le navigateur d'ajouter une page si le contenu frôle le bord */
+                page-break-after: avoid; 
+            }
+            .no-print { display: none !important; }
+        }
+
+        body { font-family: Arial, sans-serif; color: #000; font-size: 11px; }
+
+        /* ENTETE */
+        .section-header {
+            display: flex;
+            align-items: stretch;
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .bloc-gauche, .bloc-droite {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .titre-section {
+            text-decoration: underline;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 10px;
+            margin-bottom: 5px;
+        }
+
+        .table-mini {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+        }
+        .table-mini td { border: 1px solid #000; padding: 2px 6px; }
+        .label-gris { background-color: #f2f2f2; width: 45%; }
+
+        .cadre-salarie {
+            border: 1px solid #000;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .table-inner { width: 100%; border-collapse: collapse; }
+        .table-inner td { border: none !important; padding: 2px 8px; }
+
+        .regime-travail {
+            border-top: 1px solid #000;
+            padding: 4px 8px;
+            font-size: 10px;
+            margin-top: auto;
+            background-color: #fafafa;
+        }
+
+        /* TABLEAU PRINCIPAL */
+        .table-principal {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+            margin-top: 5px;
+        }
+        .table-principal th { border: 1px solid #000; padding: 5px; background: #f8f9fa; text-align: center; }
+        .table-principal td { border-left: 1px solid #000; border-right: 1px solid #000; padding: 3px 10px; height: 18px; }
+        
+        .ligne-categorie { background-color: #eee; font-weight: bold; text-decoration: underline; border: 1px solid #000; }
+
+        .barre-net {
+            display: flex;
+            background-color: rgb(46, 13, 167) !important;
+            color: #fff !important;
+            border: 1px solid #000;
+            -webkit-print-color-adjust: exact;
+        }
+        .label-net { flex: 1; padding: 8px 15px; font-weight: bold; font-size: 13px; }
+        .valeur-net { width: 180px; text-align: right; padding: 8px 15px; font-weight: bold; font-size: 13px; }
+
+        /* SIGNATURES */
+        .footer-signatures {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 30px;
+        }
+        .bloc-signature { width: 220px; }
+        .titre-signature { text-decoration: underline; font-weight: bold; font-size: 10px; margin-bottom: 5px; }
+        .espace-signature { height: 60px; }
+    </style>
 </head>
-<style>
-    body{
-        background: #f4f6f8;
-        font-family: "Segoe UI", Arial, Helvetica, sans-serif;
-        font-size: 14px;
-        color: #333;
-    }
-
-    .bulletin{
-        width: 210mm;
-        margin: 20px auto;
-        background: #fff;
-        padding: 25px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .header{
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 2px solid #2c3e50;
-        padding: 15px;
-    }
-    .header h1 {
-        margin: 0;
-        font-size: 20px;
-        color: #2c3e50;
-    }
-    .header h2 {
-        margin: 0;
-        font-size: 20px;
-    }
-    .infos{
-        display: flex;
-        justify-content: space-between;
-        margin: 20px 0;
-        background: #f9fafb;
-        padding: 15px;
-        border-left: 4px solid #2c3e50;
-    }
-    .table-paie{
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-    .table-paie th{
-        background: #2c3e50;
-        color: #fff;
-        padding: 10px;
-        text-align: left;
-
-    }
-    .table-paie td{
-        border-bottom: 1px solid #ddd;
-        padding: 8px;
-    }
-    .table-paie tr:nth-child(even){
-        background: #f5f7f9;
-    }
-    .negatif{
-        color: #c0392b;
-    }
-    .total{
-        display: flex;
-        justify-content: space-between;
-        margin-top: 25px;
-        padding: 15px;
-        background: #ecf0f1;
-        font-size: 18px;
-        font-weight: bold;
-    }
-    .net{
-        color: #27ae60;
-    }
-    .footer{
-        text-align: center;
-        margin-top: 30px;
-        margin-bottom: 30px;
-        font-size: 12px;
-        color: #777;
-    }
-    .signatures{
-        text-align: center;
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        color: #777;
-    }
-    .left{
-        width: auto;
-    }
-    @media print{
-        body{
-            background: none;
-        }
-        .bulletin{
-            box-shadow: none;
-            margin: 0;
-        }
-    }
-    @page{
-        size:A4;
-        margin:15mm;
-    }
-
-</style>
 <body>
     <div class="row">
         {{$slot}} 
     </div>
+
+
+    
+
+    {{-- <script>
+        // Attend que toute la page (images, styles) soit chargée
+        window.onload = function() {
+            // Un petit délai de 500ms pour s'assurer que le rendu CSS est fini
+            setTimeout(function() {
+                window.print();
+            }, 500);
+        };
+    </script> --}}
 </body>
 </html>

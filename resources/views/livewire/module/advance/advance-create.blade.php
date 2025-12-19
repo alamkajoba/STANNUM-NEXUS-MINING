@@ -22,9 +22,9 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Avance sur salaire</h1>
-        <button style="background-color: rgb(97, 97, 156)" class="btn text-white">
+        <a href="{{route('advance.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">
             Voir la liste
-        </button>
+        </a>
     </div>
 
 
@@ -66,8 +66,9 @@
                         <input 
                             class="form-control"
                             type="number"
+                            step="0.01"
                             placeholder=""
-                            wire:model="amount"
+                            wire:model="0.00"
                         >
                     </div>
 
@@ -76,7 +77,7 @@
                     </div>
                 </div>
                 <div>
-                    <button style="background-color: rgb(97, 97, 156)" class="btn text-white py-2 my-3">
+                    <button style="background-color: rgb(46, 13, 167);" class="btn text-white py-2 my-3">
                         Valider
                     </button>
                 </div>
