@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('middleName');
             $table->string('lastName');
             $table->string('firstName');
+            $table->string('birthTown');
+            $table->date('birthDate');
             $table->enum('relationType', RelationTypeEnum::cases());
             $table->enum('gender', GenderEnum::cases());
             $table->unsignedBigInteger('employee_id');

@@ -204,7 +204,7 @@
                     <td class="text-center">{{$refundAdvanceAmount}}%</td>
                     <td class="text-center">-</td>
                     <td class="text-center">{{$refundAdvance_Amount}}</td>
-                    <td class="text-center">{{$refundAdvance_Amount}}</td>
+                    <td class="text-center">-</td>
                 </tr>
                 <tr>
                     <td>Retenue sur Salaire</td>

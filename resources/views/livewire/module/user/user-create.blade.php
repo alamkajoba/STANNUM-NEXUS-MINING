@@ -21,8 +21,8 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Ajouter un membre de famille</h1>
-        <a href="{{route('payment.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">
+        <h1 class="h3 mb-0 text-gray-800">Ajouter un utilisateur</h1>
+        <a href="{{route('user.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">
             Voir la liste
         </a>
     </div>
@@ -30,7 +30,7 @@
 
 
     <div class="justify-content-between card-header">
-        <form wire:submit="submitPayment()">
+        <form wire:submit="submitUser()">
             @csrf
             
             <div class="container">
@@ -60,72 +60,17 @@
                                 @endforelse
                             </ul>
                         @endif
-                        
-                        <label for="">Nom</label>
-                        <input 
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="search"
-                        >
 
+                        <label for="">Identifiant de connexion</label>
+                        <input 
+                            class="form-control"
+                            type="text"
+                            placeholder=""
+                            wire:model="identifiant"
+                        >
                         
-                        <label for="">Postnom</label>
-                        <input 
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="search"
-                        >
-
-                        <label for="">Prenom</label>
-                        <input 
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="search"
-                        >
                     </div>
-
                     <div class="col-md-6">
-                        <label for="gender">Genre</label>
-                        <select wire:model="gender" id="gender" class="form-control">
-                            <option>Selectionner...</option>
-                            @foreach ($this->gender() as $genders)
-                                <option value="{{ $genders }}">{{ $genders }}</option>
-                            @endforeach
-                        </select>
-                        @error('gender')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
-
-                        <label for="">Date de naissance</label>
-                        <input 
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="search"
-                        >
-
-                        
-                        <label for="">Lieu de naissance</label>
-                        <input 
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="search"
-                        >
-
-                        <label for="gender">Type de relation</label>
-                        <select wire:model="type" id="type" class="form-control">
-                            <option>Selectionner...</option>
-                            @foreach ($this->type() as $types)
-                                <option value="{{ $types }}">{{ $types }}</option>
-                            @endforeach
-                        </select>
-                        @error('type')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
                     </div>
                 </div>
                 <div>

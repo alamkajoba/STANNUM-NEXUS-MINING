@@ -22,8 +22,9 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password')
         ]);
 
-        // $adminRole = Role::firstOrCreate(['name' => 'Top Admin']);
-        // $adminRole->syncPermissions(Permission::all());
-        // $user->assignRole($adminRole);
+
+        $adminRole = Role::firstOrCreate(['name' => 'Top Admin']);
+        $adminRole->syncPermissions(Permission::all());
+        $user->assignRole($adminRole);
     }
 }

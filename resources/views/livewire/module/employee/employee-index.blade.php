@@ -58,7 +58,7 @@
                                 <td>{{ $employees->matricule }}</td>
                                 <td>{{ $employees->category->nameCategory }}</td>
                                 <td>
-                                    <a href="{{route('family.index')}}" class="btn text-white" style="background-color: rgb(0, 255, 21)">
+                                    <a href="{{route('family.index', $employees->id)}}" class="btn text-white" style="background-color: rgb(0, 255, 21)">
                                         Dossier
                                     </a>
                                 </td>

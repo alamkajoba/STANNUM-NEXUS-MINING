@@ -6,7 +6,7 @@
                     </button>
 
                     <!-- Topbar Search -->
-
+                    <img src="{{asset('img/stannumlogo.jpeg')}}" height="50px" width="150px" alt="">
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
@@ -57,7 +57,7 @@
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a> --}}
-                                <a class="dropdown-item" href="">
+                                <a class="dropdown-item" href="{{route('user.set')}}">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Modifier mes identifiants
                                 </a>

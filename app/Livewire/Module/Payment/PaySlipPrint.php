@@ -128,12 +128,12 @@ class PaySlipPrint extends Component
         $this->refundAdvanceAmount = $payment->refundAdvanceAmount;
         $this->deductionSalary = $payment->deductionSalary;
 
-        $this->CNSSAmount = bcmul($this->totalAmount, ( bcdiv($this->CNSS, "100", 3))); 
-        $this->INPPAmount = bcmul($this->totalAmount, ( bcdiv($this->INPP, "100", 3))); 
-        $this->ONEMAmount = bcmul($this->totalAmount, ( bcdiv($this->ONEM, "100", 3))); 
-        $this->IPRAmount = bcmul($this->totalAmount, ( bcdiv($this->IPR, "100", 3))); 
-        $this->deductionSalaryAmount = bcmul($this->totalAmount, ( bcdiv($this->deductionSalary, "100", 3))); 
-        $this->refundAdvance_Amount = bcmul($this->totalAmount, ( bcdiv($this->refundAdvanceAmount, "100", 3))); 
+        $this->CNSSAmount = bcmul($this->totalAmount, bcdiv($this->CNSS, "100", 4),2); 
+        $this->INPPAmount = bcmul($this->totalAmount, bcdiv($this->INPP, "100", 4),2); 
+        $this->ONEMAmount = bcmul($this->totalAmount, bcdiv($this->ONEM, "100", 4),2); 
+        $this->IPRAmount = bcmul($this->totalAmount, bcdiv($this->IPR, "100", 4),2); 
+        $this->deductionSalaryAmount = bcmul($this->totalAmount, bcdiv($this->deductionSalary, "100", 4),2); 
+        $this->refundAdvance_Amount = bcmul($this->totalAmount, bcdiv($this->refundAdvanceAmount, "100", 4),2); 
         //Employee
         $employee = Employee::findOrFail($payment->employee_id);
         $this->firstName = $employee->firstName; 

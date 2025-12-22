@@ -1,7 +1,7 @@
 <div class="card shadow-sm">
     <div style="background-color: rgb(46, 13, 167);" class="card-header text-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Dossier Agent : Jean Dupont</h5>
-        <span style="color: rgb(46, 13, 167);" class="badge bg-light">MATRICULE: #4589</span>
+        <h5 class="mb-0">Dossier Agent : {{$fullName}}</h5>
+        <span style="color: rgb(46, 13, 167);" class="badge bg-light">MATRICULE: {{$matricule}}</span>
     </div>
     
     <div class="card-body">

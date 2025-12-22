@@ -1,15 +1,12 @@
 <ul style="background-color: rgb(46, 13, 167);" class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+            {{-- <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
                 <div class="sidebar-brand-icon rotate-n-0">
-                    {{-- <i class="fas fa-user-md"></i> --}}
+                    <i class="fas fa-user-md"></i>
                 </div>
-                <img src="{{asset('img/stannumlogo.jpeg')}}" height="50px" width="150px" alt="">
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
+                
+            </a> --}}
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
@@ -37,12 +34,16 @@
                 <div id="collapsePaiements" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('payment.create') }}">
-                            Effectuer un paiement
-                        </a>
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('payment.index') }}">
-                            Liste des paiements 
-                        </a>
+                        @can('effectuer un paiement')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('payment.create') }}">
+                                Effectuer un paiement
+                            </a>
+                        @endcan
+                        @can('voir un  paiement')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('payment.index') }}">
+                                Liste des paiements 
+                            </a>
+                        @endcan
                     </div>
                 </div>
             </li>
@@ -58,12 +59,16 @@
                 <div id="collapseAdvance" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('advance.index') }}">
-                            Liste des Avances
-                        </a>
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('advance.create')}}">
-                            Effectuer une avance
-                        </a>
+                        @can('liste avance sur salaire')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('advance.index') }}">
+                                Liste des Avances
+                            </a>
+                        @endcan
+                        @can('effectuer une avance sur salaire')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('advance.create')}}">
+                                Effectuer une avance
+                            </a>
+                        @endcan
                     </div>
                 </div>
             </li>
@@ -87,17 +92,23 @@
                 <div id="collapseEmployee" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('employee.index') }}">
-                            Liste des agents 
-                        </a>
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('employee.create') }}">
-                            Ajouter un agent
-                        </a>
+                        @can('voir un  agent')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('employee.index') }}">
+                                Liste des agents 
+                            </a>
+                        @endcan
+                        @can('creer un  agent')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('employee.create') }}">
+                                Ajouter un agent
+                            </a>
+                        @endcan
                         <hr style="color:rgb(46, 13, 167);">
 
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('family.create') }}">
-                            Situation Famille
-                        </a>
+                        @can('creer un membre de famille')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('family.create') }}">
+                                Situation Famille
+                            </a> 
+                        @endcan
                     </div>
                 </div>
             </li>
@@ -122,12 +133,17 @@
                 <div id="collapseCategory" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('category.index') }}">
-                            Liste des categories
-                        </a>
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('category.create') }}">
-                            Ajouter une categorie
-                        </a>
+                        @can('voir une categorie')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('category.index') }}">
+                                Liste des categories
+                            </a>    
+                        @endcan
+
+                        @can('creer une categorie')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('category.create') }}">
+                                Ajouter une categorie
+                            </a>
+                        @endcan
                     </div>
                 </div>
             </li>
@@ -153,13 +169,53 @@
                 <div id="collapseDeduction" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('deduction.index') }}">
-                            Retenue sur salaire
-                        </a>
+                        @can('voir les deduction')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('deduction.index') }}">
+                                Retenue sur salaire
+                            </a>   
+                        @endcan
 
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('deduction.create') }}">
-                            Ajouter Retenue sur salaire
-                        </a>
+                        @can('creer les deduction')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('deduction.create') }}">
+                                Ajouter Retenue sur salaire
+                            </a>  
+                        @endcan
+                    </div>
+                </div>
+            </li>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Heading -->
+            <div style="color:white;" class="sidebar-heading">
+               Utilisateurs
+            </div>
+
+            {{--Users--}}
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
+                    aria-expanded="true" aria-controls="collapseUser">
+                    <i style="color:white;" class="fas fa-users"></i>
+                    <span style="color:white">Gestion utilisateurs</span> 
+                </a>
+                <div id="collapseUser" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+
+                        @can('voir un utilisateur')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('user.index') }}">
+                                Liste des utilisateurs
+                            </a>
+                        @endcan
+
+                        @can('creer un utilisateur')
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('user.create') }}">
+                                Ajouter un utilisateur
+                            </a>
+                        @endcan
                     </div>
                 </div>
             </li>

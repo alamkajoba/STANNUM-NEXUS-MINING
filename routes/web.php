@@ -22,6 +22,11 @@ use App\Livewire\Module\Advance\AdvanceCreate;
 use App\Livewire\Module\Family\FamilyIndex;
 use App\Livewire\Module\Family\FamilyCreate;
 use App\Livewire\Module\Family\FamilyUpdate;
+use App\Livewire\Module\User\UserIndex;
+use App\Livewire\Module\User\UserCreate;
+use App\Livewire\Module\User\UserUpdate;
+use App\Livewire\Module\User\AssignPermission;
+use App\Livewire\Module\User\SetPassword;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -30,6 +35,19 @@ Route::get('/', function () {
 #Home routes
 Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('dashboard', HomePage::class)->name('dashboard');
+});
+
+#Users routes
+Route::middleware('auth')->prefix('user')->name('user.')->group(function () {
+    Route::get('index', UserIndex::class)->name('index');
+    Route::get('create', UserCreate::class)->name('create');
+    Route::get('update/{id}', UserUpdate::class)->name('update');
+    Route::get('set', SetPassword::class)->name('set');
+});
+
+#Permissions routes
+Route::middleware('auth')->prefix('permission')->name('permission.')->group(function () {
+    Route::get('assign/{id}', AssignPermission::class)->name('assign');
 });
 
 #Employee routes
@@ -48,7 +66,7 @@ Route::middleware('auth')->prefix('category')->name('category.')->group(function
 
 #FamilyState routes
 Route::middleware('auth')->prefix('family')->name('family.')->group(function () {
-    Route::get('index', FamilyIndex::class)->name('index');
+    Route::get('index/{id}', FamilyIndex::class)->name('index');
     Route::get('create', FamilyCreate::class)->name('create');
     Route::get('update/{id}', FamilyUpdate::class)->name('update');
 });

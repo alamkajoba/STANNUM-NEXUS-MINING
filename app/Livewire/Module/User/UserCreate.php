@@ -1,19 +1,22 @@
 <?php
 
-namespace App\Livewire\Module\Family;
+namespace App\Livewire\Module\User;
 
 use Livewire\Component;
+use Spatie\Permission\Models\Role;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
-use App\Enums\GenderEnum;
 use App\Models\Employee;
-use App\Enums\RelationTypeEnum;
+use Spatie\Permission\Models\Permission;
+use App\Models\Category;
 
 #[Layout('layouts.app')]
-class FamilyCreate extends Component
+class UserCreate extends Component
 {
-
     //Var for auto complete employee
     public $search = '';
+    public $identifiant;
     public $itemsEmployee = [];
     public $selectedEmployee = [null];
     public $employeeId;
@@ -36,25 +39,30 @@ class FamilyCreate extends Component
         // Sélectionne un élément
         $this->selectedEmployee = Employee::find($itemId)->toArray();
         $this->search = $this->selectedEmployee['middleName'].' '.$this->selectedEmployee['lastName'].' '.$this->selectedEmployee['firstName'];
-        $this->employee_id = $this->selectedEmployee['id'];
+        $this->employeeId = $this->selectedEmployee['id'];
         $this->category_id = $this->selectedEmployee['category_id'];
         $this->itemsEmployee = []; // Vide les suggestions
 
     }
 
-    // Gender Enum
-    private function gender(): array
+    public function submitUser()
     {
-        return GenderEnum::cases();
-    }
-    // Type Enum
-    private function type(): array
-    {
-        return RelationTypeEnum::cases();
+        $category = Category::find($this->employeeId);
+        $name = $category->nameCategory;
+        $create = User::Create([
+            'name' => $this->search,
+            'identifiant' => $this->identifiant,
+            'password' => Hash::make('password'),
+        ]);
+
+        $userRole = Role::FirstOrCreate(['name' => $name]);
+        $create->assignRole($userRole);
+        session()->flash('success', "L'Utilisateur a été créé avec succès.");
+        return redirect()->to(route('user.index'));
     }
     
     public function render()
     {
-        return view('livewire.module.family.family-create');
+        return view('livewire.module.user.user-create');
     }
 }

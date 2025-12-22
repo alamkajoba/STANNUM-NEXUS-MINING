@@ -129,7 +129,7 @@
 
     
 
-    {{-- <script>
+    <script>
         // Attend que toute la page (images, styles) soit chargée
         window.onload = function() {
             // Un petit délai de 500ms pour s'assurer que le rendu CSS est fini
@@ -137,6 +137,6 @@
                 window.print();
             }, 500);
         };
-    </script> --}}
+    </script>
 </body>
 </html>

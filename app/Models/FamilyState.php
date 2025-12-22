@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FamilyState extends Model
 {
     protected $fillable = [
-        'middleName','lastName','firstName','relation','gender','employee_id','user_id'
+        'middleName','lastName','birthTown','birthDate','firstName','relation','gender','employee_id','user_id'
     ];
 
     //RelationShips
