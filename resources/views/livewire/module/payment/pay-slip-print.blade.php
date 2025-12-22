@@ -1,247 +1,122 @@
-<div>
-
-    <div class="bulletin-container">
-        <h4 class="titre-bulletin text-center">Bulletin de paie {{$motif}}</h4>
-        <hr>
-        <div class="section-header">
-            <div class="bloc-gauche">
-                <div class="titre-section">Employeur</div>
-                <div class="d-flex align-items-center mb-2">
-                    <div>
-                        <img src="{{asset('img/stannumlogo.jpeg')}}" height="100px" width="300px" alt="">
-                    </div>
-                </div>
-                
-                <table class="table-mini">
-                    <tr><td class="label-gris">Adresse:</td><td>40 AV Mandrinier</td></tr>
-                    <tr><td class="label-gris">Quartier:</td><td>Bel-air camp</td></tr>
-                    <tr><td class="label-gris">Téléphone:</td><td></td></tr>
-                </table>
-
-                <table class="table-mini mt-2">
-                    <tr><td class="fw-bold">Jours prestés:</td><td class="text-center fw-bold">{{$actifDay}} jours</td></tr>
-                    <tr><td>Jours Maladie:</td><td class="text-center">--------</td></tr>
-                    <tr><td>Jours Incapacité:</td><td class="text-center">--------</td></tr>
-                    <tr><td>Jours Absence:</td><td class="text-center">--------</td></tr>
-                    <tr><td class="label-gris">Tps travail:</td><td class="text-center">48 / SEMAINE</td></tr>
-                    <tr><td class="label-gris">Heures:</td><td class="text-center small">48/SEM - 8/JOURS</td></tr>
-                </table>
+<div class="bulletin-container bg-white">
+    <div class="content-wrapper">
+        <div class="header-section">
+            <div class="logo-area">
+                <img src="{{asset('img/logo.jfif')}}" alt="Logo">
             </div>
-
-            <div class="bloc-droite">
-                <div class="titre-section text-center">Salarié</div>
-                <div class="cadre-salarie">
-                    <table class="table-mini table-inner mb-0">
-                        <tr><td width="45%"><strong>NOM :</strong></td><td>{{$middleName}}</td></tr>
-                        <tr><td><strong>POSTNOM :</strong></td><td>{{$lastName}}</td></tr>
-                        <tr><td><strong>PRENOM :</strong></td><td>{{$firstName}}</td></tr>
-                        <tr><td><strong>N° MAT :</strong></td><td>{{$matricule}}</td></tr>
-                        <tr><td>Catégorie :</td><td>{{$nameCategory}}</td></tr>
-                        <tr><td>Fonction :</td><td class="fw-bold text-uppercase">{{$nameCategory}}</td></tr>
-                        <tr><td>Sexe :</td><td>{{$gender}}</td></tr>
-                        <tr><td>N° INSS :</td><td>--------</td></tr>
-                    </table>
-                    <div class="regime-travail">
-                        Régime : 
-                    </div>
-                </div>
+            <div class="company-details">
+                <h6 class="fw-bold m-0">Stannum Nexus Mining SA</h6>
+                <p class="m-0">N° TVA: 0171/DGI/DGE/DIG/MB/TVA/2011 | NF: A0708211 J</p>
+                <p class="m-0">RCCM: CD/L'SHI/TRICOM/RCCM/13-B-0660</p>
+                <p class="m-0 text-primary">www.stannum-nexus.com</p>
             </div>
         </div>
 
-        <table class="table-principal">
+        <div class="bulletin-title text-center py-2 fw-bold mb-3">
+            Bulletin de paie du mois de {{ $motif }}
+        </div>
+
+        <table class="table-info-section w-100 mb-3">
+            <tr>
+                <td width="60%" class="p-0 border-end border-dark">
+                    <table class="w-100 inner-table">
+                        <tr><td width="35%">Matricule :</td><td class="fw-bold">{{ $matricule }}</td></tr>
+                        <tr><td>Nom :</td><td class="fw-bold text-uppercase">{{ $lastName }} {{ $middleName }} {{ $firstName }}</td></tr>
+                        <tr><td>Fonction :</td><td></td></tr>
+                        <tr><td>Num. Compte :</td><td>05130-XXXXXXXXX-XX</td></tr>
+                    </table>
+                </td>
+                <td width="40%" class="p-0">
+                    <table class="w-100 inner-table">
+                        <tr><td width="55%">Catégorie Profess. :</td><td>{{ $nameCategory }}</td></tr>
+                        <tr><td>Salaire de base :</td><td class="fw-bold">$ {{ number_format($dayAmount * 26, 2) }}</td></tr>
+                        <tr><td>Jours du mois :</td><td>26</td></tr>
+                        <tr><td>Jours Présent :</td><td>{{ $actifDay }}</td></tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table-main w-100 mb-3">
             <thead>
                 <tr>
-                    <th width="35%">Désignation</th>
-                    <th>Quantité</th>
-                    <th>Base</th>
-                    <th>Taux</th>
-                    <th>Gain</th>
-                    <th>Retenue</th>
-                    <th>Montant Net</th>
+                    <th width="25%">Remunération</th>
+                    <th width="10%">Jr/Hr</th>
+                    <th width="15%">Montant</th>
+                    <th width="25%">Arriérés</th>
+                    <th width="10%">Jr/Hr</th>
+                    <th width="15%">Montant</th>
                 </tr>
             </thead>
             <tbody>
-                {{-- Acivites normales --}}
                 <tr>
-                    <td>Activité Normale</td>
-                    <td class="text-center">{{$workDay}}</td>
-                    <td class="text-center">{{$dayAmount}}</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$amount}}</td>
-                    <td class="text-center">0</td>
-                    <td class="text-center">{{$amount}}</td>
+                    <td>Base Mensuelle :</td><td class="text-center">{{ $workDay }}</td><td class="text-end">$ {{ number_format($amount, 2) }}</td>
+                    <td>Base Mensuelle :</td><td></td><td></td>
                 </tr>
                 <tr>
-                    <td>Jours incapacité</td>
-                    <td class="text-center"></td>
-                    <td class="text-center"></td>
-                    <td class="text-center"></td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
+                    <td>Heures Sup. :</td><td class="text-center">{{ $overtimes }}</td><td class="text-end">$ {{ number_format($overtimesPay, 2) }}</td>
+                    <td>Heures Sup :</td><td></td><td></td>
                 </tr>
-                <tr>
-                    <td>Heures supplémentaires</td>
-                    <td class="text-center">{{$overtimes}}</td>
-                    <td class="text-center">{{$hourAmount}}</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$overtimesPay}}</td>
-                    <td class="text-center">0</td>
-                    <td class="text-center">{{$overtimesPay}}</td>
-                </tr>
-                <tr>
-                    <td>Jours feriés</td>
-                    <td class="text-center">0</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">0</td>
-                    <td class="text-center">-</td>
-                </tr>
-                <tr>
-                    <td>Prime d'assuduité</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center"></td>
-                    <td class="text-center">{{$assudityBonus}}</td>
-                    <td class="text-center">0</td>
-                    <td class="text-center">{{$assudityBonus}}</td>
-                </tr>
-                <tr>
-                    <td>Prime de risque</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$riskBonus}}</td>
-                    <td class="text-center">0</td>
-                    <td class="text-center">{{$riskBonus}}</td>
-                </tr>
-                <tr>
-                    <td>Prime de rendement</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$performanceBonus}}</td>
-                    <td class="text-center">0</td>
-                    <td class="text-center">{{$performanceBonus}}</td>
-                </tr>
-                <tr class="fw-bold">
-                    <td>Remuneration due</td><td colspan="3" class="text-end border-top border-dark"></td><td class="text-center border-top border-dark">{{$totalAmount}}</td><td class="text-center">-</td><td class="text-center">{{$totalAmount}}</td>
-                </tr>
-
-                {{-- Avantages --}}
-                <tr class="ligne-categorie"><td colspan="7">Avantages</td></tr>
-                <tr>
-                    <td>Indemnité transport</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$transportationCost}}</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$transportationCost}}</td>
-                </tr>
-                <tr>
-                    <td>Ration</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$lunch}}</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$lunch}}</td>
-                </tr>
-
-                {{-- Deductions --}}
-                <tr class="ligne-categorie"><td colspan="7">Retenues</td></tr>
-                <tr>
-                    <td>CNSS</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$CNSS}}%</td> 
-                    <td class="text-center">-</td> 
-                    <td class="text-center">{{$CNSSAmount}}</td> 
-                    <td class="text-center">{{$CNSSAmount}}</td> 
-                </tr>
-                <tr>
-                    <td>INPP</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$INPP}}%</td> 
-                    <td class="text-center">-</td> 
-                    <td class="text-center">{{$INPPAmount}}</td> 
-                    <td class="text-center">{{$INPPAmount}}</td>
-                </tr>
-                <tr>
-                    <td>ONEM</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$ONEM}}%</td> 
-                    <td class="text-center">-</td> 
-                    <td class="text-center">{{$ONEMAmount}}</td> 
-                    <td class="text-center">{{$ONEMAmount}}</td>
-                </tr>
-                <tr>
-                    <td>IPR</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$IPR}}%</td> 
-                    <td class="text-center">-</td> 
-                    <td class="text-center">{{$IPRAmount}}</td> 
-                    <td class="text-center">{{$IPRAmount}}</td>
-                </tr>
-                <tr>
-                    <td>Avance sur Salaire</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$amountAdvance?? "-"}}</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center"></td>
-                    <td class="text-center">-</td>
-                </tr>
-                <tr>
-                    <td>Remboursement/mois</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$refundAdvanceAmount}}%</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$refundAdvance_Amount}}</td>
-                    <td class="text-center">-</td>
-                </tr>
-                <tr>
-                    <td>Retenue sur Salaire</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$deductionSalary}}%</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">{{$deductionSalaryAmount}}</td>
-                    <td class="text-center">{{$deductionSalaryAmount}}</td>
-                </tr>
-                <tr>
-                    <td>Autres retenues</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">-</td>
+                <tr class="total-row fw-bold border-top-dark">
+                    <td colspan="2" class="text-end">Total</td><td class="text-end">$ {{ number_format($totalAmount, 2) }}</td>
+                    <td colspan="2" class="text-end">Remunération Brute :</td><td class="text-end">$ {{ number_format($totalAmount, 2) }}</td>
                 </tr>
             </tbody>
         </table>
 
-        <div class="barre-net">
-            <div class="label-net">NET À PAYER :</div>
-            <div class="valeur-net">$ {{$netAmount}}</div>
+        <table class="table-split w-100 mb-3">
+            <tr>
+                <td width="50%" class="p-0 border-end border-dark align-top">
+                    <table class="w-100 inner-table-bordered">
+                        <thead><tr class="bg-gray"><th>Avantage Social</th><th width="20%">Jr</th><th>Montant</th></tr></thead>
+                        <tbody>
+                            <tr><td>Logement :</td><td></td><td class="text-end">$ {{ number_format($lunch * 0.7, 2) }}</td></tr>
+                            <tr><td>Transport :</td><td class="text-center">26</td><td class="text-end">$ {{ number_format($transportationCost, 2) }}</td></tr>
+                            <tr class="fw-bold bg-gray"><td>Total Avantages</td><td></td><td class="text-end">$ {{ number_format($transportationCost + ($lunch * 0.7), 2) }}</td></tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td width="50%" class="p-0 align-top">
+                    <table class="w-100 inner-table-bordered">
+                        <thead><tr class="bg-gray"><th>Déduction</th><th>Montant</th></tr></thead>
+                        <tbody>
+                            <tr><td>IPR :</td><td class="text-end">$ {{ number_format($IPRAmount, 2) }}</td></tr>
+                            <tr><td>CNSS :</td><td class="text-end">$ {{ number_format($CNSSAmount, 2) }}</td></tr>
+                            <tr class="fw-bold bg-gray"><td>Total Déduction</td><td class="text-end">$ {{ number_format($IPRAmount + $CNSSAmount, 2) }}</td></tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <div class="summary-stripe border-dark mb-4">
+            <div class="stripe-item">SALAIRE BRUT</div>
+            <div class="stripe-value border-end border-dark">$ {{ number_format($totalAmount + $transportationCost + ($lunch * 0.7), 2) }}</div>
+            <div class="stripe-item">TOTAL DEDUCTION</div>
+            <div class="stripe-value">$ {{ number_format($IPRAmount + $CNSSAmount, 2) }}</div>
         </div>
 
-        <div class="footer-signatures">
-            <div class="bloc-signature">
-                <p class="titre-signature">SIGNATURE POUR RÉCEPTION</p>
-                <div class="espace-signature"></div>
+        <div class="footer-section">
+            <div class="net-summary border-dark">
+                <div class="net-row"><span>Salaire Brut :</span> <span>$ {{ number_format($totalAmount + $transportationCost + ($lunch * 0.7), 2) }}</span></div>
+                <div class="net-row text-danger"><span>Total Déduction :</span> <span>$ {{ number_format($IPRAmount + $CNSSAmount, 2) }}</span></div>
+                <div class="net-row net-final fw-bold h5 mb-0"><span>Salaire Net :</span> <span class="text-primary">$ {{ number_format($netAmount, 2) }}</span></div>
             </div>
-
-            <div class="bloc-signature text-end">
-                <p class="titre-signature">LA DIRECTION</p>
-                <div class="espace-signature"></div>
+            <div class="stamp-area">
+                <div class="stamp-box"></div>
+                <p class="stamp-label m-0">Cachet de l'entreprise</p>
             </div>
         </div>
     </div>
+
+    <div class="bottom-legal-info border-top border-dark pt-2">
+        <div class="d-flex justify-content-between px-2">
+            <span>Numéro CNSS : 11988628355C </span>
+            <span>Email : </span>
+        </div>
+        <div class="text-center mt-2 pb-2">
+            <strong>Ceci est un bulletin généré par l'ordinateur et la signature n'est pas requise</strong>
+        </div>
+    </div>
 </div>
+

@@ -7,10 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 class Employee extends Model
 {
     protected $fillable = [
-        'firstName', 'middleName', 'lastName', 
-        'matricule', 'birthDate', 'birthTown',
-        'address', 'phone', 'mail',
-        'category_id', 'user_id', 'gender'
+        //Personnal info and profil
+        'firstName', 
+        'middleName', 
+        'lastName', 
+        'birthDate', 
+        'birthTown', 
+        'gender', 
+        'phone', 
+        'emergencyPhone', 
+        'mail', 
+        'address', 
+        'nationality',
+        
+        //Personnal info and profil
+        'matricule', 
+        'proMail',
+        'category_id', 
+        'user_id',
+        'proPhone',
+        'jobTitle',
+        'affectation',
     ];
 
     //RelationShips
