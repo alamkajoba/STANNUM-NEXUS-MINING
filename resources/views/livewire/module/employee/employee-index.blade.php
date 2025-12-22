@@ -42,7 +42,8 @@
                             <th>n</th>
                             <th>Nom  Postnom  Prénom</th>
                             <th>Matricule</th>
-                            <th>Fonction</th>
+                            <th>Departement</th>
+                            <th>Poste</th>
                             <th colspan="3">Actions</th>
                         </tr>
                     </thead>
@@ -57,6 +58,7 @@
                                 </td>
                                 <td>{{ $employees->matricule }}</td>
                                 <td>{{ $employees->category->nameCategory }}</td>
+                                <td>{{ $employees->jobTitle  }}</td>
                                 <td>
                                     <a href="{{route('family.index', $employees->id)}}" class="btn text-white" style="background-color: rgb(0, 255, 21)">
                                         Dossier

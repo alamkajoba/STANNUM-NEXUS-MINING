@@ -47,7 +47,7 @@ class PaymentCreate extends Component
     public $totalCredit = 0;
 
     //Addiction
-    public $lunch = 0;
+    public $z = 0;
     public $transportationCost = 0;
 
     //Net to pay

@@ -45,8 +45,9 @@
                             <th>Jours de travail</th>
                             <th>Remuneration par jour</th>
                             <th>Remuneration par heure</th>
-                            <th>Ration</th>
-                            <th>Indemnite transport</th>
+                            <th>Logement</th>
+                            <th>Transport</th>
+                            <th>Allocation familliale</th>
                             <th colspan="3">Actions</th>
                         </tr>
                     </thead>
@@ -59,8 +60,9 @@
                                 <td>{{ $categories->workDay }} Jours</td>
                                 <td>{{ $categories->dayAmount }} $</td>
                                 <td>{{ $categories->hourAmount }} $</td>
-                                <td>{{ $categories->lunch}} $</td>
+                                <td>{{ $categories->housing}} $</td>
                                 <td>{{ $categories->transportationCost}} $</td>
+                                <td>{{ $categories->familialAllocation}} $</td>
                                 <td>
                                     <a href="{{route('category.update', $categories->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
                                         Modifier

@@ -175,7 +175,7 @@
                             </a>   
                         @endcan
 
-                        @can('creer les deduction')
+                        @can('creer les deductio')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('deduction.create') }}">
                                 Ajouter Retenue sur salaire
                             </a>  

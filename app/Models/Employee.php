@@ -46,9 +46,9 @@ class Employee extends Model
         return $this->hasMany(familyState::class);
     }
 
-    public function advence()
+    public function advance()
     {
-        return $this->hasOne(Advence::class);
+        return $this->hasOne(Advance::class);
     }
 
     public function user()

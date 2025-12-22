@@ -18,8 +18,9 @@ return new class extends Migration
             $table->decimal('dayAmount', 15, 2)->default(0.00);
             $table->decimal('hourAmount', 15, 2)->default(0.00);
             $table->integer('workDay'); 
-            $table->decimal('lunch', 15, 2)->default(0.00);
+            $table->decimal('housing', 15, 2)->default(0.00);
             $table->decimal('transportationCost', 15, 2)->default(0.00); 
+            $table->decimal('familialAllocation', 15, 2)->default(0.00); 
             $table->timestamps();
 
             $table->unsignedBigInteger('user_id');

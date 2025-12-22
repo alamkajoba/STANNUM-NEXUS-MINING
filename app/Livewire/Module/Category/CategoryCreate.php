@@ -20,16 +20,19 @@ class CategoryCreate extends Component
     public $nameCategory = '';
 
     #[Validate('required')]
-    public $amount = '';
+    public $amount = 0.00;
 
     #[Validate('required')]
-    public $workDay = '';
+    public $workDay = 0.00;
 
     #[Validate('nullable')]
-    public $lunch = '';
+    public $housing = 0.00;
 
     #[Validate('nullable')]
-    public $transportationCost = '';
+    public $transportationCost = 0.00;
+
+    #[Validate('nullable')]
+    public $familialAllocation = 0.00;
 
     private function dataCategory(): array
     {
@@ -44,8 +47,9 @@ class CategoryCreate extends Component
             'dayAmount' => $dayAmount,
             'hourAmount' => $hourAmount,
             'workDay' => $this->workDay,
-            'lunch' => $this->lunch,
+            'housing' => $this->housing,
             'transportationCost' => $this->transportationCost,
+            'familialAllocation' => $this->familialAllocation,
             'user_id' => $id
         ];
     }

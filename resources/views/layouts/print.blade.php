@@ -33,7 +33,7 @@
 
     .header-section { display: flex; justify-content: space-between; margin-bottom: 10px; }
     .logo-area img { height: 70px; }
-    .company-details { text-align: right; font-size: 10px; line-height: 1.3; }
+    .company-details { text-align: left; font-size: 10px; line-height: 1.3; }
 
     .bulletin-title { border-top: 1px solid #000; border-bottom: 1px solid #000; background: #f2f2f2; text-transform: uppercase; font-size: 14px; }
 
@@ -83,7 +83,7 @@
 
     
 
-    <script>
+    {{-- <script>
         // Attend que toute la page (images, styles) soit chargée
         window.onload = function() {
             // Un petit délai de 500ms pour s'assurer que le rendu CSS est fini
@@ -91,6 +91,6 @@
                 window.print();
             }, 500);
         };
-    </script>
+    </script> --}}
 </body>
 </html>

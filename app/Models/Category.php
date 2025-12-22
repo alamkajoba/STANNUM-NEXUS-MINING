@@ -12,8 +12,9 @@ class Category extends Model
         'dayAmount', 
         'hourAmount',  
         'workDay', 
-        'lunch', 
+        'housing', 
         'transportationCost', 
+        'familialAllocation',
         'user_id'
     ];
 
@@ -21,7 +22,8 @@ class Category extends Model
         'amount' => 'decimal:2',
         'dayAmount' => 'decimal:2',
         'hourAmount' => 'decimal:2',
-        'lunch' => 'decimal:2',
+        'housing' => 'decimal:2',
+        'familialAllocation' => 'decimal:2',
         'transportationCost' => 'decimal:2',
     ];
 
