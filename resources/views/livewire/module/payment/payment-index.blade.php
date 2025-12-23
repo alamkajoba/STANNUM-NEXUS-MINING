@@ -43,7 +43,6 @@
                             <th>Agent</th>
                             <th>Matricule</th>
                             <th>Motif</th>
-                            <th>Net a payer</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -54,7 +53,6 @@
                                 <td>{{ $payments->employee->middleName }} {{ $payments->employee->lastName }} {{ $payments->employee->firstName }}</td>
                                 <td>{{ $payments->employee->matricule }}</td>
                                 <td>{{ $payments->motif }}</td>
-                                <td>{{ $payments->netAmount }} $</td>
                                 <td>
                                     <div>
                                         <a href="{{route('payment.print', $payments->id)}}" class="btn text-white" style="background-color: rgb(46, 13, 167);">
