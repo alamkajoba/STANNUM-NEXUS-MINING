@@ -30,6 +30,7 @@
         padding: 1.5cm; /* Marges intérieures */
         box-sizing: border-box;
     }
+    
 
     .header-section { display: flex; justify-content: space-between; margin-bottom: 10px; }
     .logo-area img { height: 70px; }
@@ -72,6 +73,12 @@
             padding: 1.5cm;
             box-shadow: none;
         }
+        .total-row {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            background-color: rgb(41, 5, 88) !important;
+            color: white !important;
+        }
     }
 </style>
 </head>
@@ -83,14 +90,14 @@
 
     
 
-    {{-- <script>
-        // Attend que toute la page (images, styles) soit chargée
-        window.onload = function() {
-            // Un petit délai de 500ms pour s'assurer que le rendu CSS est fini
-            setTimeout(function() {
-                window.print();
-            }, 500);
-        };
-    </script> --}}
+        {{-- <script>
+            // Attend que toute la page (images, styles) soit chargée
+            window.onload = function() {
+                // Un petit délai de 500ms pour s'assurer que le rendu CSS est fini
+                setTimeout(function() {
+                    window.print();
+                }, 500);
+            };
+        </script> --}}
 </body>
 </html>

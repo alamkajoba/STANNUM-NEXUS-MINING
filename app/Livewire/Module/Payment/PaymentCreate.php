@@ -25,13 +25,13 @@ class PaymentCreate extends Component
     #[Validate('nullable')]
     public $restDay = 0;
     #[Validate('nullable')]
-    public $overtimes = 0; 
+    public $overtimes = 0.00; 
     #[Validate('nullable')]
-    public $assudityBonus = 0; 
+    public $assudityBonus = 0.00; 
     #[Validate('nullable')]
-    public $riskBonus = 0; 
+    public $riskBonus = 0.00; 
     #[Validate('nullable')]
-    public $performanceBonus = 0; 
+    public $performanceBonus = 0.00; 
 
     //Var for auto complete employee
     public $search = '';
@@ -41,17 +41,11 @@ class PaymentCreate extends Component
 
     public $category_id;
 
-    //Deductions
-    public $absence = 0; public $CNSS = 0; public $IPR = 0; public $ONEM = 0; public $INPP = 0;
-    public $deductionSalary = 0; public $toRefundAdvance = 0; public $remainToRefundAdvance = 0;
-    public $totalCredit = 0;
+    //Bonus
+    public $brutWithoutDeduction = 0.00;
 
-    //Addiction
-    public $z = 0;
-    public $transportationCost = 0;
-
-    //Net to pay
-    public $netToPay = 0;
+    //Avantage
+    public $brutWiAfterDeduction = 0.00;
 
 
     public function searchEmployee(): void
@@ -83,43 +77,53 @@ class PaymentCreate extends Component
         //Select category
         $category = Category::find($this->category_id);
 
-        //Addiction
-        $this->lunch = $category->lunch;
-        $this->transportationCost = $category->transportationCost;
         $overtimesPay = $this->overtimes * $category->hourAmount;
-        $totalAmount = $category->amount + $overtimesPay + $this->assudityBonus + $this->riskBonus + $this->performanceBonus;
+        $absence = $this->restDay * $category->dayAmount;
+
+        //brut without deduction
+        $this->brutWithoutDeduction = $this->riskBonus + 
+                    $this->performanceBonus + 
+                    $this->assudityBonus + 
+                    $category->housing + 
+                    $category->transportationCost + 
+                    $category->amount +
+                    $category->familialAllocation + 
+                    $overtimesPay - 
+                    $absence;
+        
 
         //Select deduction
         $deduction = Deduction::first();
-        $this->IPR = $category->amount * ($deduction->IPR / 100);
-        $this->CNSS = $category->amount * ($deduction->CNSS / 100);
-        $this->ONEM = $category->amount * ($deduction->ONEM / 100);
-        $this->INPP = $category->amount * ($deduction->INPP / 100);
-        $this->deductionSalary = $category->amount * ($deduction->deductionSalary / 100);
-        $this->toRefundAdvance = $category->amount * ($deduction->refundAdvanceAmount / 100);
-        $this->absence = $this->restDay * $category->dayAmount;
+        $IPR =  $category->amount *  ($deduction->IPR /100);
+        $CNSS =  $category->amount *  ($deduction->CNSS /100);
+        $ONEM =  $category->amount *  ($deduction->ONEM /100);
+        $INPP =  $category->amount *  ($deduction->INPP /100);
+        $deductionSalary =  $category->amount *  ($deduction->deductionSalary /100);
+        $totalCCC = ($IPR + $INPP + $ONEM + $CNSS + $deductionSalary);
+        dd($totalCCC);
+
+        $this->brutWiAfterDeduction = $this->brutWithoutDeduction - ($IPR + $INPP + $ONEM + $CNSS + $deductionSalary);
+        
 
         //Select advance
         $advance = Advance::find($this->employee_id);
         if($advance)
         {
-            $this->remainToRefundAdvance = $advance->toRefund;
-            $this->totalCredit = $advance->amount;
-        }
+            $remainToRefundAdvance = $advance->toRefund;
+            $totalCredit = $advance->amount;
+            //Make deduction if remaining advance is over refund amount
+            if($remainToRefundAdvance >= $toRefundAdvance)
+            {
+                $this->brutWiAfterDeduction = $brutWiAfterDeduction - $toRefundAdvance;
+            }
 
-        //Make deduction if remaining advance is over refund amount
-        if($this->remainToRefundAdvance >= $this->toRefundAdvance)
-        {
-            $this->netToPay = $totalAmount-($this->absence + $this->CNSS +$this->INPP + $this->IPR + $this->ONEM + $this->deductionSalary + $this->toRefundAdvance)+ $this->lunch + $this->transportationCost;
+            //Make deduction if remaining advance is over refund amount
+            elseif($remainToRefundAdvance < $toRefundAdvance)
+            {
+                $this->brutWiAfterDeduction = $brutWiAfterDeduction - $remainToRefundAdvance;
+                $toRefundAdvance = $remainToRefundAdvance;
+            }
         }
-
-        //Make deduction if remaining advance is over refund amount
-        elseif($this->remainToRefundAdvance < $this->toRefundAdvance)
-        {
-            $this->netToPay = $totalAmount-($this->absence + $this->CNSS +$this->INPP + $this->IPR + $this->ONEM + $this->deductionSalary + $this->remainToRefundAdvance)+ $this->lunch + $this->transportationCost;
-            $this->toRefundAdvance = $this->remainToRefundAdvance;
-        }
-        // + $this->lunch + $this->transportationCost
         
         //Submit payment
         $check = Payment::where('employee_id', $this->employee_id)
@@ -134,8 +138,8 @@ class PaymentCreate extends Component
         Payment::create([
             'employee_id' => $this->employee_id, 
             'motif' => $this->motif, 
-            'totalAmount' => $totalAmount,  
-            'netAmount' => $this->netToPay,  
+            'totalAmount' => $this->brutWithoutDeduction,  
+            'netAmount' => $this->brutWiAfterDeduction,  
             'restDay' => $this->restDay, 
             'overtimesPay' => $overtimesPay, 
             'overtimes' => $this->overtimes,
@@ -153,7 +157,7 @@ class PaymentCreate extends Component
 
         if($advance)
         {
-            $remain = $advance->toRefund - $this->toRefundAdvance;
+            $remain = $advance->toRefund - $toRefundAdvance;
             if($remain == 0)
             {
                 $advance->delete();
@@ -163,7 +167,7 @@ class PaymentCreate extends Component
             }
 
             $advance->update([
-                'toRefund' => $advance->toRefund - $this->toRefundAdvance,
+                'toRefund' => $advance->toRefund - $toRefundAdvance,
             ]);
         }
         $print = Payment::latest()->first();
