@@ -23,7 +23,7 @@ class CategoryCreate extends Component
     public $amount = 0.00;
 
     #[Validate('required')]
-    public $workDay = 0.00;
+    public $workDay = 1;
 
     #[Validate('nullable')]
     public $housing = 0.00;

@@ -15,6 +15,10 @@ use Livewire\Attributes\Validate;
 class EmployeeCreate extends Component
 {
 
+    public $convertMiddleName;
+    public $convertLastName;
+    public $convertFirstName;
+
     public $step = 1;
 
     // Champs du formulaire
@@ -55,9 +59,26 @@ class EmployeeCreate extends Component
 
 
     public function saveEmployee() {
-        $this->validate([
+        $rules = ([
             'jobTitle' => 'required', 'categoryName' => 'required'
         ]);
+        $this->validate($rules);
+
+        //Check if exist
+        $this->convertFirstName = Str::lower(trim($this->firstName));
+        $this->convertMiddleName = Str::lower(trim($this->middleName));
+        $this->convertLastName = Str::lower(trim($this->lastName));
+
+        $existEmployee = Employee::whereRaw('LOWER(firstName) = ?', [$this->convertFirstName])
+            ->whereRaw('LOWER(middleName) = ?', [$this->convertMiddleName])
+            ->whereRaw('LOWER(lastName) = ?', [$this->convertLastName])
+            ->where('birthDate', $this->birthDate)
+            ->exists();
+
+        if ($existEmployee) {
+            session()->flash('danger', "Cet Agent existe déjà!...");
+            return redirect()->route('employee.create');
+        }
 
         $matricule = $this->generateNextMatricule();
 
