@@ -48,7 +48,7 @@
                     @empty
                         <tr>
                             <td colspan="5" class="px-6 py-2.5 text-danger whitespace-nowrap text">
-                                Oups! Aucun Produit trouvé.
+                                Oups! La liste est vide.
                             </td>
                         </tr>
                     @endforelse

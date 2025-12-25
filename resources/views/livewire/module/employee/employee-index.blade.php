@@ -72,7 +72,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center text-danger">Oups! Aucun(e) abonné(e) trouvé.</td>
+                                <td colspan="9" class="text-center text-danger">Oups! Aucun Agent trouvé.</td>
                             </tr>
                         @endforelse
                     </tbody>

@@ -67,20 +67,20 @@
                             <span class="text-danger">Verifiez ce champ</span>
                         @enderror
 
-                        <label for="workDay">Lunch</label>
+                        <label for="workDay">Logement</label>
                         <input 
                             id="lunch"
                             class="form-control"
                             type="number"
                             step="0.01"
                             placeholder=""
-                            wire:model="lunch"
+                            wire:model="housing"
                         >
-                        @error('lunch')
+                        @error('housing')
                             <span class="text-danger">Verifiez ce champ</span>
                         @enderror
 
-                        <label for="workDay">Indamnite transport</label>
+                        <label for="workDay">Transport</label>
                         <input 
                             id="transportationCost"
                             class="form-control"
@@ -90,6 +90,19 @@
                             wire:model="transportationCost"
                         >
                         @error('transportationCost')
+                            <span class="text-danger">Verifiez ce champ</span>
+                        @enderror
+
+                        <label for="workDay">Allocation famille (Par enfant)</label>
+                        <input 
+                            id="familialAllocation"
+                            class="form-control"
+                            type="number"
+                            step="0.01"
+                            placeholder=""
+                            wire:model="familialAllocation"
+                        >
+                        @error('familialAllocation')
                             <span class="text-danger">Verifiez ce champ</span>
                         @enderror
                     </div>

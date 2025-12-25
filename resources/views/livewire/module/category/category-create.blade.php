@@ -93,7 +93,7 @@
                             <span class="text-danger">Verifiez ce champ</span>
                         @enderror
 
-                        <label for="familialAllocation">Allocation familliale</label>
+                        <label for="familialAllocation">Allocation familliale (Par enfant)</label>
                         <input 
                             id="familialAllocation"
                             class="form-control"

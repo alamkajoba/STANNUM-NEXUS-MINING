@@ -22,14 +22,13 @@
     @endif
     {{-- table --}}
     <div class="justify-content-between card-header">
-        <form wire:submit="submitDeduction">
+        <form wire:submit="updateDeduction">
             @csrf
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
                         <label for="CNSS">CNSS</label>
                         <input 
-                            required
                             id="CNSS"
                             class="form-control"
                             type="text"
@@ -42,7 +41,6 @@
 
                         <label for="INPP">INPP</label>
                         <input 
-                            required
                             id="INPP"
                             class="form-control"
                             type="text"
@@ -55,7 +53,6 @@
 
                         <label for="IPR">Impot Professionnel sur Remuneration</label>
                         <input 
-                            required
                             id="IRP"
                             class="form-control"
                             type="text"

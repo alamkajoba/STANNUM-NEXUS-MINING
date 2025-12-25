@@ -21,10 +21,13 @@ class CategoryUpdate extends Component
     public $workDay = '';
 
     #[Validate('nullable')]
-    public $lunch = '';
+    public $housing = '';
 
     #[Validate('nullable')]
     public $transportationCost = '';
+
+    #[Validate('nullable')]
+    public $familialAllocation = '';
 
     public $categoryId;
     
@@ -34,7 +37,8 @@ class CategoryUpdate extends Component
         $this->nameCategory = $category->nameCategory;
         $this->amount = $category->amount;
         $this->workDay = $category->workDay;
-        $this->lunch = $category->lunch;
+        $this->housing = $category->housing;
+        $this->familialAllocation = $category->familialAllocation;
         $this->transportationCost = $category->transportationCost;
         $this->categoryId = $category->id;
     }
@@ -50,7 +54,8 @@ class CategoryUpdate extends Component
             'dayAmount' => $dayAmount,
             'hourAmount' => $hourAmount,
             'workDay' => $this->workDay,
-            'lunch' => $this->lunch,
+            'familialAllocation' => $this->familialAllocation,
+            'housing' => $this->housing,
             'transportationCost' => $this->transportationCost,
             'user_id' => $id
         ];

@@ -76,7 +76,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center text-danger">Oups! Aucun(e) abonné(e) trouvé.</td>
+                                <td colspan="9" class="text-center text-danger">Oups! Aucune Catégorie trouvée.</td>
                             </tr>
                         @endforelse
                     </tbody>
