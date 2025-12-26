@@ -34,6 +34,9 @@
                 <div id="collapsePaiements" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
+                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('payment.payNotify') }}">
+                            Envoyer une notification
+                        </a>
                         @can('effectuer un paiement')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('payment.create') }}">
                                 Effectuer un paiement

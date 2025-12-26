@@ -34,6 +34,47 @@ class PaymentCreate extends Component
     #[Validate('nullable')]
     public $performanceBonus = 0.00; 
 
+    //Var for auto complete employee
+    public $search = '';
+    public $itemsEmployee = [];
+    public $selectedEmployee = [null];
+
+    //All for paySlip
+    public $childCount = 0;
+    public $baseSalary = 0.00;
+    public $dayMounth = 0;
+    public $justifyDay = 0;
+    public $workDay = 0;
+    //payment
+    public $baseMounthlyDay = '';
+    public $overtimesPay = 0.00;
+    //advantage
+    public $housingDay = 0.00;
+    public $housingMounth = 0.00;
+    public $transportationCostDay = 0.00;
+    public $transportationCostMounth = 0.00;
+    public $familialAllocationDay = 0.00;
+    public $familialAllocationMounth = 0.00;
+    public $totalAdvantage= 0.00;
+    //deduction
+    public $CNSS = 0.00;
+    public $INPP = 0.00;
+    public $ONEM = 0.00;
+    public $IPR = 0.00;
+    public $deductionSalary = 0.00;
+    public $refund = 0.00;
+    public $CNSSAmount = 0.00;
+    public $INPPAmount = 0.00;
+    public $ONEMAmount = 0.00;
+    public $IPRAmount = 0.00;
+    public $deductionSalaryAmount = 0.00;
+    public $refundAmount = 0.00;
+    public $totalDeduction = 0.00;
+    //final
+    public $brutSalary = 0.00;
+    public $netSalary = 0.00;
+
+
 
     public function searchEmployee(): void
     {
@@ -59,7 +100,10 @@ class PaymentCreate extends Component
 
     }
 
-    
+    public function submitPayment()
+    {
+        dd($this->motif);
+    }
 
     public function render()
     {

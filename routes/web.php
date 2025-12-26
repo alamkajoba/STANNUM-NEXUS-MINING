@@ -27,6 +27,7 @@ use App\Livewire\Module\User\UserCreate;
 use App\Livewire\Module\User\UserUpdate;
 use App\Livewire\Module\User\AssignPermission;
 use App\Livewire\Module\User\SetPassword;
+use App\Livewire\Module\Notify\PayNotify;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -81,6 +82,7 @@ Route::middleware('auth')->prefix('advance')->name('advance.')->group(function (
 #Payment routes
 Route::middleware('auth')->prefix('payment')->name('payment.')->group(function () {
     Route::get('index', PaymentIndex::class)->name('index');
+    Route::get('payNotify', PayNotify::class)->name('payNotify');
     Route::get('create', PaymentCreate::class)->name('create');
     Route::get('update/{id}', PaymentUpdate::class)->name('update');
     Route::get('print/{id}', PaySlipPrint::class)->name('print');

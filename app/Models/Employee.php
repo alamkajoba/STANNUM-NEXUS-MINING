@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Employee extends Model
 {
+    use Notifiable;
+    
     protected $fillable = [
         //Personnal info and profil
         'firstName', 
@@ -29,6 +32,11 @@ class Employee extends Model
         'jobTitle',
         'affectation',
     ];
+
+    public function routeNotificationForMail($notification)
+    {
+        return $this->proMail; 
+    }
 
     //RelationShips
     public function category()
