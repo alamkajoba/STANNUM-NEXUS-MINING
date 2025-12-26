@@ -118,7 +118,7 @@ class EmployeeCreate extends Component
     public function render()
     {
         return view('livewire.module.employee.employee-create', [
-        'selectCategory' => \App\Models\Category::all(), // On récupère toutes les catégories
+        'selectCategory' => Category::all(),
     ]);
     }
 }

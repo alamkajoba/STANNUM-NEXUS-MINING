@@ -2,7 +2,7 @@
     <div class="content-wrapper">
         <div class="header-section">
             <div class="logo-area">
-                <img src="{{asset('img/logo.jfif')}}" alt="Logo">
+                <img src="{{asset('img/finallogo.jpeg')}}" alt="Logo">
             </div>
             <div class="company-details">
                 <h6 class="fw-bold m-0">Stannum Nexus Mining sarl</h6>

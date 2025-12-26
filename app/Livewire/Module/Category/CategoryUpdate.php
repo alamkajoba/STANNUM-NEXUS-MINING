@@ -45,8 +45,9 @@ class CategoryUpdate extends Component
 
     private function dataCategory(): array
     {
-        $dayAmount = $this->amount / $this->workDay;
-        $hourAmount = $this->amount / 8;
+        $dayAmount = $this->amount / max(1, $this->workDay);
+        $hourAmount = $dayAmount / 8;
+
         $id = Auth::id();
         return [
             'nameCategory' => $this->nameCategory,

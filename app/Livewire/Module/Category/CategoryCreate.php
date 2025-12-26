@@ -36,7 +36,7 @@ class CategoryCreate extends Component
 
     private function dataCategory(): array
     {
-        $dayAmount = $this->amount / $this->workDay;
+        $dayAmount = $this->amount / max(1, $this->workDay);
         $hourAmount = $dayAmount / 8;
         $id = Auth::id();
 
