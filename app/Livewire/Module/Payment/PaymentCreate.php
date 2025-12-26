@@ -188,55 +188,54 @@ class PaymentCreate extends Component
             $this->amountToDeduct = 0;
         }
 
-        $this->totalDeduction = round($this->CNSSAmount + $this->INPPAmount + $this->IPRAmount + $this->ONEMAmount + $this->amountToDeduct, 2);
+        $this->totalDeduction = round($this->CNSSAmount 
+                                + $this->INPPAmount 
+                                + $this->IPRAmount 
+                                + $this->ONEMAmount 
+                                + $this->amountToDeduct, 2);
 
-        dd([
-            'CNSS' => $this->CNSSAmount,
-            'INPP' => $this->INPPAmount,
-            'IPR'  => $this->IPRAmount,
-            'ONEM' => $this->ONEMAmount,
-            'Deduct' => $this->amountToDeduct,
-            'CalculatedTotal' => $this->CNSSAmount + $this->INPPAmount + $this->IPRAmount + $this->ONEMAmount + $this->amountToDeduct
-        ]);
-        
+        $this->netSalary = round($this->brutSalary - $this->totalDeduction, 2);
+        dd($this->netSalary);
+
+        $id = Auth::id();
         $payment = Payment::create([
-            'employee_id', 
-            'motif', 
-            'user_id',
+            'employee_id' => $this->employee_id, 
+            'motif' => $this->motif, 
+            'user_id' => $id,
             //All for paySlip
-            'childCount',
-            'baseSalary',
-            'dayMounth',
-            'justifyDay',
-            'workDay',
+            'childCount' => $this->childCount,
+            'baseSalary' => $this->baseSalary,
+            'dayMounth' => $this->dayMounth,
+            'justifyDay' => $this->justifyDay,
+            'workDay' => $this->workDay,
             //payment
-            'baseMounthlyDay',
-            'overtimesPay',
+            'baseMounthlyDay' => $this->baseMounthlyDay,
+            'overtimesPay' => $this->overtimesPay,
             //advantage
-            'housingDay',
-            'housingMounth',
-            'transportationCostDay',
-            'transportationCostMounth',
-            'familialAllocationDay',
-            'familialAllocationMounth',
-            'totalAdvantage',
+            'housingDay' => $this->housingDay,
+            'housingMounth' => $this->housingMounth,
+            'transportationCostDay' => $this->transportationCostDay,
+            'transportationCostMounth' => $this->transportationCostMounth,
+            'familialAllocationDay' => $this->familialAllocationDay,
+            'familialAllocationMounth' => $this->familialAllocationMounth,
+            'totalAdvantage' => $this->totalAdvantage,
             //deduction
-            'CNSS',
-            'INPP',
-            'ONEM',
-            'IPR',
-            'deductionSalary',
-            'refund',
-            'CNSSAmount',
-            'INPPAmount',
-            'ONEMAmount',
-            'IPRAmount',
-            'deductionSalaryAmount',
-            'refundAmount',
-            'totalDeduction',
+            'CNSS' => $this->CNSS,
+            'INPP' => $this->INPP,
+            'ONEM' => $this->ONEM,
+            'IPR' => $this->IPR,
+            'deductionSalary' => $this->deductionSalary,
+            'refund' => $this->refund,
+            'CNSSAmount' => $this->childCount,
+            'INPPAmount' => $this->INPPAmount,
+            'ONEMAmount' => $this->ONEMAmount,
+            'IPRAmount' => $this->IPRAmount,
+            'deductionSalaryAmount' => $this->deductionSalaryAmount,
+            'refundAmount' => $this->refundAmount,
+            'totalDeduction' => $this->totalDeduction,
             //final
-            'brutSalary',
-            'netSalary',
+            'brutSalary' => $this->brutSalary,
+            'netSalary' => $this->netSalary,
         ]);
 
     }
