@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
+            // $table->unique(['agent_id', 'billing_period']);
             $table->id();
+            $table->unique(['employee_id', 'periode_begin', 'periode_end']);
             $table->string('motif'); 
             $table->integer('restDay');  
             $table->integer('overtimes'); 

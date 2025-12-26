@@ -6,7 +6,7 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <img src="{{asset('img/stannumlogo.jpeg')}}" height="50px" width="150px" alt="">
+                    <img src="{{asset('img/finallogo.jpeg')}}" height="50px" width="150px" alt="">
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
