@@ -43,7 +43,7 @@ class PayNotify extends Component
             session()->flash('danger', "Erreur SMTP Hostinger : " . $e->getMessage());
         }
         session()->flash('success', "La notification a été envoyée avec succès à " . $tousLesAgents->count() . " agents.");
-        return redirect()->route('payment.payNotify');
+        return redirect()->route('notify.payNotify');
     }
 
 

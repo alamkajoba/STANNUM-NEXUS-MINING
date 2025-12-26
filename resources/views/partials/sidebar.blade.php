@@ -28,15 +28,12 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePaiements"
                     aria-expanded="true" aria-controls="collapsePaiements">
-                    <i style="color:white;" class="fas fa-currency"></i>
+                    <i style="color:white;" class="fa fa-credit-card"></i>
                     <span style="color:white;">Paiements</span> 
                 </a>
                 <div id="collapsePaiements" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('payment.payNotify') }}">
-                            Envoyer une notification
-                        </a>
                         @can('effectuer un paiement')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('payment.create') }}">
                                 Effectuer un paiement
@@ -51,12 +48,14 @@
                 </div>
             </li>
 
+            
+
             {{--Advance--}}
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdvance"
                     aria-expanded="true" aria-controls="collapseAdvance">
-                    <i style="color:white;" class="fas fa-currency"></i>
+                    <i style="color:white;" class="fa fa-credit-card" aria-hidden="true"></i>
                     <span style="color:white;">Avance sur salaire</span> 
                 </a>
                 <div id="collapseAdvance" class="collapse" aria-labelledby="headingUtilities"
@@ -81,7 +80,7 @@
 
             <!-- Heading -->
             <div style="color:white;" class="sidebar-heading">
-               Gestion des Agents
+               Agents et Notifications
             </div>
 
             {{--Employee--}}
@@ -116,6 +115,25 @@
                 </div>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNotifies"
+                    aria-expanded="true" aria-controls="collapseNotifies">
+                    <i style="color:white;" class="fa fa-envelope" aria-hidden="true"></i>
+                    <span style="color:white;">Notifications</span> 
+                </a>
+                <div id="collapseNotifies" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('notify.payNotify') }}">
+                            Notification des paiements
+                        </a>
+                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('notify.noteNotify') }}">
+                            Notes internes
+                        </a>
+                    </div>
+                </div>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -130,7 +148,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategory"
                     aria-expanded="true" aria-controls="collapseCategory">
-                    <i style="color:white;" class="fas fa-users"></i>
+                    <i style="color:white;" class="fa fa-cogs"></i>
                     <span style="color:white">Categories</span> 
                 </a>
                 <div id="collapseCategory" class="collapse" aria-labelledby="headingUtilities"
@@ -166,7 +184,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDeduction"
                     aria-expanded="true" aria-controls="collapseDeduction">
-                    <i style="color:white;" class="fas fa-users"></i>
+                    <i style="color:white;" class="fa fa-cogs"></i>
                     <span style="color:white">Retenue sur salaire</span> 
                 </a>
                 <div id="collapseDeduction" class="collapse" aria-labelledby="headingUtilities"
@@ -201,7 +219,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
                     aria-expanded="true" aria-controls="collapseUser">
-                    <i style="color:white;" class="fas fa-users"></i>
+                    <i style="color:white;" class="fas fa-user"></i>
                     <span style="color:white">Gestion utilisateurs</span> 
                 </a>
                 <div id="collapseUser" class="collapse" aria-labelledby="headingUtilities"

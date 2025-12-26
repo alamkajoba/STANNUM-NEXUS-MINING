@@ -24,9 +24,10 @@ class AvailablePayNotify extends Notification
         return ['mail'];
     }
 
+    //Mail
     public function toMail($notifiable): MailMessage
     {
-        $nomMois = Carbon::parse($this->motif)->translatedFormat('F Y');
+        $nomMois = Carbon::parse($this->motif)->locale('fr')->translatedFormat('F Y');
 
         return (new MailMessage)
             ->from('info@alvinebusiness.com', 'Alvine Business Finance')
@@ -37,4 +38,15 @@ class AvailablePayNotify extends Notification
             ->line("Le bureau est ouvert du lundi au vendredi, de 08h00 à 16h00.")
             ->salutation("La Direction Financière, STANNUM NEXUS MINING SARL.");
     }
+
+    //Sms
+    // public function toVonage($notifiable)
+    // {
+    //     $date = Carbon::parse($this->motif);
+    //     $nomMois = $date->locale('fr')->translatedFormat('F Y');
+
+    //     return (new \Illuminate\Notifications\Messages\VonageMessage)
+    //         ->content("Bonjour Mr/Mm, votre bulletin de paie de " . $nomMois . " est disponible. Merci de passer au bureau financier.")
+    //         ->from('STANNUM NEXUS MINING');
+    // }
 }

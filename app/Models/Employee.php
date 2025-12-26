@@ -38,6 +38,12 @@ class Employee extends Model
         return $this->proMail; 
     }
 
+    // public function routeNotificationForVonage($notification)
+    // {
+    //     //(format international : 243...)
+    //     return $this->proPhone; 
+    // }
+
     //RelationShips
     public function category()
     {
