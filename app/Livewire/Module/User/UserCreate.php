@@ -10,12 +10,15 @@ use Livewire\Attributes\Layout;
 use App\Models\Employee;
 use Spatie\Permission\Models\Permission;
 use App\Models\Category;
+use Livewire\Attributes\Validate;
 
 #[Layout('layouts.app')]
 class UserCreate extends Component
 {
     //Var for auto complete employee
     public $search = '';
+
+    #[Validate('required|min:3')]
     public $identifiant;
     public $itemsEmployee = [];
     public $selectedEmployee = [null];
@@ -47,18 +50,24 @@ class UserCreate extends Component
 
     public function submitUser()
     {
-        $category = Category::find($this->employeeId);
-        $name = $category->nameCategory;
-        $create = User::Create([
-            'name' => $this->search,
-            'identifiant' => $this->identifiant,
-            'password' => Hash::make('password'),
-        ]);
+        $this->validate();
+        if($this->employeeId)
+        {
+            $category = Category::find($this->employeeId);
+            $name = $category->nameCategory;
+            $create = User::Create([
+                'name' => $this->search,
+                'identifiant' => $this->identifiant,
+                'password' => Hash::make('password'),
+            ]);
 
-        $userRole = Role::FirstOrCreate(['name' => $name]);
-        $create->assignRole($userRole);
-        session()->flash('success', "L'Utilisateur a été créé avec succès.");
-        return redirect()->to(route('user.index'));
+            $userRole = Role::FirstOrCreate(['name' => $name]);
+            $create->assignRole($userRole);
+            session()->flash('success', "L'Utilisateur a été créé avec succès.");
+            return redirect()->to(route('user.index'));
+        }
+        session()->flash('danger', "Aucun agent n'a été selectionné.");
+        return redirect()->to(route('user.create'));
     }
     
     public function render()

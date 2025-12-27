@@ -43,7 +43,7 @@
                             <th>Nom  Postnom  Prénom</th>
                             <th>Matricule</th>
                             <th>Site</th>
-                            <th>Departement</th>
+                            <th>Département</th>
                             <th>Poste</th>
                             <th colspan="3">Actions</th>
                         </tr>
@@ -67,9 +67,9 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="{{route('employee.update', $employees->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
+                                    {{-- <a href="{{route('employee.update', $employees->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
                                         Modifier
-                                    </a>
+                                    </a> --}}
                                 </td>
                             </tr>
                         @empty

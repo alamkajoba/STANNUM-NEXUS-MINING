@@ -14,6 +14,7 @@ use App\Enums\MonthEnum;
 use App\Models\Payment;
 use Illuminate\Support\Str;
 use App\Enums\RelationTypeEnum;
+use Carbon\Carbon;
 
 
 #[Layout('layouts.app')]
@@ -112,14 +113,15 @@ class PaymentCreate extends Component
 
     public function submitPayment()
     {
+        $motif = Carbon::parse($this->motif);
 
-        $existPayment = Payment::where('employee_id', [$this->employee_id])
-            ->where('motif', [$this->motif])
+        $existPayment = Payment::where('employee_id', $this->employee_id)
+            ->where('motif', $motif)
             ->exists();
 
         if ($existPayment) {
-            session()->flash('danger', "Cet Agent existe déjà!...");
-            return redirect()->route('employee.create');
+            session()->flash('danger', "Cet Agent a déjà reçu ce paiement verifiez la liste!...");
+            return redirect()->route('payment.index');
         }
 
         $deduction = Deduction::latest()->first();
@@ -195,12 +197,11 @@ class PaymentCreate extends Component
                                 + $this->amountToDeduct, 2);
 
         $this->netSalary = round($this->brutSalary - $this->totalDeduction, 2);
-        dd($this->netSalary);
 
         $id = Auth::id();
         $payment = Payment::create([
             'employee_id' => $this->employee_id, 
-            'motif' => $this->motif, 
+            'motif' => $motif, 
             'user_id' => $id,
             //All for paySlip
             'childCount' => $this->childCount,
@@ -237,6 +238,8 @@ class PaymentCreate extends Component
             'brutSalary' => $this->brutSalary,
             'netSalary' => $this->netSalary,
         ]);
+        session()->flash('danger', "Successfuly!...");
+        return redirect()->route('payment.index');
 
     }
 

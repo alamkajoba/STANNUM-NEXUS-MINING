@@ -139,7 +139,7 @@
 
             <!-- Heading -->
             <div style="color:white;" class="sidebar-heading">
-               Gestion des Categories
+               Gestion des Catégories
             </div>
 
 
@@ -149,20 +149,20 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategory"
                     aria-expanded="true" aria-controls="collapseCategory">
                     <i style="color:white;" class="fa fa-cogs"></i>
-                    <span style="color:white">Categories</span> 
+                    <span style="color:white">Catégories</span> 
                 </a>
                 <div id="collapseCategory" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         @can('voir une categorie')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('category.index') }}">
-                                Liste des categories
+                                Liste des catégories
                             </a>    
                         @endcan
 
                         @can('creer une categorie')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('category.create') }}">
-                                Ajouter une categorie
+                                Ajouter une catégorie
                             </a>
                         @endcan
                     </div>
@@ -176,7 +176,7 @@
 
             <!-- Heading -->
             <div style="color:white;" class="sidebar-heading">
-               Retenues
+               Rétenues
             </div>
 
             {{--Deduction--}}
@@ -185,20 +185,20 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDeduction"
                     aria-expanded="true" aria-controls="collapseDeduction">
                     <i style="color:white;" class="fa fa-cogs"></i>
-                    <span style="color:white">Retenue sur salaire</span> 
+                    <span style="color:white">Rétenue sur salaire</span> 
                 </a>
                 <div id="collapseDeduction" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         @can('voir les deduction')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('deduction.index') }}">
-                                Retenue sur salaire
+                                Rétenue sur salaire
                             </a>   
                         @endcan
 
                         @can('creer les deductio')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('deduction.create') }}">
-                                Ajouter Retenue sur salaire
+                                Ajouter Rétenue sur salaire
                             </a>  
                         @endcan
                     </div>

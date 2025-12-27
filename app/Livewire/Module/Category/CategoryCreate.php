@@ -19,19 +19,19 @@ class CategoryCreate extends Component
     #[Validate('required|min:3|string')]
     public $nameCategory = '';
 
-    #[Validate('required')]
+    #[Validate('required|numeric|min:0')]
     public $amount = 0.00;
 
-    #[Validate('required')]
+    #[Validate('nullable|numeric|min:1|max:31')]
     public $workDay = 1;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0')]
     public $housing = 0.00;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0')]
     public $transportationCost = 0.00;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0')]
     public $familialAllocation = 0.00;
 
     private function dataCategory(): array
@@ -65,12 +65,12 @@ class CategoryCreate extends Component
             ->exists();
 
         if ($existCategory) {
-            session()->flash('danger', "Cette categorie existe déjà!...");
+            session()->flash('danger', "Cette catégorie existe déjà!...");
             return redirect()->route('category.create');
         }
 
         $employee = Category::create($this->dataCategory());
-        session()->flash('success', "La categorie a été créé avec succès.");
+        session()->flash('success', "La catégorie a été créé avec succès.");
         return redirect()->to(route('category.index'));
     }
 

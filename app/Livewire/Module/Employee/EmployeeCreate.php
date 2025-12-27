@@ -29,11 +29,19 @@ class EmployeeCreate extends Component
     public function nextStep() {
         $rules = [
             1 => [
-                'firstName' => 'required', 'middleName' => 'required', 'lastName' => 'required',
-                'gender' => 'required', 'birthDate' => 'required', 'birthTown' => 'required'
+                'firstName' => 'required|string|min:2|regex:/^[a-zA-Z\s-]+$/u', 
+                'middleName' => 'required|string|min:2|regex:/^[a-zA-Z\s-]+$/u', 
+                'lastName' => 'required|string|min:2|regex:/^[a-zA-Z\s-]+$/u',
+                'gender' => 'required', 
+                'birthDate' => 'required|date', 
+                'birthTown' => 'required|string|min:2'
             ],
             2 => [
-                'phone' => 'required', 'address' => 'required', 'nationalite' => 'required'
+                'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10', 
+                'emergencyPhone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+                'mail' => 'nullable|string|email:rfc,dns',
+                'address' => 'required|string|min:2', 
+                'nationalite' => 'required|string|min:2'
             ]
         ];
 
@@ -60,7 +68,11 @@ class EmployeeCreate extends Component
 
     public function saveEmployee() {
         $rules = ([
-            'jobTitle' => 'required', 'categoryName' => 'required'
+            'jobTitle' => 'required|string|min:2', 
+            'affectation' => 'required|string|min:2', 
+            'proMail' => 'nullable|string|email:rfc,dns', 
+            'proPhone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10', 
+            'categoryName' => 'required'
         ]);
         $this->validate($rules);
 

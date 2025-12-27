@@ -1,7 +1,11 @@
 <div class="card shadow-sm">
     <div style="background-color: rgb(46, 13, 167);" class="card-header text-white d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Dossier Agent : {{$employee->middleName}}_{{$employee->lastName}}_{{$employee->firstName}}</h5>
-        <span style="color: rgb(46, 13, 167);" class="badge bg-light">MATRICULE: {{$employee->matricule}}</span>
+        <span class="badge bg-light">
+            <a href="{{route('employee.index')}}" class="btn text-white" style="background-color: rgb(112, 147, 163)">
+                Retour
+            </a>
+        </span>
     </div>
     
     <div class="card-body">
@@ -27,6 +31,7 @@
                     <div class="col-md-6">
                         <p><strong>Intitulé du poste :</strong> {{$employee->jobTitle}}</p>
                         <p><strong>Département :</strong> {{$employee->category->nameCategory}}</p>
+                        <p><strong>Matricule :</strong> {{$employee->matricule}}</p>
                     </div>
                     <div class="col-md-6">
                         <p><strong>Date d'entrée :</strong> {{$employee->created_at->format('d/m/Y')}}</p>

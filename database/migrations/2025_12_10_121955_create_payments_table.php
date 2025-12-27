@@ -15,7 +15,7 @@ return new class extends Migration
             // $table->unique(['agent_id', 'billing_period']);
             $table->id();
             $table->unique(['employee_id', 'motif']);
-            $table->date('motif'); 
+            $table->string('motif'); 
             $table->float('CNSS'); 
             $table->float('INPP');  
             $table->float('ONEM'); 

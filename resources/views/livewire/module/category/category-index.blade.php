@@ -26,7 +26,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
             <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-users"></i>
-            Liste des categories
+            Liste des catégories
         </h1>
         <div class="d-none d-sm-inline-block shadow-sm">
             <input wire:model.live="search" class="form-control" type="text" placeholder="Rechercher...">
@@ -40,11 +40,11 @@
                     <thead style="background-color: rgb(46, 13, 167);" class="text-white">
                         <tr>
                             <th>n</th>
-                            <th>Categorie</th>
+                            <th>Catégorie</th>
                             <th>Salaire</th>
                             <th>Jours de travail</th>
-                            <th>Remuneration par jour</th>
-                            <th>Remuneration par heure</th>
+                            <th>Jour</th>
+                            <th>Heure</th>
                             <th>Logement</th>
                             <th>Transport</th>
                             <th>Allocation familliale</th>

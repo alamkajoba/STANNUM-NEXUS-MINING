@@ -55,7 +55,7 @@
                                     </a>
                                 @empty
                                     <div class="list-group-item mb-2 flex bg-danger-200">
-                                        Aucun(e) Agent
+                                        Aucun Agent
                                     </div>
                                 @endforelse
                             </ul>
@@ -68,6 +68,11 @@
                             placeholder=""
                             wire:model="identifiant"
                         >
+                        @error('identifiant')
+                            <div style="color: rgb(252, 0, 0)" class="flex"> 
+                                saisissez plus de 3 caracteres
+                            </div> 
+                        @enderror
                         
                     </div>
                     <div class="col-md-6">
