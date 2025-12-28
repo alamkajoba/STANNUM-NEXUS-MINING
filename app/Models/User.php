@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\User;
 
 class User extends Authenticatable
 {
@@ -77,5 +78,14 @@ class User extends Authenticatable
     public function familyState()
     {
         return $this->hasMany(familyState::class);
+    }
+
+    public function test_the_application_returns_a_successful_response(): void
+    {
+        $user = User::factory()->create(); // Crée un utilisateur fictif
+
+        $response = $this->actingAs($user)->get('/'); // Se connecte avant d'aller sur '/'
+
+        $response->assertStatus(200);
     }
 }

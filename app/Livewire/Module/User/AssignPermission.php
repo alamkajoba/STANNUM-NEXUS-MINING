@@ -33,6 +33,13 @@ class AssignPermission extends Component
         $this->selectedPermissions = $user->permissions->pluck('id')->toArray();
     }
 
+    public function assignAll()
+    {
+        $user = User::findOrFail($this->userId);
+        $user->syncPermissions(Permission::all());
+        session()->flash('success', 'Permissions mises à jour avec succès !');
+        return redirect()->to(route('user.index'));
+    }
     public function save()
     {
         $user = User::findOrFail($this->userId);

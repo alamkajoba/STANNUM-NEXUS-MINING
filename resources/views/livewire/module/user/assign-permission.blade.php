@@ -3,10 +3,15 @@
         <div class="card-body">
             <div class="table-responsive">
                 <h3>
-                    Assigner des Permissions a: {{$name}} --{{$role}}
+                    Permission
                     <span>
                         <button wire:click="save" style="background-color: rgb(7, 7, 99)" class="btn text-white py-2 my-3">
                             Valider
+                        </button>
+                    </span>
+                    <span>
+                        <button wire:click="assignAll" style="background-color: rgb(33, 99, 7)" class="btn text-white py-2 my-3">
+                            Assigner toutes les permissions
                         </button>
                     </span>
                 </h3>

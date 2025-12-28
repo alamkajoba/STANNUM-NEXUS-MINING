@@ -22,7 +22,7 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Ajouter un membre de famille</h1>
-        <a href="{{route('payment.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">
+        <a href="{{route('employee.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">
             Voir la liste
         </a>
     </div>

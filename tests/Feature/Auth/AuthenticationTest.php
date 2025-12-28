@@ -22,19 +22,22 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
-        $user = User::factory()->create();
+        // 1. On crée un utilisateur avec un identifiant explicite
+        $user = User::factory()->create([
+            'identifiant' => 'admin123',
+            'password' => bcrypt('password'),
+        ]);
 
-        $component = Volt::test('pages.auth.login')
-            ->set('form.email', $user->email)
-            ->set('form.password', 'password');
-
-        $component->call('login');
-
-        $component
+        // 2. On teste le composant Volt
+        Volt::test('pages.auth.login')
+            ->set('form.identifiant', 'admin123') // On utilise le même identifiant
+            ->set('form.password', 'password')
+            ->call('login')     
             ->assertHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+            // Vérifie bien le nom de ta route ici :
+            ->assertRedirect(route('dashboard.dashboard', absolute: false)); 
 
-        $this->assertAuthenticated();
+        $this->assertAuthenticatedAs($user);
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
@@ -42,7 +45,7 @@ class AuthenticationTest extends TestCase
         $user = User::factory()->create();
 
         $component = Volt::test('pages.auth.login')
-            ->set('form.email', $user->email)
+            ->set('form.identifiant', $user->identifiant)
             ->set('form.password', 'wrong-password');
 
         $component->call('login');
@@ -60,11 +63,9 @@ class AuthenticationTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = $this->get('/dashboard');
+        $response = $this->get(route('dashboard.dashboard'));
 
-        $response
-            ->assertOk()
-            ->assertSeeVolt('layout.navigation');
+        $response->assertSee('Modifier mes identifiants');
     }
 
     public function test_users_can_logout(): void
