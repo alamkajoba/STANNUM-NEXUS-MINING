@@ -25,22 +25,7 @@ class EmployeeIndex extends Component
     {
 
         $employee = Employee::with('category')
-                ->where(function ($query) {
-                    $searchTerm = '%' . $this->search . '%';
-                    
-                    
-                    $query->where('firstName', 'like', $searchTerm)
-                        ->orWhere('middleName', 'like', $searchTerm)
-                        ->orWhere('lastName', 'like', $searchTerm)
-                        ->orWhere('matricule', 'like', $searchTerm)
-                        ->orWhere('affectation', 'like', $searchTerm)
-                        ->orWhere('jobTitle', 'like', $searchTerm);
-                        
-                   
-                    $query->orWhereHas('category', function ($q) use ($searchTerm) {
-                        $q->where('nameCategory', 'like', $searchTerm); 
-                    });
-                })
+                ->search($this->search)
                 ->latest()
                 ->paginate(5);
 

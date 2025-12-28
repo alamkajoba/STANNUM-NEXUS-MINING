@@ -23,11 +23,13 @@ class CategoryIndex extends Component
     public function render()
     {
 
-        $category = Category::where('nameCategory', 'like', '%' . $this->search . '%');
+        $category = Category::search($this->search)
+                ->latest()
+                ->paginate(5);
 
             
         return view('livewire.module.category.category-index', [
-            'category' => $category->latest()->paginate(5),
+            'category' => $category,
         ]);
     }
 }

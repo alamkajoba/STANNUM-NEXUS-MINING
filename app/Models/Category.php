@@ -3,9 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Trait\Searchable;
 
 class Category extends Model
 {
+
+    use Searchable;
+    
+    protected $searchableColumns = ['nameCategory'];
+
     protected $fillable = [
         'nameCategory', 
         'amount',  
