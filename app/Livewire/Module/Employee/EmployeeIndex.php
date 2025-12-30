@@ -25,14 +25,13 @@ class EmployeeIndex extends Component
     {
 
         $employee = Employee::with('category')
-            ->where('firstName', 'like', '%' . $this->search . '%')
-            ->orWhere('middleName', 'like', '%' . $this->search . '%')
-            ->orWhere('lastName', 'like', '%' . $this->search . '%')
-            ->orWhere('matricule', 'like', '%' . $this->search . '%');
+                ->search($this->search)
+                ->latest()
+                ->paginate(5);
 
             
         return view('livewire.module.employee.employee-index', [
-            'employee' => $employee->latest()->paginate(5),
+            'employee' => $employee,
         ]);
     }
 }

@@ -30,7 +30,7 @@ new #[Layout('layouts.guest')] class extends Component
     <form wire:submit="login">
         <div>
             <center>
-                <img src="{{asset('img/stannumlogo.jpeg')}}" height="100px" width="200px" alt="">
+                <img src="{{asset('img/finallogo.jpeg')}}" height="100px" width="200px" alt="">
             </center>
         </div>
 

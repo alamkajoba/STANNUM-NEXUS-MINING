@@ -15,6 +15,10 @@ use Livewire\Attributes\Validate;
 class EmployeeCreate extends Component
 {
 
+    public $convertMiddleName;
+    public $convertLastName;
+    public $convertFirstName;
+
     public $step = 1;
 
     // Champs du formulaire
@@ -25,11 +29,19 @@ class EmployeeCreate extends Component
     public function nextStep() {
         $rules = [
             1 => [
-                'firstName' => 'required', 'middleName' => 'required', 'lastName' => 'required',
-                'gender' => 'required', 'birthDate' => 'required', 'birthTown' => 'required'
+                'firstName' => 'required|string|min:2|regex:/^[a-zA-Z\s-]+$/u', 
+                'middleName' => 'required|string|min:2|regex:/^[a-zA-Z\s-]+$/u', 
+                'lastName' => 'required|string|min:2|regex:/^[a-zA-Z\s-]+$/u',
+                'gender' => 'required', 
+                'birthDate' => 'required|date', 
+                'birthTown' => 'required|string|min:2'
             ],
             2 => [
-                'phone' => 'required', 'address' => 'required', 'nationalite' => 'required'
+                'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10', 
+                'emergencyPhone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+                'mail' => 'nullable|string|email:rfc,dns',
+                'address' => 'required|string|min:2', 
+                'nationalite' => 'required|string|min:2'
             ]
         ];
 
@@ -55,9 +67,30 @@ class EmployeeCreate extends Component
 
 
     public function saveEmployee() {
-        $this->validate([
-            'jobTitle' => 'required', 'categoryName' => 'required'
+        $rules = ([
+            'jobTitle' => 'required|string|min:2', 
+            'affectation' => 'required|string|min:2', 
+            'proMail' => 'nullable|string|email:rfc,dns', 
+            'proPhone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10', 
+            'categoryName' => 'required'
         ]);
+        $this->validate($rules);
+
+        //Check if exist
+        $this->convertFirstName = Str::lower(trim($this->firstName));
+        $this->convertMiddleName = Str::lower(trim($this->middleName));
+        $this->convertLastName = Str::lower(trim($this->lastName));
+
+        $existEmployee = Employee::whereRaw('LOWER(firstName) = ?', [$this->convertFirstName])
+            ->whereRaw('LOWER(middleName) = ?', [$this->convertMiddleName])
+            ->whereRaw('LOWER(lastName) = ?', [$this->convertLastName])
+            ->where('birthDate', $this->birthDate)
+            ->exists();
+
+        if ($existEmployee) {
+            session()->flash('danger', "Cet Agent existe déjà!...");
+            return redirect()->route('employee.create');
+        }
 
         $matricule = $this->generateNextMatricule();
 
@@ -97,7 +130,7 @@ class EmployeeCreate extends Component
     public function render()
     {
         return view('livewire.module.employee.employee-create', [
-        'selectCategory' => \App\Models\Category::all(), // On récupère toutes les catégories
+        'selectCategory' => Category::all(),
     ]);
     }
 }

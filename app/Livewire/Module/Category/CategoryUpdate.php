@@ -11,24 +11,24 @@ use Illuminate\Support\Facades\Auth;
 #[Layout('layouts.app')]
 class CategoryUpdate extends Component
 {
-    #[Validate('required|min:3|string')]
+     #[Validate('required|min:3|string')]
     public $nameCategory = '';
 
-    #[Validate('required')]
-    public $amount = '';
+    #[Validate('required|numeric|min:0')]
+    public $amount = 0.00;
 
-    #[Validate('required')]
-    public $workDay = '';
+    #[Validate('nullable|numeric|min:1|max:31')]
+    public $workDay = 1;
 
-    #[Validate('nullable')]
-    public $housing = '';
+    #[Validate('nullable|numeric|min:0')]
+    public $housing = 0.00;
 
-    #[Validate('nullable')]
-    public $transportationCost = '';
+    #[Validate('nullable|numeric|min:0')]
+    public $transportationCost = 0.00;
 
-    #[Validate('nullable')]
-    public $familialAllocation = '';
-
+    #[Validate('nullable|numeric|min:0')]
+    public $familialAllocation = 0.00;
+    
     public $categoryId;
     
     public function mount($id)
@@ -45,8 +45,9 @@ class CategoryUpdate extends Component
 
     private function dataCategory(): array
     {
-        $dayAmount = $this->amount / $this->workDay;
-        $hourAmount = $this->amount / 8;
+        $dayAmount = $this->amount / max(1, $this->workDay);
+        $hourAmount = $dayAmount / 8;
+
         $id = Auth::id();
         return [
             'nameCategory' => $this->nameCategory,

@@ -3,9 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use App\Trait\Searchable;
 
 class Employee extends Model
 {
+    use Notifiable;
+
+    use Searchable; 
+
+    // search
+    protected $searchableColumns = [
+        'firstName', 'middleName', 'lastName', 
+        'matricule', 'affectation', 'jobTitle'
+    ];
+
+    // relations
+    protected $searchableRelations = [
+        'category' => 'nameCategory'
+    ];
+    
     protected $fillable = [
         //Personnal info and profil
         'firstName', 
@@ -29,6 +46,17 @@ class Employee extends Model
         'jobTitle',
         'affectation',
     ];
+
+    public function routeNotificationForMail($notification)
+    {
+        return $this->proMail; 
+    }
+
+    // public function routeNotificationForVonage($notification)
+    // {
+    //     //(format international : 243...)
+    //     return $this->proPhone; 
+    // }
 
     //RelationShips
     public function category()

@@ -12,6 +12,10 @@ use App\Models\Advance;
 use App\Models\Category;
 use App\Enums\MonthEnum;
 use App\Models\Payment;
+use Illuminate\Support\Str;
+use App\Enums\RelationTypeEnum;
+use Carbon\Carbon;
+
 
 #[Layout('layouts.app')]
 class PaymentCreate extends Component
@@ -25,6 +29,8 @@ class PaymentCreate extends Component
     #[Validate('nullable')]
     public $restDay = 0;
     #[Validate('nullable')]
+    public $justifyDay = 0;
+    #[Validate('nullable')]
     public $overtimes = 0.00; 
     #[Validate('nullable')]
     public $assudityBonus = 0.00; 
@@ -37,15 +43,48 @@ class PaymentCreate extends Component
     public $search = '';
     public $itemsEmployee = [];
     public $selectedEmployee = [null];
-    public $employeeId;
 
-    public $category_id;
+    //All for paySlip
+    public $childCount = 0;
+    public $restDayCost = 0.00;
+    public $dayPay = 0.00;
+    public $baseSalary = 0.00;
+    public $dayMounth = 0;
+    public $justifyDayPay = 0.00;
+    public $workDay = 0;
+    //payment
+    public $baseMounthlyDay = 0.00;
+    public $overtimesPay = 0.00;
+    public $totalDue = 0.00;
+    //advantage
+    public $housingDay = 0.00;
+    public $housingMounth = 0.00;
+    public $transportationCostDay = 0.00;
+    public $transportationCostMounth = 0.00;
+    public $familialAllocationDay = 0.00;
+    public $familialAllocationMounth = 0.00;
+    public $totalAdvantage= 0.00;
+    //advance
+    public $remainToPay = 0.00;
+    public $amountToDeduct = 0.00;
+    //deduction
+    public $CNSS = 0.00;
+    public $INPP = 0.00;
+    public $ONEM = 0.00;
+    public $IPR = 0.00;
+    public $deductionSalary = 0.00;
+    public $refund = 0.00;
+    public $CNSSAmount = 0.00;
+    public $INPPAmount = 0.00;
+    public $ONEMAmount = 0.00;
+    public $IPRAmount = 0.00;
+    public $deductionSalaryAmount = 0.00;
+    public $refundAmount = 0.00;
+    public $totalDeduction = 0.00;
+    //final
+    public $brutSalary = 0.00;
+    public $netSalary = 0.00;
 
-    //Bonus
-    public $brutWithoutDeduction = 0.00;
-
-    //Avantage
-    public $brutWiAfterDeduction = 0.00;
 
 
     public function searchEmployee(): void
@@ -74,111 +113,134 @@ class PaymentCreate extends Component
 
     public function submitPayment()
     {
-        //Select category
-        $category = Category::find($this->category_id);
+        $motif = Carbon::parse($this->motif);
 
-        $overtimesPay = $this->overtimes * $category->hourAmount;
-        $absence = $this->restDay * $category->dayAmount;
+        $existPayment = Payment::where('employee_id', $this->employee_id)
+            ->where('motif', $motif)
+            ->exists();
 
-        //brut without deduction
-        $this->brutWithoutDeduction = $this->riskBonus + 
-                    $this->performanceBonus + 
-                    $this->assudityBonus + 
-                    $category->housing + 
-                    $category->transportationCost + 
-                    $category->amount +
-                    $category->familialAllocation + 
-                    $overtimesPay - 
-                    $absence;
-        
+        if ($existPayment) {
+            session()->flash('danger', "Cet Agent a déjà reçu ce paiement verifiez la liste!...");
+            return redirect()->route('payment.index');
+        }
 
-        //Select deduction
-        $deduction = Deduction::first();
-        $IPR =  $category->amount *  ($deduction->IPR /100);
-        $CNSS =  $category->amount *  ($deduction->CNSS /100);
-        $ONEM =  $category->amount *  ($deduction->ONEM /100);
-        $INPP =  $category->amount *  ($deduction->INPP /100);
-        $deductionSalary =  $category->amount *  ($deduction->deductionSalary /100);
-        $totalCCC = ($IPR + $INPP + $ONEM + $CNSS + $deductionSalary);
-        dd($totalCCC);
+        $deduction = Deduction::latest()->first();
 
-        $this->brutWiAfterDeduction = $this->brutWithoutDeduction - ($IPR + $INPP + $ONEM + $CNSS + $deductionSalary);
-        
+        $employee = Employee::with([
+            'category',
+            'familyState' => function($query) {
+                $query->where('relationType', RelationTypeEnum::CHILD->value);
+            }
+        ])->findOrFail($this->employee_id);
 
-        //Select advance
-        $advance = Advance::find($this->employee_id);
-        if($advance)
+        $advance = Advance::where('employee_id', $this->employee_id)
+                  ->where('credit_amount', '>', 0)
+                  ->first();
+
+        $this->baseSalary = $employee->category->amount;
+        $this->childCount = $employee->familyState->count();
+        $this->dayMounth = $employee->category->workDay;
+        $this->workDay = round($employee->category->workDay - $this->restDay, 2);
+        $this->baseMounthlyDay = round($this->baseSalary / max(1, $this->dayMounth), 2);
+        $this->dayPay = round($this->baseSalary / max(1, $this->dayMounth), 2);
+        $this->overtimesPay = round($this->overtimes * $employee->category->hourAmount, 2);
+
+        if($this->restDay > 0)
         {
-            $remainToRefundAdvance = $advance->toRefund;
-            $totalCredit = $advance->amount;
-            //Make deduction if remaining advance is over refund amount
-            if($remainToRefundAdvance >= $toRefundAdvance)
-            {
-                $this->brutWiAfterDeduction = $brutWiAfterDeduction - $toRefundAdvance;
-            }
-
-            //Make deduction if remaining advance is over refund amount
-            elseif($remainToRefundAdvance < $toRefundAdvance)
-            {
-                $this->brutWiAfterDeduction = $brutWiAfterDeduction - $remainToRefundAdvance;
-                $toRefundAdvance = $remainToRefundAdvance;
-            }
+            $this->restDayCost = round($this->dayPay * $this->restDay, 2);
+        }
+        if($this->justifyDay > 0)
+        {
+            $this->justifyDayPay = round($this->dayPay * $this->justifyDay, 2);
         }
         
-        //Submit payment
-        $check = Payment::where('employee_id', $this->employee_id)
-                        ->where('motif', $this->motif)
-                        ->exists();
-        if ($check) {
-            session()->flash('danger', $this->search." a déjà eu le salaire : ".$this->motif );
-            return redirect()->route('payment.create');
+
+        
+        $this->housingMounth = $employee->category->housing;
+        $this->housingDay = round($this->housingMounth / max(1, $this->dayMounth), 2);
+        $this->transportationCostMounth = $employee->category->transportationCost;
+        $this->transportationCostDay = round($this->transportationCostMounth / max(1, $this->dayMounth), 2);
+        $this->familialAllocationMounth = round($employee->category->familialAllocation * $this->childCount, 2);
+        $this->familialAllocationDay = round($this->familialAllocationMounth / max(1, $this->dayMounth), 2);
+        
+        $this->totalDue = ($this->baseSalary + $this->overtimesPay + $this->assudityBonus + $this->riskBonus + $this->performanceBonus + $this->justifyDayPay) - $this->restDayCost;
+       
+        $this->totalAdvantage = round($this->housingMounth + $this->transportationCostMounth + $this->familialAllocationMounth, 2);
+        
+        $this->brutSalary = round($this->totalAdvantage + $this->totalDue, 2);
+
+        $this->CNSS = $deduction->CNSS;
+        $this->INPP = $deduction->INPP;
+        $this->IPR = $deduction->IPR;
+        $this->ONEM = $deduction->ONEM;
+        $this->refund = $deduction->refundAdvanceAmount;
+        $this->deductionSalary = $deduction->deductionSalary;
+
+        $this->CNSSAmount = round(($this->brutSalary * $this->CNSS) / 100, 2);
+        $this->INPPAmount = round(($this->brutSalary * $this->INPP) / 100, 2);
+        $this->IPRAmount  = round(($this->brutSalary * $this->IPR) / 100, 2);
+        $this->ONEMAmount = round(($this->brutSalary * $this->ONEM) / 100, 2);
+
+        if ($advance) {
+            // On compare le montant prévu ($this->refundAmount) avec la dette réelle ($advance->remainToPay)
+            // On prend le plus petit des deux pour ne pas prélever plus que la dette.
+            
+            $this->amountToDeduct = min($this->refundAmount, $advance->remainToPay);
+        } else {
+            $this->amountToDeduct = 0;
         }
+
+        $this->totalDeduction = round($this->CNSSAmount 
+                                + $this->INPPAmount 
+                                + $this->IPRAmount 
+                                + $this->ONEMAmount 
+                                + $this->amountToDeduct, 2);
+
+        $this->netSalary = round($this->brutSalary - $this->totalDeduction, 2);
 
         $id = Auth::id();
-        Payment::create([
+        $payment = Payment::create([
             'employee_id' => $this->employee_id, 
-            'motif' => $this->motif, 
-            'totalAmount' => $this->brutWithoutDeduction,  
-            'netAmount' => $this->brutWiAfterDeduction,  
-            'restDay' => $this->restDay, 
-            'overtimesPay' => $overtimesPay, 
-            'overtimes' => $this->overtimes,
-            'assudityBonus' => $this->assudityBonus, 
-            'riskBonus' => $this->riskBonus,
-            'performanceBonus' => $this->performanceBonus, 
-            'CNSS'=> $deduction->CNSS, 
-            'INPP'=> $deduction->INPP, 
-            'ONEM'=> $deduction->ONEM,   
-            'IPR'=> $deduction->IPR,  
-            'refundAdvanceAmount' => $deduction->refundAdvanceAmount,   
-            'deductionSalary'=> $deduction->deductionSalary,  
-            'user_id' => $id
+            'motif' => $motif, 
+            'user_id' => $id,
+            //All for paySlip
+            'childCount' => $this->childCount,
+            'baseSalary' => $this->baseSalary,
+            'dayMounth' => $this->dayMounth,
+            'justifyDay' => $this->justifyDay,
+            'workDay' => $this->workDay,
+            //payment
+            'baseMounthlyDay' => $this->baseMounthlyDay,
+            'overtimesPay' => $this->overtimesPay,
+            //advantage
+            'housingDay' => $this->housingDay,
+            'housingMounth' => $this->housingMounth,
+            'transportationCostDay' => $this->transportationCostDay,
+            'transportationCostMounth' => $this->transportationCostMounth,
+            'familialAllocationDay' => $this->familialAllocationDay,
+            'familialAllocationMounth' => $this->familialAllocationMounth,
+            'totalAdvantage' => $this->totalAdvantage,
+            //deduction
+            'CNSS' => $this->CNSS,
+            'INPP' => $this->INPP,
+            'ONEM' => $this->ONEM,
+            'IPR' => $this->IPR,
+            'deductionSalary' => $this->deductionSalary,
+            'refund' => $this->refund,
+            'CNSSAmount' => $this->childCount,
+            'INPPAmount' => $this->INPPAmount,
+            'ONEMAmount' => $this->ONEMAmount,
+            'IPRAmount' => $this->IPRAmount,
+            'deductionSalaryAmount' => $this->deductionSalaryAmount,
+            'refundAmount' => $this->refundAmount,
+            'totalDeduction' => $this->totalDeduction,
+            //final
+            'brutSalary' => $this->brutSalary,
+            'netSalary' => $this->netSalary,
         ]);
+        session()->flash('danger', "Successfuly!...");
+        return redirect()->route('payment.index');
 
-        if($advance)
-        {
-            $remain = $advance->toRefund - $toRefundAdvance;
-            if($remain == 0)
-            {
-                $advance->delete();
-
-                session()->flash('success', "Paiement effectué pour :".$this->search." Motif : ".$this->motif );
-                return redirect()->route('payment.create');
-            }
-
-            $advance->update([
-                'toRefund' => $advance->toRefund - $toRefundAdvance,
-            ]);
-        }
-        $print = Payment::latest()->first();
-        session()->flash('success', "Paiement effectué pour :".$this->search." Motif : ".$this->motif );
-        return redirect()->route('payment.print', $print->id);
-    }
-
-    // Gender Enum
-    private function month(): array
-    {
-        return MonthEnum::cases();
     }
 
     public function render()

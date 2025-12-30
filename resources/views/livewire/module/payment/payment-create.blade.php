@@ -61,13 +61,13 @@
                             </ul>
                         @endif
 
-                        <label for="motif">Motif</label>
-                            <select required wire:model="motif" class="form-control">
-                                <option>Selectionner...</option>
-                                @foreach ($this->month() as $months)
-                                    <option value="{{ $months }}">{{ $months }}</option>
-                                @endforeach
-                            </select>
+                        <label for="">Selectionner le nom de l'Agent</label>
+                        <input 
+                            class="form-control"
+                            type="month"
+                            placeholder=""
+                            wire:model="motif"
+                        >
 
 
                         <label for="restDay">Jours d'abscence</label>

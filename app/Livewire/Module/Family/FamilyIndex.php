@@ -9,15 +9,11 @@ use App\Models\Employee;
 #[Layout('layouts.app')]
 class FamilyIndex extends Component
 {
-    public $fullName; 
-    public $matricule; 
-    public $nameCategory; 
+    public $employee; 
 
     public function mount($id)
     {
-        $employee = Employee::findOrFail($id);
-        $this->fullName = $employee->middleName ." ". $employee->lastName ." ". $employee->firstName;
-        $this->matricule = $employee->matricule;
+        $this->employee = Employee::with(['category', 'familyState'])->findOrFail($id);
     }
 
     public function render()

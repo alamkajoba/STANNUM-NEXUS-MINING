@@ -28,28 +28,57 @@
                     @if($step == 1)
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Nom (MiddleName)</label>
-                            <input wire:model="middleName" class="form-control mb-2" type="text">
-                            @error('middleName') <span class="text-danger small">Vérifiez ce champ</span> @enderror
+                            <div class="mb-1">
+                                <label>Nom (MiddleName)</label>
+                                <input wire:model="middleName" class="form-control mb-2" type="text">
+                                @error('middleName') <span style="color: rgb(252, 0, 0)" class="flex">Remplissez le champ uniquement des lèttres et (-)</span> @enderror
+                            </div>
 
-                            <label>Postnom (LastName)</label>
-                            <input wire:model="lastName" class="form-control mb-2" type="text">
-                            
-                            <label>Prénom</label>
-                            <input wire:model="firstName" class="form-control mb-2" type="text">
+                            <div class="mb-1">
+                                <label>Postnom (LastName)</label>
+                                <input wire:model="lastName" class="form-control mb-2" type="text">
+                                @error('lastName') <span style="color: rgb(252, 0, 0)" class="flex">Remplissez le champ uniquement des lèttres et (-)</span> @enderror
+                            </div>
+
+                            <div class="mb-1">
+                                <label>Prénom</label>
+                                <input wire:model="firstName" class="form-control mb-2" type="text">
+                                @error('firstName') <span style="color: rgb(252, 0, 0)" class="flex">Remplissez le champ uniquement des lèttres et (-)</span> @enderror
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <label>Genre</label>
-                            <select wire:model="gender" class="form-control mb-2">
-                                <option value="">Sélectionner...</option>
-                                @foreach ($this->gender() as $g) <option value="{{ $g }}">{{ $g }}</option> @endforeach
-                            </select>
-                            
-                            <label>Date de naissance</label>
-                            <input wire:model="birthDate" class="form-control mb-2" type="date">
-                            
-                            <label>Lieu de naissance</label>
-                            <input wire:model="birthTown" class="form-control mb-2" type="text">
+                            <div class="mb-1">
+                                <label>Genre</label>
+                                <select wire:model="gender" class="form-control mb-2">
+                                    <option value="">Sélectionner...</option>
+                                    @foreach ($this->gender() as $g) <option value="{{ $g }}">{{ $g }}</option> @endforeach
+                                </select>
+                                @error('gender') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Selectionnez une valeur entre homme, femme
+                                    </span> 
+                                @enderror
+                            </div>
+
+                            <div class="mb-1">
+                                <label>Date de naissance</label>
+                                <input wire:model="birthDate" class="form-control mb-2" type="date">
+                                @error('birthDate') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Verifiez la date
+                                    </span> 
+                                @enderror
+                            </div>
+
+                            <div class="mb-1">
+                                <label>Lieu de naissance</label>
+                                <input wire:model="birthTown" class="form-control mb-2" type="text">
+                                @error('birthTown') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Ce champ est réquis
+                                    </span> 
+                                @enderror
+                            </div>
                         </div>
                     </div>
                     @endif
@@ -58,21 +87,56 @@
                     @if($step == 2)
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Téléphone Personnel</label>
-                            <input wire:model="phone" class="form-control mb-2" type="text" placeholder="+243...">
-                            
-                            <label>Téléphone d'Urgence</label>
-                            <input wire:model="emergencyPhone" class="form-control mb-2" type="text">
+                            <div class="mb-1">
+                                <label>Téléphone Personnel</label>
+                                <input wire:model="phone" class="form-control mb-2" type="text" placeholder="+243...">
+                                @error('phone') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Ce champ est réquis
+                                    </span> 
+                                @enderror
+                            </div>
 
-                            <label>Email Personnel</label>
-                            <input wire:model="mail" class="form-control mb-2" type="email">
+                            <div class="mb-1">
+                                <label>Téléphone d'Urgence</label>
+                                <input wire:model="emergencyPhone" class="form-control mb-2" type="text">
+                                @error('emergencyPhone') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Ce champ est réquis
+                                    </span> 
+                                @enderror
+                            </div>
+
+                            <div class="mb-1">
+                                <label>Email Personnel</label>
+                                <input wire:model="mail" class="form-control mb-2" type="text">
+                                @error('mail') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Ce champ est réquis
+                                    </span> 
+                                @enderror
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <label>Nationalité</label>
-                            <input wire:model="nationalite" class="form-control mb-2" type="text">
+                            <div class="mb-1">
+                                <label>Nationalité</label>
+                                <input wire:model="nationalite" class="form-control mb-2" type="text">
+                                @error('nationalite') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Ce champ est réquis
+                                    </span> 
+                                @enderror
+                            </div>
 
-                            <label>Adresse Résidentielle</label>
-                            <input wire:model="address" class="form-control mb-2" type="text">
+                            <div class="mb-1">
+                                <label>Adresse Résidentielle</label>
+                                <input wire:model="address" class="form-control mb-2" type="text">
+                                @error('address') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Ce champ est réquis
+                                    </span> 
+                                @enderror
+                            </div>
                         </div>
                     </div>
                     @endif
@@ -81,24 +145,51 @@
                     @if($step == 3)
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Affectation</label>
-                            <input wire:model="affectation" class="form-control mb-2" type="text">
+                            <div class="mb-1">
+                                <label>Affectation</label>
+                                <input wire:model="affectation" class="form-control mb-2" type="text">
+                                @error('affectation') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Ce champ est réquis
+                                    </span> 
+                                @enderror
+                            </div>
 
-                            <label>Poste / Titre</label>
-                            <input wire:model="jobTitle" class="form-control mb-2" type="text">
+                            <div class="mb-1">
+                                <label>Poste / Titre</label>
+                                <input wire:model="jobTitle" class="form-control mb-2" type="text">
+                                @error('jobTitle') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Ce champ est réquis
+                                    </span> 
+                                @enderror
+                            </div>
 
-                            <label>Catégorie</label>
-                            <select wire:model="categoryName" class="form-control mb-2">
-                                <option value="">Sélectionner...</option>
-                                @foreach ($selectCategory as $cat)
-                                    <option value="{{ $cat->id }}">{{ $cat->nameCategory }}</option>
-                                @endforeach
-                            </select>
+                            <div class="mb-1">
+                                <label>Catégorie</label>
+                                <select wire:model="categoryName" class="form-control mb-2">
+                                    <option value="">Sélectionner...</option>
+                                    @foreach ($selectCategory as $cat)
+                                        <option value="{{ $cat->id }}">{{ $cat->nameCategory }}</option>
+                                    @endforeach
+                                </select>
+                                @error('categoryName') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Ce champ est réquis
+                                    </span> 
+                                @enderror
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <label>Email Professionnel</label>
-                            <input wire:model="proMail" class="form-control mb-2" type="email">
-
+                            <div class="mb-1">
+                                <label>Email Professionnel</label>
+                                <input wire:model="proMail" class="form-control mb-2" type="email">
+                                @error('proMail') 
+                                    <span style="color: rgb(252, 0, 0)" class="flex">
+                                        Ce champ est réquis
+                                    </span> 
+                                @enderror
+                            </div>
                         </div>
                     </div>
                     @endif

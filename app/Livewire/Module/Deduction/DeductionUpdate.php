@@ -11,22 +11,22 @@ use Illuminate\Support\Facades\Auth;
 #[Layout('layouts.app')]
 class DeductionUpdate extends Component
 {
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $CNSS = '';
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $INPP = '';
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $IPR = '';
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $ONEM = '';
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $refundAdvanceAmount = '';
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $deductionSalary = '';
 
     public $deductionId;

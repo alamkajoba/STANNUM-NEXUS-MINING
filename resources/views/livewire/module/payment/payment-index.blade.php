@@ -52,7 +52,7 @@
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{ $payments->employee->middleName }} {{ $payments->employee->lastName }} {{ $payments->employee->firstName }}</td>
                                 <td>{{ $payments->employee->matricule }}</td>
-                                <td>{{ $payments->motif }}</td>
+                                <td>{{ ucfirst(\Carbon\Carbon::parse($payments->motif)->locale('fr')->translatedFormat('F Y')) }}</td>
                                 <td>
                                     <div>
                                         <a href="{{route('payment.print', $payments->id)}}" class="btn text-white" style="background-color: rgb(46, 13, 167);">

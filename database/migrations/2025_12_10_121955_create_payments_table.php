@@ -12,24 +12,41 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
+            // $table->unique(['agent_id', 'billing_period']);
             $table->id();
+            $table->unique(['employee_id', 'motif']);
             $table->string('motif'); 
-            $table->integer('restDay');  
-            $table->integer('overtimes'); 
-            $table->decimal('overtimesPay', 15, 2)->default(0.00);
-            $table->decimal('assudityBonus', 15, 2)->default(0.00);
-            $table->decimal('totalAmount', 15, 2)->default(0.00);
-            $table->decimal('netAmount', 15, 2)->default(0.00);
-            $table->decimal('riskBonus', 15, 2)->default(0.00);
-            $table->decimal('performanceBonus', 10, 2)->default(0.00);
             $table->float('CNSS'); 
             $table->float('INPP');  
             $table->float('ONEM'); 
             $table->float('IPR'); 
-            $table->float('refundAdvanceAmount');   
-            $table->float('deductionSalary'); 
-            $table->timestamps();
+            $table->integer('childCount');
+            $table->decimal('baseSalary', 10, 2)->default(0.00);
+            $table->integer('dayMounth');
+            $table->integer('justifyDay');
+            $table->integer('workDay');
+            $table->decimal('baseMounthlyDay', 10, 2)->default(0.00);
+            $table->decimal('overtimesPay', 10, 2)->default(0.00);
+            $table->decimal('housingDay', 10, 2)->default(0.00);
+            $table->decimal('housingMounth', 10, 2)->default(0.00);
+            $table->decimal('transportationCostDay', 10, 2)->default(0.00);
+            $table->decimal('transportationCostMounth', 10, 2)->default(0.00);
+            $table->decimal('familialAllocationDay', 10, 2)->default(0.00);
+            $table->decimal('familialAllocationMounth', 10, 2)->default(0.00);
+            $table->decimal('totalAdvantage', 10, 2)->default(0.00);
+            $table->decimal('deductionSalary', 10, 2)->default(0.00);
+            $table->decimal('refund', 10, 2)->default(0.00);
+            $table->decimal('CNSSAmount', 10, 2)->default(0.00);
+            $table->decimal('INPPAmount', 10, 2)->default(0.00);
+            $table->decimal('ONEMAmount', 10, 2)->default(0.00);
+            $table->decimal('IPRAmount', 10, 2)->default(0.00);
+            $table->decimal('deductionSalaryAmount', 10, 2)->default(0.00);
+            $table->decimal('refundAmount', 10, 2)->default(0.00);
+            $table->decimal('totalDeduction', 10, 2)->default(0.00);
+            $table->decimal('brutSalary', 10, 2)->default(0.00);
+            $table->decimal('netSalary', 10, 2)->default(0.00);
 
+            $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('employee_id');
 

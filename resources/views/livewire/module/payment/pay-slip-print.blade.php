@@ -2,7 +2,7 @@
     <div class="content-wrapper">
         <div class="header-section">
             <div class="logo-area">
-                <img src="{{asset('img/logo.jfif')}}" alt="Logo">
+                <img src="{{asset('img/finallogo.jpeg')}}" alt="Logo">
             </div>
             <div class="company-details">
                 <h6 class="fw-bold m-0">Stannum Nexus Mining sarl</h6>
@@ -14,7 +14,7 @@
         </div>
 
         <div class="bulletin-title text-center py-2 fw-bold">
-            Bulletin de paie du mois de {{ $payment->motif }}
+            Bulletin de paie du mois de {{ ucfirst(\Carbon\Carbon::parse($payment->motif)->locale('fr')->translatedFormat('F Y')) }}
         </div>
 
         {{-- Indentification --}}
@@ -28,7 +28,7 @@
                         <tr><td>Fonction :</td><td>{{ $payment->employee->jobTitle }}</td></tr>
                         <tr><td>Affectation :</td><td>{{ $payment->employee->affectation }}</td></tr>
                         <tr><td>Num. Compte :</td><td>-</td></tr>
-                        <tr><td>Nombre enfant :</td><td>-</td></tr>
+                        <tr><td>Nombre enfant :</td><td>{{ $payment->childCount }}</td></tr>
                     </table>
                 </td>
                 <td width="50%" class="p-0">
@@ -78,9 +78,13 @@
                     <td>Prime de rendement :</td><td class="text-center">{{ $payment->performanceBonus }}</td><td class="text-end">USD {{ $payment->performanceBonus }}</td>
                     <td>Prime de rendement :</td><td></td><td></td>
                 </tr>
-                <tr style="background-color: rgb(41, 5, 88)" class="total-row text-white fw-bold">
+                <tr>
+                    <td>Jour incapacité :</td><td class="text-center">{{ $payment->employee?->category?->dayAmount }}</td><td class="text-end">USD {{$payment->employee?->category?->amount }}</td>
+                    <td></td><td></td><td></td>
+                </tr>
+                <tr style="background-color: rgb(129, 129, 129)" class="total-row text-white fw-bold">
                     <td width="25%" class="text-end">Total</td><td colspan="2" class="text-end ">USD {{ $totalBonus}}</td>
-                    <td width="25%" class="text-end">Remunération Brute :</td><td colspan="2" class="text-end">USD {{ $totalBonus}}</td>
+                    <td width="25%" class="text-end">Remunération Brute :</td><td colspan="2" class="text-end">USD {{ $payment->baseSalary}}</td>
                 </tr>
             </tbody>
         </table>
@@ -96,7 +100,7 @@
                             <tr><td>Logement :</td><td class="text-end"></td><td class="text-end">USD {{$payment->employee?->category?->housing}}</td></tr>
                             <tr><td>Transport :</td><td class="text-center"></td><td class="text-end">USD {{$payment->employee?->category?->transportationCost}}</td></tr>
                             <tr><td>Allocation familliale :</td><td class="text-center"></td><td class="text-end">USD {{$payment->employee?->category?->familialAllocation}}</td></tr>
-                            <tr class="fw-bold bg-gray"><td colspan="2">Total Avantages</td><td class="text-end">USD {{$totalSocialBonus}}</td></tr>
+                            <tr class="fw-bold bg-gray"><td colspan="2">Total Avantages</td><td class="text-end">USD {{$payment->totalAdvantage}}</td></tr>
                             
                             
                         </tbody>
@@ -117,9 +121,9 @@
                 </td>
             </tr>
         </table>
-        <table class="table-main w-100">
+        <table class="table-info-section inner-table-bordered w-100">
             <tbody>
-                <tr style="background-color: rgb(41, 5, 88)" class="total-row text-white fw-bold">
+                <tr style="background-color: rgb(129, 129, 129)" class="text-white fw-bold">
                     <td colspan="2" width="35%" class="text-end">Salaire brute</td><td class="text-end ">USD {{$brutSalary}}</td>
                     <td colspan="2" width="35%" class="text-end">Total déduction :</td><td class="text-end">USD {{$totalDeduction}}</td>
                 </tr>
@@ -142,7 +146,7 @@
     <div class="bottom-legal-info border-top border-dark pt-2">
         <div class="d-flex justify-content-between px-2">
             <span>Numéro CNSS : ---------------------------------------------</span>
-            <span>Email : ----------------------------------------</span>
+            <span>Email : {{$payment->employee?->proMail}}</span>
         </div>
         <div class="d-flex justify-content-between px-2 mt-5">
             <span>SIGNATURE POUR RECEPTION</span>

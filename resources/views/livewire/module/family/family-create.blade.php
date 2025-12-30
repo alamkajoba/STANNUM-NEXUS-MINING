@@ -22,7 +22,7 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Ajouter un membre de famille</h1>
-        <a href="{{route('payment.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">
+        <a href="{{route('employee.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">
             Voir la liste
         </a>
     </div>
@@ -30,7 +30,7 @@
 
 
     <div class="justify-content-between card-header">
-        <form wire:submit="submitPayment()">
+        <form wire:submit="submitFamily()">
             @csrf
             
             <div class="container">
@@ -66,7 +66,7 @@
                             class="form-control"
                             type="text"
                             placeholder=""
-                            wire:model="search"
+                            wire:model="middleName"
                         >
 
                         
@@ -75,7 +75,7 @@
                             class="form-control"
                             type="text"
                             placeholder=""
-                            wire:model="search"
+                            wire:model="lastName"
                         >
 
                         <label for="">Prenom</label>
@@ -83,7 +83,7 @@
                             class="form-control"
                             type="text"
                             placeholder=""
-                            wire:model="search"
+                            wire:model="firstName"
                         >
                     </div>
 
@@ -102,9 +102,9 @@
                         <label for="">Date de naissance</label>
                         <input 
                             class="form-control"
-                            type="text"
+                            type="date"
                             placeholder=""
-                            wire:model="search"
+                            wire:model="birthDate"
                         >
 
                         
@@ -113,17 +113,17 @@
                             class="form-control"
                             type="text"
                             placeholder=""
-                            wire:model="search"
+                            wire:model="birthTown"
                         >
 
-                        <label for="gender">Type de relation</label>
-                        <select wire:model="type" id="type" class="form-control">
+                        <label for="relationType">Type de relation</label>
+                        <select wire:model="relationType" id="relationType" class="form-control">
                             <option>Selectionner...</option>
-                            @foreach ($this->type() as $types)
-                                <option value="{{ $types }}">{{ $types }}</option>
+                            @foreach ($this->relation() as $relations)
+                                <option value="{{ $relations }}">{{ $relations }}</option>
                             @endforeach
                         </select>
-                        @error('type')
+                        @error('relationType')
                             <span class="text-danger">Verifiez ce champ</span>
                         @enderror
                     </div>

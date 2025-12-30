@@ -3,11 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\RelationTypeEnum;
 
 class FamilyState extends Model
 {
     protected $fillable = [
-        'middleName','lastName','birthTown','birthDate','firstName','relation','gender','employee_id','user_id'
+        'firstName','middleName','lastName','birthTown','birthDate','relationType','gender','employee_id','user_id'
+    ];
+
+    protected $casts = [
+        'birthDate' => 'date',
+        'relationType' => RelationTypeEnum::class,
     ];
 
     //RelationShips

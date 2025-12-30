@@ -27,84 +27,92 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="nameCategory">Categorie</label>
-                        <input 
-                            required
-                            id="nameCategory"
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="nameCategory"
-                        >
-                        @error('nameCategory')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
+                        <div class="mb-1">
+                            <label for="nameCategory">Catégorie</label>
+                            <input 
+                                id="nameCategory"
+                                class="form-control"
+                                type="text"
+                                placeholder=""
+                                wire:model="nameCategory"
+                            >
+                            @error('nameCategory')
+                                <span style="color: rgb(252, 0, 0)" class="flex">Ce champs ne doit pas être vide</span>
+                            @enderror
+                        </div>
+                        
+                        <div class="mb-1">
+                            <label for="amount">Salaire de base</label>
+                            <input 
+                                required
+                                id="amount"
+                                class="form-control"
+                                type="number"
+                                step="0.01"
+                                placeholder=""
+                                wire:model="amount"
+                            >
+                            @error('amount')
+                                <span style="color: rgb(252, 0, 0)" class="flex">Saisissez une valeur superieure a 1</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1">
+                            <label for="workDay">Jours de travail</label>
+                            <input 
+                                id="workDay"
+                                class="form-control"
+                                type="number"
+                                placeholder=""
+                                wire:model="workDay"
+                            >
+                            @error('workDay')
+                                <span style="color: rgb(252, 0, 0)" class="flex">La valeur doit etre comprise entre 1 et 31</span>
+                            @enderror
+                        </div>    
+                        <div class="mb-1">
+                            <label for="workDay">Logement</label>
+                            <input 
+                                id="housing"
+                                class="form-control"
+                                type="number"
+                                step="0.01"
+                                placeholder=""
+                                wire:model="housing"
+                            >
+                            @error('housing')
+                                <span style="color: rgb(252, 0, 0)" class="flex">verifiez ce champs</span>
+                            @enderror
+                        </div>
 
-                        <label for="amount">Salaire</label>
-                        <input 
-                            required
-                            id="amount"
-                            class="form-control"
-                            type="number"
-                            step="0.01"
-                            placeholder=""
-                            wire:model="amount"
-                        >
-                        @error('amount')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
-
-                        <label for="workDay">Jours de travail</label>
-                        <input 
-                            required
-                            id="workDay"
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="workDay"
-                        >
-                        @error('workDay')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
-
-                        <label for="workDay">Logement</label>
-                        <input 
-                            id="housing"
-                            class="form-control"
-                            type="number"
-                            step="0.01"
-                            placeholder=""
-                            wire:model="housing"
-                        >
-                        @error('housing')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
-
-                        <label for="workDay">Transport</label>
-                        <input 
-                            id="transportationCost"
-                            class="form-control"
-                            type="number"
-                            step="0.01"
-                            placeholder=""
-                            wire:model="transportationCost"
-                        >
-                        @error('transportationCost')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
-
-                        <label for="familialAllocation">Allocation familliale (Par enfant)</label>
-                        <input 
-                            id="familialAllocation"
-                            class="form-control"
-                            type="number"
-                            step="0.01"
-                            placeholder=""
-                            wire:model="familialAllocation"
-                        >
-                        @error('familialAllocation')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
+                        <div class="mb-1">
+                            <label for="workDay">Transport</label>
+                            <input 
+                                id="transportationCost"
+                                class="form-control"
+                                type="number"
+                                step="0.01"
+                                placeholder=""
+                                wire:model="transportationCost"
+                            >
+                            @error('transportationCost')
+                                <span style="color: rgb(252, 0, 0)" class="flex">verifiez ce champs</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1">
+                            <label for="familialAllocation">Allocation familliale (Par enfant)</label>
+                            <input 
+                                id="familialAllocation"
+                                class="form-control"
+                                type="number"
+                                step="0.01"
+                                placeholder=""
+                                wire:model="familialAllocation"
+                            >
+                            @error('familialAllocation')
+                                <span style="color: rgb(252, 0, 0)" class="flex">verifiez ce champs</span>
+                            @enderror
+                        </div>
+                        
                     </div>
 
                     <div class="col-md-6">
