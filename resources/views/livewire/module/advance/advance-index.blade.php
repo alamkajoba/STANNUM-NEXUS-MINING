@@ -55,14 +55,8 @@
                                 <td>{{ $advances->employee->matricule }}</td>
                                 <td>{{ $advances->amount }} $</td>
                                 <td>{{ $advances->toRefund }} $</td>
-                                <td>
-                                    <div>
-                                        {{-- <a href="#" class="btn text-white" style="background-color: rgb(97, 97, 156)">
-                                            <i style="color:rgb(255, 255, 255);" class="fas fa-fw fa-print"></i>
-                                            Imprimer
-                                        </a> --}}
-                                    </div>
-                                </td>
+                                <td>                                    
+                                </td> 
                             </tr>
                         @empty
                             <tr>

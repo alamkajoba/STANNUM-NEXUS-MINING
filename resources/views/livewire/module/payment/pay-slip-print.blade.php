@@ -110,7 +110,6 @@
                     <table class="w-100 inner-table-bordered">
                         <thead><tr class="bg-gray"><th width="50%">Déduction</th><th width="20%">Taux</th><th>Montant</th></tr></thead>
                         <tbody>
-                            <tr><td>Crédit :</td><td class="text-end">{{$deduction->refundAdvanceAmount}}%</td><td class="text-end">USD 0</td></tr>
                             <tr><td>CNSS :</td><td class="text-end">{{$deduction->CNSS}}%</td><td class="text-end">USD {{$CNSS}}</td></tr>
                             <tr><td>INPP :</td><td class="text-end">{{$deduction->INPP}}%</td><td class="text-end">USD {{$INPP}}</td></tr>
                             <tr><td>ONEM :</td><td class="text-end">{{$deduction->ONEM}}%</td><td class="text-end">USD {{$ONEM}}</td></tr>

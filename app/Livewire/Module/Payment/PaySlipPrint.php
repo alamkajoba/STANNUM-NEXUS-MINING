@@ -17,6 +17,13 @@ class PaySlipPrint extends Component
     public $brutSalary;
     public $totalDeduction;
     public $actifDay;
+    public $refund = 0;
+
+    // Advance repayment history
+    public $advance;
+    public $advanceRepayments = [];
+    public $totalRepaid = 0.00;
+    public $remainingAdvance = 0.00;
 
     public $INPP;
     public $CNSS;
@@ -51,8 +58,26 @@ class PaySlipPrint extends Component
         $this->ONEM =  $this->brutSalary  *  ($this->deduction->ONEM /100);
         $this->INPP =  $this->brutSalary  *  ($this->deduction->INPP /100);
         $this->deductionSalary =  $this->brutSalary  *  ($this->deduction->deductionSalary /100);
-        $this->totalDeduction = ($this->IPR + $this->CNSS + $this->ONEM + $this->INPP + $this->deductionSalary);
+        // Include any advance refund applied on the payment
+        $this->refund = $this->payment->refundAmount ?? 0;
+        $this->totalDeduction = ($this->IPR + $this->CNSS + $this->ONEM + $this->INPP + $this->deductionSalary + $this->refund);
         $this->totalSalary = $this->brutSalary - $this->totalDeduction;
+
+        // Load active advance and its repayment history for this employee
+        $this->advance = \App\Models\Advance::where('employee_id', $this->payment->employee->id)
+                            ->orderByDesc('created_at')
+                            ->first();
+
+        if ($this->advance) {
+            $this->advanceRepayments = $this->advance->repayments()->with(['payment', 'user'])->get();
+            $this->totalRepaid = (float) $this->advanceRepayments->sum('amount');
+            // remainingAdvance is whatever toRefund currently shows
+            $this->remainingAdvance = (float) $this->advance->toRefund;
+        } else {
+            $this->advanceRepayments = collect();
+            $this->totalRepaid = 0.00;
+            $this->remainingAdvance = 0.00;
+        }
     }
 
     public function render()

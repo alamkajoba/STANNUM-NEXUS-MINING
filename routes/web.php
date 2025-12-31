@@ -29,6 +29,10 @@ use App\Livewire\Module\User\AssignPermission;
 use App\Livewire\Module\User\SetPassword;
 use App\Livewire\Module\Notify\PayNotify;
 use App\Livewire\Module\Notify\NoteNotify;
+use App\Livewire\Module\Advance\AdvanceShow;
+use App\Livewire\Module\Advance\AdvanceHistory;
+use App\Livewire\Module\Advance\EmployeeAdvanceDetail;
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -77,6 +81,9 @@ Route::middleware('auth')->prefix('family')->name('family.')->group(function () 
 Route::middleware('auth')->prefix('advance')->name('advance.')->group(function () {
     Route::get('index', AdvanceIndex::class)->name('index');
     Route::get('create', AdvanceCreate::class)->name('create');
+    Route::get('show/{id}', AdvanceShow::class)->name('show');
+    Route::get('history', AdvanceHistory::class)->name('history');
+    Route::get('employee/{employeeId}', EmployeeAdvanceDetail::class)->name('employee');
 });
 
 

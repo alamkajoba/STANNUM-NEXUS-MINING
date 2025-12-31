@@ -71,6 +71,10 @@
                                 Effectuer une avance
                             </a>
                         @endcan
+                        <hr style="color:rgb(46, 13, 167);">
+                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('advance.history') }}">
+                            Historique des remboursement
+                        </a> 
                     </div>
                 </div>
             </li>
