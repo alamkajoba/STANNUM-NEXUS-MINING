@@ -55,7 +55,7 @@
                         @forelse ($category as $categories)
                             <tr >
                                 <td>
-                                    {{ ($categorie->currentPage() - 1) * $categorie->perPage() + $loop->iteration }}
+                                    {{ ($category->currentPage() - 1) * $category->perPage() + $loop->iteration }}
                                 </td>
                                 <td>{{ $categories->nameCategory }}</td>
                                 <td>{{ $categories->amount }} $</td>

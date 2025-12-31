@@ -36,9 +36,9 @@
                         <tr><td>Salaire de base :</td><td class="fw-bold">USD {{$payment->employee?->category?->amount}}</td></tr>
                         <tr><td>Indemnite Chairman :</td><td>-</td></tr>
                         <tr><td>Annuité :</td><td>-</td></tr>
-                        <tr><td>Indemnite Rétention :</td><td></td></tr>
+                        <tr><td>Indemnite Rétention :</td><td>-</td></tr>
                         <tr><td>Jours du mois :</td><td>{{ $payment->employee?->category?->workDay }}</td></tr>
-                        <tr><td>Jours Présent :</td><td>{{ $actifDay }}</td></tr>
+                        <tr><td>Jours Présent :</td><td>{{ $payment->workDay }}</td></tr>
                         <tr><td>Date d'engagement:</td><td>-</td></tr>
                     </table>
                 </td>
@@ -59,32 +59,28 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Base Mensuelle :</td><td class="text-center">{{ $payment->employee?->category?->dayAmount }}</td><td class="text-end">USD {{$payment->employee?->category?->amount }}</td>
-                    <td>Base Mensuelle :</td><td></td><td></td>
-                </tr>
-                <tr>
                     <td>Heures Sup. :</td><td class="text-center">{{ $payment->overtimes }}</td><td class="text-end">USD {{ $payment->overtimesPay}}</td>
                     <td>Heures Sup :</td><td></td><td></td>
                 </tr>
                 <tr>
-                    <td>Prime d'assiduité :</td><td class="text-center">{{ $payment->assudityBonus }}</td><td class="text-end">USD {{ $payment->assudityBonus }}</td>
+                    <td>Prime d'assiduité :</td><td class="text-center">-</td><td class="text-end">USD {{ $payment->assudityBonus }}</td>
                     <td>Prime d'assiduité :</td><td></td><td></td>
                 </tr>
                 <tr>
-                    <td>Prime de risque :</td><td class="text-center">{{ $payment->riskBonus }}</td><td class="text-end">USD {{ $payment->riskBonus }}</td>
+                    <td>Prime de risque :</td><td class="text-center">-</td><td class="text-end">USD {{ $payment->riskBonus }}</td>
                     <td>Prime de risque :</td><td></td><td></td>
                 </tr>
                 <tr>
-                    <td>Prime de rendement :</td><td class="text-center">{{ $payment->performanceBonus }}</td><td class="text-end">USD {{ $payment->performanceBonus }}</td>
+                    <td>Prime de rendement :</td><td class="text-center">-</td><td class="text-end">USD {{ $payment->performanceBonus }}</td>
                     <td>Prime de rendement :</td><td></td><td></td>
                 </tr>
                 <tr>
-                    <td>Jour incapacité :</td><td class="text-center">{{ $payment->employee?->category?->dayAmount }}</td><td class="text-end">USD {{$payment->employee?->category?->amount }}</td>
+                    <td>Jour incapacité :</td><td class="text-center">{{ $payment->justifyDay }}</td><td class="text-end">USD {{$payment->justifyDayPay }}</td>
                     <td></td><td></td><td></td>
                 </tr>
-                <tr style="background-color: rgb(129, 129, 129)" class="total-row text-white fw-bold">
-                    <td width="25%" class="text-end">Total</td><td colspan="2" class="text-end ">USD {{ $totalBonus}}</td>
-                    <td width="25%" class="text-end">Remunération Brute :</td><td colspan="2" class="text-end">USD {{ $payment->baseSalary}}</td>
+                <tr style="background-color: rgb(75, 72, 72)" class="total-row text-white fw-bold">
+                    <td width="25%" class="text-end">Total</td><td colspan="2" class="text-end ">USD {{ $payment->totalDue}}</td>
+                    <td width="25%" class="text-end">Remunération Brute :</td><td colspan="2" class="text-end">USD {{ $payment->totalDue}}</td>
                 </tr>
             </tbody>
         </table>
@@ -97,9 +93,9 @@
                     <table class="w-100 inner-table-bordered">
                         <thead><tr class="bg-gray"><th width="50%">Avantage Social</th><th width="20%">Jr</th><th>Montant</th></tr></thead>
                         <tbody>
-                            <tr><td>Logement :</td><td class="text-end"></td><td class="text-end">USD {{$payment->employee?->category?->housing}}</td></tr>
-                            <tr><td>Transport :</td><td class="text-center"></td><td class="text-end">USD {{$payment->employee?->category?->transportationCost}}</td></tr>
-                            <tr><td>Allocation familliale :</td><td class="text-center"></td><td class="text-end">USD {{$payment->employee?->category?->familialAllocation}}</td></tr>
+                            <tr><td>Logement :</td><td class="text-center">-</td><td class="text-end">USD {{$payment->employee?->category?->housing}}</td></tr>
+                            <tr><td>Transport :</td><td class="text-center">-</td><td class="text-end">USD {{$payment->employee?->category?->transportationCost}}</td></tr>
+                            <tr><td>Allocation familliale :</td><td class="text-center">-</td><td class="text-end">USD {{$payment->employee?->category?->familialAllocation}}</td></tr>
                             <tr class="fw-bold bg-gray"><td colspan="2">Total Avantages</td><td class="text-end">USD {{$payment->totalAdvantage}}</td></tr>
                             
                             
@@ -110,12 +106,12 @@
                     <table class="w-100 inner-table-bordered">
                         <thead><tr class="bg-gray"><th width="50%">Déduction</th><th width="20%">Taux</th><th>Montant</th></tr></thead>
                         <tbody>
-                            <tr><td>Crédit :</td><td class="text-end">{{$deduction->refundAdvanceAmount}}%</td><td class="text-end">USD 0</td></tr>
-                            <tr><td>CNSS :</td><td class="text-end">{{$deduction->CNSS}}%</td><td class="text-end">USD {{$CNSS}}</td></tr>
-                            <tr><td>INPP :</td><td class="text-end">{{$deduction->INPP}}%</td><td class="text-end">USD {{$INPP}}</td></tr>
-                            <tr><td>ONEM :</td><td class="text-end">{{$deduction->ONEM}}%</td><td class="text-end">USD {{$ONEM}}</td></tr>
-                            <tr><td>IPR :</td><td class="text-end">{{$deduction->IPR}}%</td><td class="text-end">USD {{$IPR}}</td></tr>
-                            <tr><td>Retenue :</td><td class="text-end">{{$deduction->deductionSalary}} %</td><td class="text-end">USD {{$deductionSalary}}</td></tr>
+                            <tr><td>Crédit :</td><td class="text-end">{{$payment->refundAdvanceAmount}}%</td><td class="text-end">USD 0</td></tr>
+                            <tr><td>CNSS :</td><td class="text-end">{{$payment->CNSS}}%</td><td class="text-end">USD {{$payment->CNSSAmount}}</td></tr>
+                            <tr><td>INPP :</td><td class="text-end">{{$payment->INPP}}%</td><td class="text-end">USD {{$payment->INPPAmount}}</td></tr>
+                            <tr><td>ONEM :</td><td class="text-end">{{$payment->ONEM}}%</td><td class="text-end">USD {{$payment->ONEMAmount}}</td></tr>
+                            <tr><td>IPR :</td><td class="text-end">{{$payment->IPR}}%</td><td class="text-end">USD {{$payment->IPRAmount}}</td></tr>
+                            <tr><td>Retenue :</td><td class="text-end">{{$payment->deductionSalary}} %</td><td class="text-end">USD {{$payment->deductionSalaryAmount}}</td></tr>
                         </tbody>
                     </table>
                 </td>
@@ -124,8 +120,8 @@
         <table class="table-info-section inner-table-bordered w-100">
             <tbody>
                 <tr style="background-color: rgb(129, 129, 129)" class="text-white fw-bold">
-                    <td colspan="2" width="35%" class="text-end">Salaire brute</td><td class="text-end ">USD {{$brutSalary}}</td>
-                    <td colspan="2" width="35%" class="text-end">Total déduction :</td><td class="text-end">USD {{$totalDeduction}}</td>
+                    <td colspan="2" width="35%" class="text-end">Salaire brute</td><td class="text-end ">USD {{$payment->brutSalary}}</td>
+                    <td colspan="2" width="35%" class="text-end">Total déduction :</td><td class="text-end">USD {{$payment->totalDeduction}}</td>
                 </tr>
             </tbody>
         </table>
@@ -134,9 +130,9 @@
                 <table class="w-100 inner-table-bordered">
                     
                     <tbody class="text-dark">
-                        <tr><td colspan="2" width="70%">Salaire brute :</td><td class="text-end">USD {{$brutSalary}}</td></tr>
-                        <tr><td colspan="2" width="70%">Total déduction  :</td><td class="text-end">USD {{$totalDeduction}}</td></tr>
-                        <tr><td colspan="2" width="70%">Salaire net :</td><td class="text-end">USD {{$totalSalary}}</td></tr>
+                        <tr><td colspan="2" width="70%">Salaire brute :</td><td class="text-end">USD {{$payment->brutSalary}}</td></tr>
+                        <tr><td colspan="2" width="70%">Total déduction  :</td><td class="text-end">USD {{$payment->totalDeduction}}</td></tr>
+                        <tr><td colspan="2" width="70%">Salaire net :</td><td class="text-end">USD {{$payment->totalSalary}}</td></tr>
                     </tbody>
                 </table>
             </td>
