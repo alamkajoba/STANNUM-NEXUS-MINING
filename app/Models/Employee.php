@@ -46,6 +46,9 @@ class Employee extends Model
         'jobTitle',
         'affectation',
     ];
+    protected $casts = [
+        'birthDate' => 'date',
+    ];
 
     public function routeNotificationForMail($notification)
     {

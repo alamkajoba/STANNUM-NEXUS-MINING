@@ -51,7 +51,9 @@
                     <tbody >
                         @forelse ($employee as $employees)
                             <tr >
-                                <td>{{$loop->iteration}}</td>
+                                <td>
+                                    {{ ($employee->currentPage() - 1) * $employee->perPage() + $loop->iteration }}
+                                </td>
                                 <td>
                                     {{ $employees->middleName }}
                                     {{ $employees->lastName }}
@@ -67,9 +69,9 @@
                                     </a>
                                 </td>
                                 <td>
-                                    {{-- <a href="{{route('employee.update', $employees->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
+                                    <a href="{{route('employee.update', $employees->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
                                         Modifier
-                                    </a> --}}
+                                    </a>
                                 </td>
                             </tr>
                         @empty

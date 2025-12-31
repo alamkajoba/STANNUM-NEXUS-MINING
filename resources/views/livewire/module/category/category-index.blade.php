@@ -54,7 +54,9 @@
                     <tbody >
                         @forelse ($category as $categories)
                             <tr >
-                                <td>{{$loop->iteration}}</td>
+                                <td>
+                                    {{ ($categorie->currentPage() - 1) * $categorie->perPage() + $loop->iteration }}
+                                </td>
                                 <td>{{ $categories->nameCategory }}</td>
                                 <td>{{ $categories->amount }} $</td>
                                 <td>{{ $categories->workDay }} Jours</td>
