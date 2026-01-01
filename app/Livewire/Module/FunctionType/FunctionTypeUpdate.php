@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Livewire\Module\Category;
+namespace App\Livewire\Module\FunctionType;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
+use App\Models\FunctionType;
 
 #[Layout('layouts.app')]
-class CategoryUpdate extends Component
+class FunctionTypeUpdate extends Component
 {
      #[Validate('required|min:3|string')]
-    public $nameCategory = '';
+    public $nameFunction = '';
 
     #[Validate('required|numeric|min:0')]
     public $amount = 0.00;
@@ -29,28 +29,28 @@ class CategoryUpdate extends Component
     #[Validate('nullable|numeric|min:0')]
     public $familialAllocation = 0.00;
     
-    public $categoryId;
+    public $functionId;
     
     public function mount($id)
     {
-        $category = Category::findOrFail($id);
-        $this->nameCategory = $category->nameCategory;
-        $this->amount = $category->amount;
-        $this->workDay = $category->workDay;
-        $this->housing = $category->housing;
-        $this->familialAllocation = $category->familialAllocation;
-        $this->transportationCost = $category->transportationCost;
-        $this->categoryId = $category->id;
+        $function = FunctionType::findOrFail($id);
+        $this->nameFunction = $function->nameFunction;
+        $this->amount = $function->amount;
+        $this->workDay = $function->workDay;
+        $this->housing = $function->housing;
+        $this->familialAllocation = $function->familialAllocation;
+        $this->transportationCost = $function->transportationCost;
+        $this->functionId = $function->id;
     }
 
-    private function dataCategory(): array
+    private function dataFunctionType(): array
     {
         $dayAmount = $this->amount / max(1, $this->workDay);
         $hourAmount = $dayAmount / 8;
 
         $id = Auth::id();
         return [
-            'nameCategory' => $this->nameCategory,
+            'nameFunction' => $this->nameFunction,
             'amount' => $this->amount,
             'dayAmount' => $dayAmount,
             'hourAmount' => $hourAmount,
@@ -66,14 +66,14 @@ class CategoryUpdate extends Component
     {
         $this->validate();
 
-        $category = Category::find($this->categoryId);
-        $category->update($this->dataCategory());
-        session()->flash('success', "La categorie: ".$this->nameCategory. " a été modifiéé avec succès.");
-        return redirect()->to(route('category.index'));
+        $function = FunctionType::find($this->functionId);
+        $function->update($this->dataFunctionType());
+        session()->flash('success', "La Fonction: ".$this->nameFunction. " a été modifiéé avec succès.");
+        return redirect()->to(route('function.index'));
     }
 
     public function render()
     {
-        return view('livewire.module.category.category-update');
+        return view('livewire.module.function-type.function-type-update');
     }
 }

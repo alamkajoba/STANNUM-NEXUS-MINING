@@ -9,19 +9,6 @@ use App\Trait\Searchable;
 class Employee extends Model
 {
     use Notifiable;
-
-    use Searchable; 
-
-    // search
-    protected $searchableColumns = [
-        'firstName', 'middleName', 'lastName', 
-        'matricule', 'affectation', 'jobTitle'
-    ];
-
-    // relations
-    protected $searchableRelations = [
-        'category' => 'nameCategory'
-    ];
     
     protected $fillable = [
         //Personnal info and profil
@@ -36,15 +23,7 @@ class Employee extends Model
         'mail', 
         'address', 
         'nationality',
-        
-        //Personnal info and profil
-        'matricule', 
-        'proMail',
-        'category_id', 
         'user_id',
-        'proPhone',
-        'jobTitle',
-        'affectation',
     ];
     protected $casts = [
         'birthDate' => 'date',
@@ -62,9 +41,11 @@ class Employee extends Model
     // }
 
     //RelationShips
-    public function category()
+    
+
+    public function enrollment()
     {
-        return $this->belongsTo(Category::class);
+        return $this->hasOne(Enrollment::class);
     }
 
     public function payment()

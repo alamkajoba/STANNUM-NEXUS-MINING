@@ -217,6 +217,8 @@ class PaymentCreate extends Component
                 'category' => $employee?->category,
                 'accountNumber' => $employee?->accountNumber,
                 'childCount' => $this->childCount,
+                'baseSalary' => $this->baseSalary,
+                'workDay' => $this->workDay,
                 //Invoice section 1 brutDue and total
                 'abscence' => $this->restDay,
                 'absencePay' => $this->restDayCost,
@@ -236,6 +238,19 @@ class PaymentCreate extends Component
                 'totalAdvantage' => $this->totalAdvantage,
                 'totalDeduction' => $this->totalDeduction,
                 'brutSalary' => $this->brutSalary,
+                //Invoice section 3 Deductions
+                'CNSS' => $this->CNSS,
+                'ONEM' => $this->ONEM,
+                'INPP' => $this->INPPAmount,
+                'IPR' => $this->IPR,
+                'toRefundAdvance' => $this->refund,
+                'salaryDeduction' => $this->deductionSalary,
+                'CNSSAmount' => $this->CNSSAmount,
+                'ONEMAmount' => $this->ONEMAmount,
+                'INPPAmount' => $this->INPPAmount,
+                'IPRAmount' => $this->IPRAmount,
+                'toRefundAdvance' => $this->refundAmount,
+                'salaryDeductionAmount' => $this->deductionSalaryAmount,
             ], 
         ]);
         session()->flash('success', "Successfuly!...");

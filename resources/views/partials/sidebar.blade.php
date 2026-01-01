@@ -139,30 +139,30 @@
 
             <!-- Heading -->
             <div style="color:white;" class="sidebar-heading">
-               Gestion des Catégories
+               Gestion des Fonctions
             </div>
 
 
-            {{--Category--}}
+            {{--Functions--}}
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategory"
                     aria-expanded="true" aria-controls="collapseCategory">
                     <i style="color:white;" class="fa fa-cogs"></i>
-                    <span style="color:white">Catégories</span> 
+                    <span style="color:white">Fonctions</span> 
                 </a>
                 <div id="collapseCategory" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         @can('voir une categorie')
-                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('category.index') }}">
-                                Liste des catégories
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('function.index') }}">
+                                Liste des Fonctions
                             </a>    
                         @endcan
 
                         @can('creer une categorie')
-                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('category.create') }}">
-                                Ajouter une catégorie
+                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('function.create') }}">
+                                Ajouter une Fonction
                             </a>
                         @endcan
                     </div>

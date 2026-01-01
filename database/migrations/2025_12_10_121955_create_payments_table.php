@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('motif');
             $table->decimal('netSalary');
             $table->json('slipPrint')->nullable();
-
+            $table->softDeletes();
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('employee_id');

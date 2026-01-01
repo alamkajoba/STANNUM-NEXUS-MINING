@@ -4,16 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Trait\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Category extends Model
+class FunctionType extends Model
 {
-
     use Searchable;
+    use HasFactory;
     
-    protected $searchableColumns = ['nameCategory'];
+    protected $searchableColumns = ['nameFunction'];
 
     protected $fillable = [
-        'nameCategory', 
+        'nameFunction', 
         'amount',  
         'dayAmount', 
         'hourAmount',  
@@ -36,9 +37,10 @@ class Category extends Model
 
 
     //RelationShips
-    public function employee()
+
+    public function enrollment()
     {
-        return $this->hasMany(Employee::class);
+        return $this->hasMany(Enrollment::class);
     }
 
     public function user()

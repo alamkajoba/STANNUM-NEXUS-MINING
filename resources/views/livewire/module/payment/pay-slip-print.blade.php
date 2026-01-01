@@ -24,21 +24,23 @@
                     <table class="w-100 inner-table">
                         <tr><td width="35%">Matricule :</td><td class="fw-bold">{{ $payment->employee->matricule }}</td></tr>
                         <tr><td>Nom :</td><td class="fw-bold text-uppercase">{{ $payment->employee->lastName }} {{ $payment->employee->middleName }} {{ $payment->employee->firstName }}</td></tr>
-                        <tr><td>Catégorie :</td><td>{{ $payment->employee?->category?->nameCategory }}</td></tr>
-                        <tr><td>Fonction :</td><td>{{ $payment->employee->jobTitle }}</td></tr>
-                        <tr><td>Affectation :</td><td>{{ $payment->employee->affectation }}</td></tr>
+                        <tr><td>Fonction :</td><td>{{ $payment->slipPrint['function'] }}</td></tr>
+                        <tr><td>Section :</td><td>{{ $payment->slipPrint['section'] }}</td></tr>
+                        <tr><td>Département :</td><td>{{ $payment->slipPrint['department'] }}</td></tr>
+                        <tr><td>Site :</td><td>{{ $payment->slipPrint['site'] }}</td></tr>
                         <tr><td>Num. Compte :</td><td>-</td></tr>
                         <tr><td>Nombre enfant :</td><td>{{ $payment->childCount }}</td></tr>
                     </table>
                 </td>
                 <td width="50%" class="p-0">
                     <table class="w-100 inner-table">
-                        <tr><td>Salaire de base :</td><td class="fw-bold">USD {{$payment->employee?->category?->amount}}</td></tr>
+                        <tr><td>Catégorie profess :</td><td class="fw-bold">{{ $payment->slipPrint['category'] }}</td></tr>
+                        <tr><td>Salaire de base :</td><td class="fw-bold">USD {{ $payment->slipPrint['baseSalary'] }}</td></tr>
                         <tr><td>Indemnite Chairman :</td><td>-</td></tr>
                         <tr><td>Annuité :</td><td>-</td></tr>
                         <tr><td>Indemnite Rétention :</td><td>-</td></tr>
-                        <tr><td>Jours du mois :</td><td>{{ $payment->employee?->category?->workDay }}</td></tr>
-                        <tr><td>Jours Présent :</td><td>{{ $payment->workDay }}</td></tr>
+                        <tr><td>Jours du mois :</td><td>{{ $payment->slipPrint['workDay'] }}</td></tr>
+                        <tr><td>Absence :</td><td>{{ $payment->slipPrint['abscence'] }}</td></tr>
                         <tr><td>Date d'engagement:</td><td>-</td></tr>
                     </table>
                 </td>
@@ -59,28 +61,28 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Heures Sup. :</td><td class="text-center">{{ $payment->overtimes }}</td><td class="text-end">USD {{ $payment->overtimesPay}}</td>
+                    <td>Heures Sup. :</td><td class="text-center">{{ $payment->slipPrint['overtimes'] }}</td><td class="text-end">USD {{ $payment->slipPrint['overtimesPay']}}</td>
                     <td>Heures Sup :</td><td></td><td></td>
                 </tr>
                 <tr>
-                    <td>Prime d'assiduité :</td><td class="text-center">-</td><td class="text-end">USD {{ $payment->assudityBonus }}</td>
+                    <td>Prime d'assiduité :</td><td class="text-center">-</td><td class="text-end">USD {{ $payment->slipPrint['assuduity'] }}</td>
                     <td>Prime d'assiduité :</td><td></td><td></td>
                 </tr>
                 <tr>
-                    <td>Prime de risque :</td><td class="text-center">-</td><td class="text-end">USD {{ $payment->riskBonus }}</td>
+                    <td>Prime de risque :</td><td class="text-center">-</td><td class="text-end">USD {{ $payment->slipPrint['risk'] }}</td>
                     <td>Prime de risque :</td><td></td><td></td>
                 </tr>
                 <tr>
-                    <td>Prime de rendement :</td><td class="text-center">-</td><td class="text-end">USD {{ $payment->performanceBonus }}</td>
+                    <td>Prime de rendement :</td><td class="text-center">-</td><td class="text-end">USD {{ $payment->slipPrint['performance'] }}</td>
                     <td>Prime de rendement :</td><td></td><td></td>
                 </tr>
                 <tr>
-                    <td>Jour incapacité :</td><td class="text-center">{{ $payment->justifyDay }}</td><td class="text-end">USD {{$payment->justifyDayPay }}</td>
+                    <td>Jour incapacité :</td><td class="text-center">{{ $payment->slipPrint['justify'] }}</td><td class="text-end">USD {{$payment->slipPrint['justifyPay'] }}</td>
                     <td></td><td></td><td></td>
                 </tr>
                 <tr style="background-color: rgb(75, 72, 72)" class="total-row text-white fw-bold">
-                    <td width="25%" class="text-end">Total</td><td colspan="2" class="text-end ">USD {{ $payment->totalDue}}</td>
-                    <td width="25%" class="text-end">Remunération Brute :</td><td colspan="2" class="text-end">USD {{ $payment->totalDue}}</td>
+                    <td width="25%" class="text-end">Total</td><td colspan="2" class="text-end ">USD {{ $payment->slipPrint['totalAddiction']}}</td>
+                    <td width="25%" class="text-end">Remunération Brute :</td><td colspan="2" class="text-end">USD {{ $payment->slipPrint['brutDue']}}</td>
                 </tr>
             </tbody>
         </table>
@@ -93,10 +95,10 @@
                     <table class="w-100 inner-table-bordered">
                         <thead><tr class="bg-gray"><th width="50%">Avantage Social</th><th width="20%">Jr</th><th>Montant</th></tr></thead>
                         <tbody>
-                            <tr><td>Logement :</td><td class="text-center">-</td><td class="text-end">USD {{$payment->employee?->category?->housing}}</td></tr>
-                            <tr><td>Transport :</td><td class="text-center">-</td><td class="text-end">USD {{$payment->employee?->category?->transportationCost}}</td></tr>
-                            <tr><td>Allocation familliale :</td><td class="text-center">-</td><td class="text-end">USD {{$payment->employee?->category?->familialAllocation}}</td></tr>
-                            <tr class="fw-bold bg-gray"><td colspan="2">Total Avantages</td><td class="text-end">USD {{$payment->totalAdvantage}}</td></tr>
+                            <tr><td>Logement :</td><td class="text-center">-</td><td class="text-end">USD {{$payment->slipPrint['housing']}}</td></tr>
+                            <tr><td>Transport :</td><td class="text-center">-</td><td class="text-end">USD {{$payment->slipPrint['transportation']}}</td></tr>
+                            <tr><td>Allocation familliale :</td><td class="text-center">-</td><td class="text-end">USD {{$payment->slipPrint['familialAllocation']}}</td></tr>
+                            <tr class="fw-bold bg-gray"><td colspan="2">Total Avantages</td><td class="text-end">USD {{$payment->slipPrint['brutDue']}}</td></tr>
                             
                             
                         </tbody>
@@ -107,11 +109,11 @@
                         <thead><tr class="bg-gray"><th width="50%">Déduction</th><th width="20%">Taux</th><th>Montant</th></tr></thead>
                         <tbody>
                             <tr><td>Crédit :</td><td class="text-end">{{$payment->refundAdvanceAmount}}%</td><td class="text-end">USD 0</td></tr>
-                            <tr><td>CNSS :</td><td class="text-end">{{$payment->CNSS}}%</td><td class="text-end">USD {{$payment->CNSSAmount}}</td></tr>
-                            <tr><td>INPP :</td><td class="text-end">{{$payment->INPP}}%</td><td class="text-end">USD {{$payment->INPPAmount}}</td></tr>
-                            <tr><td>ONEM :</td><td class="text-end">{{$payment->ONEM}}%</td><td class="text-end">USD {{$payment->ONEMAmount}}</td></tr>
-                            <tr><td>IPR :</td><td class="text-end">{{$payment->IPR}}%</td><td class="text-end">USD {{$payment->IPRAmount}}</td></tr>
-                            <tr><td>Retenue :</td><td class="text-end">{{$payment->deductionSalary}} %</td><td class="text-end">USD {{$payment->deductionSalaryAmount}}</td></tr>
+                            <tr><td>CNSS :</td><td class="text-end">{{$payment->slipPrint['CNSS']}}%</td><td class="text-end">USD {{$payment->slipPrint['CNSSAmount']}}</td></tr>
+                            <tr><td>INPP :</td><td class="text-end">{{$payment->slipPrint['INPP']}}%</td><td class="text-end">USD {{$payment->slipPrint['INPPAmount']}}</td></tr>
+                            <tr><td>ONEM :</td><td class="text-end">{{$payment->slipPrint['ONEM']}}%</td><td class="text-end">USD {{$payment->slipPrint['ONEMAmount']}}</td></tr>
+                            <tr><td>IPR :</td><td class="text-end">{{$payment->slipPrint['IPR']}}%</td><td class="text-end">USD {{$payment->slipPrint['IPRAmount']}}</td></tr>
+                            <tr><td>Retenue :</td><td class="text-end">{{$payment->slipPrint['salaryDeduction']}} %</td><td class="text-end">USD {{$payment->slipPrint['salaryDeductionAmount']}}</td></tr>
                         </tbody>
                     </table>
                 </td>

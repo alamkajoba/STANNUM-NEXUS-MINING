@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('function_types', function (Blueprint $table) {
             $table->id();
-            $table->string('nameCategory'); 
+            $table->string('nameFunction'); 
             $table->decimal('amount', 15, 2)->default(0.00);
             $table->decimal('dayAmount', 15, 2)->default(0.00);
             $table->decimal('hourAmount', 15, 2)->default(0.00);
@@ -21,13 +21,14 @@ return new class extends Migration
             $table->decimal('housing', 15, 2)->default(0.00);
             $table->decimal('transportationCost', 15, 2)->default(0.00); 
             $table->decimal('familialAllocation', 15, 2)->default(0.00); 
+            $table->softDeletes();
             $table->timestamps();
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')
                     ->references('id')
                     ->on('users')
-                    ->onDelete('cascade');
+                    ->onDelete('restrict');
         });
     }
 
@@ -36,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('function_types');
     }
 };

@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 use App\Livewire\Module\Employee\EmployeeIndex;
 use App\Livewire\Module\Employee\EmployeeCreate;
 use App\Livewire\Module\Employee\EmployeeUpdate;
-use App\Livewire\Module\Category\CategoryIndex;
-use App\Livewire\Module\Category\CategoryCreate;
-use App\Livewire\Module\Category\CategoryUpdate;
 use App\Livewire\Module\Deduction\DeductionIndex;
 use App\Livewire\Module\Deduction\DeductionCreate;
 use App\Livewire\Module\Deduction\DeductionUpdate;
@@ -29,6 +26,9 @@ use App\Livewire\Module\User\AssignPermission;
 use App\Livewire\Module\User\SetPassword;
 use App\Livewire\Module\Notify\PayNotify;
 use App\Livewire\Module\Notify\NoteNotify;
+use App\Livewire\Module\FunctionType\FunctionTypeIndex;
+use App\Livewire\Module\FunctionType\FunctionTypeCreate;
+use App\Livewire\Module\FunctionType\FunctionTypeUpdate;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -59,11 +59,11 @@ Route::middleware('auth')->prefix('employee')->name('employee.')->group(function
     Route::get('update/{id}', EmployeeUpdate::class)->name('update');
 });
 
-#Category routes
-Route::middleware('auth')->prefix('category')->name('category.')->group(function () {
-    Route::get('index', CategoryIndex::class)->name('index');
-    Route::get('create', CategoryCreate::class)->name('create');
-    Route::get('update/{id}', CategoryUpdate::class)->name('update');
+#function routes
+Route::middleware('auth')->prefix('function')->name('function.')->group(function () {
+    Route::get('index', FunctionTypeIndex::class)->name('index');
+    Route::get('create', FunctionTypeCreate::class)->name('create');
+    Route::get('update/{id}', FunctionTypeUpdate::class)->name('update');
 });
 
 #FamilyState routes
