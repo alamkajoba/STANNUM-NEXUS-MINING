@@ -6,7 +6,7 @@
             Gestion des categories
         </h1>
         <div>
-            <a href="{{ route('category.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">Voir la liste</a>
+            <a href="{{ route('function.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">Voir la liste</a>
         </div>
     </div>
 
@@ -22,21 +22,21 @@
     @endif
     {{-- table --}}
     <div class="justify-content-between card-header">
-        <form wire:submit="updateCategory">
+        <form wire:submit="submitCategory">
             @csrf
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-1">
-                            <label for="nameCategory">Catégorie</label>
+                            <label for="nameFunction">Fonction</label>
                             <input 
-                                id="nameCategory"
+                                id="nameFunction"
                                 class="form-control"
                                 type="text"
                                 placeholder=""
-                                wire:model="nameCategory"
+                                wire:model="nameFunction"
                             >
-                            @error('nameCategory')
+                            @error('nameFunction')
                                 <span style="color: rgb(252, 0, 0)" class="flex">Ce champs ne doit pas être vide</span>
                             @enderror
                         </div>
@@ -112,6 +112,7 @@
                                 <span style="color: rgb(252, 0, 0)" class="flex">verifiez ce champs</span>
                             @enderror
                         </div>
+                        
                     </div>
 
                     <div class="col-md-6">
@@ -121,12 +122,11 @@
                 </div>
                 <div>
                     <button type="submit" style="background-color: rgb(46, 13, 167);" class="btn text-white py-2 my-3">
-                        Modifier
+                        Valider
                     </button>
                 </div>
             </div>
         </form>
     </div>  
 </div>
-
 

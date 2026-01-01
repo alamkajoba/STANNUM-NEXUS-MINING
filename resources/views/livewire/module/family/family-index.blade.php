@@ -1,6 +1,6 @@
 <div class="card shadow-sm">
     <div style="background-color: rgb(46, 13, 167);" class="card-header text-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Dossier Agent : {{$employee->middleName}}_{{$employee->lastName}}_{{$employee->firstName}}</h5>
+        <h5 class="mb-0">Dossier Agent : {{$enrollment?->employee?->middleName}}_{{$enrollment?->employee?->lastName}}_{{$enrollment?->employee?->firstName}}</h5>
         <span class="badge bg-light">
             <a href="{{route('employee.index')}}" class="btn text-white" style="background-color: rgb(112, 147, 163)">
                 Retour
@@ -29,12 +29,14 @@
             <div class="tab-pane fade show active" id="poste">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Intitulé du poste :</strong> {{$employee->jobTitle}}</p>
-                        <p><strong>Département :</strong> {{$employee->category->nameCategory}}</p>
-                        <p><strong>Matricule :</strong> {{$employee->matricule}}</p>
+                        <p><strong>Fonction :</strong> {{$enrollment?->functionType?->nameFunction}}</p>
+                        <p><strong>Section :</strong> {{$enrollment?->section}}</p>
+                        <p><strong>Département :</strong> {{$enrollment?->department}}</p>
+                        <p><strong>Site :</strong> {{$enrollment?->site}}</p>
+                        <p><strong>Matricule :</strong> {{$enrollment?->matricule}}</p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Date d'entrée :</strong> {{$employee->created_at->format('d/m/Y')}}</p>
+                        <p><strong>Date d'entrée :</strong> {{ ucfirst(\Carbon\Carbon::parse($enrollment?->motif)->locale('fr')->translatedFormat('l d F Y')) }}</p>
                         <p><strong>Type de contrat :</strong> CDI</p>
                     </div>
                 </div>
@@ -52,7 +54,7 @@
                     <tbody>
                         {{-- SECTION CONJOINT --}}
                         @php 
-                            $conjoint = $employee->familyState->firstWhere('relationType', \App\Enums\RelationTypeEnum::CONJOINT); 
+                            $conjoint = $enrollment?->familyState?->firstWhere('relationType', \App\Enums\RelationTypeEnum::CONJOINT); 
                         @endphp
                         <tr>
                             <td><strong>{{ \App\Enums\RelationTypeEnum::CONJOINT->value }}</strong></td>
@@ -66,10 +68,10 @@
 
                         {{-- SECTION ENFANTS --}}
                         @php 
-                            $enfants = $employee->familyState->where('relationType', \App\Enums\RelationTypeEnum::CHILD); 
+                            $enfants = $enrollment?->familyState?->where('relationType', \App\Enums\RelationTypeEnum::CHILD); 
                         @endphp
                         
-                        @if($enfants->count() > 0)
+                        @if($enfants?->count() > 0)
                             @foreach($enfants as $enfant)
                                 <tr>
                                     <td>{{ \App\Enums\RelationTypeEnum::CHILD->value }}</td>
@@ -90,23 +92,23 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Salaire brut
-                        <span>USD {{$employee->category->amount}}</span>
+                        <span>USD {{$enrollment?->functionType?->amount}}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Allocation familliale par enfant
-                        <span>USD {{$employee->category->familialAllocation}}</span>
+                        <span>USD {{$enrollment?->functionType?->familialAllocation}}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Véhicule de fonction
-                        <span class="badge bg-success rounded-pill">Actif</span>
+                        <span class="badge bg-success text-white rounded-pill">Actif</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Logement
-                        <span>USD {{$employee->category->housing}}</span>
+                        <span>USD {{$enrollment?->functionType?->housing}}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Transport
-                        <span>USD {{$employee->category->transportationCost}}</span>
+                        <span>USD {{$enrollment?->functionType?->transportationCost}}</span>
                     </li>
                 </ul>
             </div>

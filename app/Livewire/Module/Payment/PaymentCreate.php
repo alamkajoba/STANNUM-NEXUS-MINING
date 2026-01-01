@@ -52,6 +52,7 @@ class PaymentCreate extends Component
     public $dayMounth = 0;
     public $justifyDayPay = 0.00;
     public $workDay = 0;
+    public $totalAddiction = 0.00;
     //payment
     public $baseMounthlyDay = 0.00;
     public $overtimesPay = 0.00;
@@ -115,14 +116,14 @@ class PaymentCreate extends Component
     {
         $motif = Carbon::parse($this->motif);
 
-        $existPayment = Payment::where('employee_id', $this->employee_id)
-            ->where('motif', $motif)
-            ->exists();
+        // $existPayment = Payment::where('employee_id', $this->employee_id)
+        //     ->where('motif', $motif)
+        //     ->exists();
 
-        if ($existPayment) {
-            session()->flash('danger', "Cet Agent a déjà reçu ce paiement verifiez la liste!...");
-            return redirect()->route('payment.index');
-        }
+        // if ($existPayment) {
+        //     session()->flash('danger', "Cet Agent a déjà reçu ce paiement verifiez la liste!...");
+        //     return redirect()->route('payment.index');
+        // }
 
         $deduction = Deduction::latest()->first();
 
@@ -163,11 +164,13 @@ class PaymentCreate extends Component
         $this->familialAllocationMounth = round($employee->category->familialAllocation * $this->childCount, 2);
         $this->familialAllocationDay = round($this->familialAllocationMounth / max(1, $this->dayMounth), 2);
         
-        $this->totalDue = ($this->baseSalary + $this->overtimesPay + $this->assudityBonus + $this->riskBonus + $this->performanceBonus + $this->justifyDayPay) - $this->restDayCost;
+        $this->totalDue = round(($this->baseSalary + $this->overtimesPay + $this->assudityBonus + $this->riskBonus + $this->performanceBonus + $this->justifyDayPay) - $this->restDayCost, 2);
        
         $this->totalAdvantage = round($this->housingMounth + $this->transportationCostMounth + $this->familialAllocationMounth, 2);
         
         $this->brutSalary = round($this->totalAdvantage + $this->totalDue, 2);
+
+        $this->totalAddiction = round($this->overtimesPay + $this->assudityBonus + $this->riskBonus + $this->performanceBonus + $this->justifyDayPay, 2);
 
         $this->CNSS = $deduction->CNSS;
         $this->INPP = $deduction->INPP;
@@ -203,43 +206,55 @@ class PaymentCreate extends Component
             'employee_id' => $this->employee_id, 
             'motif' => $motif, 
             'user_id' => $id,
-            //All for paySlip
-            'childCount' => $this->childCount,
-            'baseSalary' => $this->baseSalary,
-            'dayMounth' => $this->dayMounth,
-            'justifyDay' => $this->justifyDay,
-            'workDay' => $this->workDay,
-            //payment
-            'baseMounthlyDay' => $this->baseMounthlyDay,
-            'overtimesPay' => $this->overtimesPay,
-            //advantage
-            'housingDay' => $this->housingDay,
-            'housingMounth' => $this->housingMounth,
-            'transportationCostDay' => $this->transportationCostDay,
-            'transportationCostMounth' => $this->transportationCostMounth,
-            'familialAllocationDay' => $this->familialAllocationDay,
-            'familialAllocationMounth' => $this->familialAllocationMounth,
-            'totalAdvantage' => $this->totalAdvantage,
-            //deduction
-            'CNSS' => $this->CNSS,
-            'INPP' => $this->INPP,
-            'ONEM' => $this->ONEM,
-            'IPR' => $this->IPR,
-            'deductionSalary' => $this->deductionSalary,
-            'refund' => $this->refund,
-            'CNSSAmount' => $this->childCount,
-            'INPPAmount' => $this->INPPAmount,
-            'ONEMAmount' => $this->ONEMAmount,
-            'IPRAmount' => $this->IPRAmount,
-            'deductionSalaryAmount' => $this->deductionSalaryAmount,
-            'refundAmount' => $this->refundAmount,
-            'totalDeduction' => $this->totalDeduction,
-            //final
-            'brutSalary' => $this->brutSalary,
             'netSalary' => $this->netSalary,
+            //JSON
+            'slipPrint'=>[
+                //Employee section
+                'function' => $employee?->category?->function,
+                'section' => $employee?->section,
+                'department' => $employee?->department,
+                'site' => $employee?->site,
+                'category' => $employee?->category,
+                'accountNumber' => $employee?->accountNumber,
+                'childCount' => $this->childCount,
+                'baseSalary' => $this->baseSalary,
+                'workDay' => $this->workDay,
+                //Invoice section 1 brutDue and total
+                'abscence' => $this->restDay,
+                'absencePay' => $this->restDayCost,
+                'justify' => $this->justify,
+                'justifyPay' => $this->justifyPay,
+                'overtimes' => $this->overtimes,
+                'overtimesPay' => $this->overtimesPay,
+                'assuduity' => $this->assudityBonus,
+                'risk' => $this->riskBonus,
+                'performance' => $this->performanceBonus,
+                'totalAddiction' => $this->totalAddiction,
+                'brutDue' => $this->totalDue,
+                //Invoice section 2 Social advantage
+                'housing' => $this->housingMounth,
+                'transportation' => $this->transportationCostMounth,
+                'familialAllocation' => $this->familialAllocationMounth,
+                'totalAdvantage' => $this->totalAdvantage,
+                'totalDeduction' => $this->totalDeduction,
+                'brutSalary' => $this->brutSalary,
+                //Invoice section 3 Deductions
+                'CNSS' => $this->CNSS,
+                'ONEM' => $this->ONEM,
+                'INPP' => $this->INPPAmount,
+                'IPR' => $this->IPR,
+                'toRefundAdvance' => $this->refund,
+                'salaryDeduction' => $this->deductionSalary,
+                'CNSSAmount' => $this->CNSSAmount,
+                'ONEMAmount' => $this->ONEMAmount,
+                'INPPAmount' => $this->INPPAmount,
+                'IPRAmount' => $this->IPRAmount,
+                'toRefundAdvance' => $this->refundAmount,
+                'salaryDeductionAmount' => $this->deductionSalaryAmount,
+            ], 
         ]);
-        session()->flash('danger', "Successfuly!...");
-        return redirect()->route('payment.index');
+        session()->flash('success', "Successfuly!...");
+        return redirect()->route('payment.print', $payment->id);
 
     }
 

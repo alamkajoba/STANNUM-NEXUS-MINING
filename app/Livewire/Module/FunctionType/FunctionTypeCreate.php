@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Livewire\Module\Category;
+namespace App\Livewire\Module\FunctionType;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Models\Category;
 use Livewire\Attributes\Validate;
 use App\Models\Employee;
+use App\Models\FunctionType;
 
 #[Layout('layouts.app')]
-class CategoryCreate extends Component
+class FunctionTypeCreate extends Component
 {
 
     public $convertName;
 
     #[Validate('required|min:3|string')]
-    public $nameCategory = '';
+    public $nameFunction = '';
 
     #[Validate('required|numeric|min:0')]
     public $amount = 0.00;
@@ -42,7 +42,7 @@ class CategoryCreate extends Component
 
         // dd($this->amount);
         return [
-            'nameCategory' => $this->nameCategory,
+            'nameFunction' => $this->nameFunction,
             'amount' => $this->amount,
             'dayAmount' => $dayAmount,
             'hourAmount' => $hourAmount,
@@ -59,24 +59,24 @@ class CategoryCreate extends Component
         $this->validate();
 
         //Check if exist
-        $this->convertName = Str::lower(trim($this->nameCategory));
+        $this->convertName = Str::lower(trim($this->nameFunction));
 
-        $existCategory = Category::whereRaw('LOWER(nameCategory) = ?', [$this->convertName])
+        $existCategory = FunctionType::whereRaw('LOWER(nameFunction) = ?', [$this->convertName])
             ->exists();
 
         if ($existCategory) {
-            session()->flash('danger', "Cette catégorie existe déjà!...");
-            return redirect()->route('category.create');
+            session()->flash('danger', "Cette Fonction existe déjà!...");
+            return redirect()->route('function.create');
         }
 
-        $employee = Category::create($this->dataCategory());
-        session()->flash('success', "La catégorie a été créé avec succès.");
-        return redirect()->to(route('category.index'));
+        $employee = FunctionType::create($this->dataCategory());
+        session()->flash('success', "La Fonction a été créé avec succès.");
+        return redirect()->to(route('function.index'));
     }
 
 
     public function render()
     {
-        return view('livewire.module.category.category-create');
+        return view('livewire.module.function-type.function-type-create');
     }
 }

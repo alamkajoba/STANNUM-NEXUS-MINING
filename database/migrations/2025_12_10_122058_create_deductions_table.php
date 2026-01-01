@@ -19,6 +19,7 @@ return new class extends Migration
             $table->float('IPR')->nullable(); 
             $table->float('refundAdvanceAmount')->nullable(); 
             $table->float('deductionSalary')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->unsignedBigInteger('user_id');

@@ -4,16 +4,16 @@ namespace App\Livewire\Module\Family;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use App\Models\Employee;
+use App\Models\Enrollment;
 
 #[Layout('layouts.app')]
 class FamilyIndex extends Component
 {
-    public $employee; 
+    public $enrollment; 
 
     public function mount($id)
     {
-        $this->employee = Employee::with(['category', 'familyState'])->findOrFail($id);
+        $this->enrollment = Enrollment::with(['employee.familyState', 'functionType'])->findOrFail($id);
     }
 
     public function render()

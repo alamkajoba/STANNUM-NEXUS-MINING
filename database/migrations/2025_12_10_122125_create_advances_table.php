@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->decimal('amount', 15, 2)->default(0.00);
             $table->decimal('toRefund', 15, 2)->default(0.00);
+            $table->softDeletes();
             $table->timestamps();
 
             //foreign key

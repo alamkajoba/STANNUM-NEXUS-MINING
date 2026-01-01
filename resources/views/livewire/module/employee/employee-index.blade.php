@@ -42,34 +42,32 @@
                             <th>n</th>
                             <th>Nom  Postnom  Prénom</th>
                             <th>Matricule</th>
-                            <th>Site</th>
-                            <th>Département</th>
-                            <th>Poste</th>
+                            <th>Fonction</th>
                             <th colspan="3">Actions</th>
                         </tr>
                     </thead>
                     <tbody >
-                        @forelse ($employee as $employees)
+                        @forelse ($enrollment as $enrollments)
                             <tr >
-                                <td>{{$loop->iteration}}</td>
                                 <td>
-                                    {{ $employees->middleName }}
-                                    {{ $employees->lastName }}
-                                    {{ $employees->firstName }}
+                                    {{ ($enrollment->currentPage() - 1) * $enrollment->perPage() + $loop->iteration }}
                                 </td>
-                                <td>{{ $employees->matricule }}</td>
-                                <td>{{ $employees->affectation }}</td>
-                                <td>{{ $employees->category->nameCategory }}</td>
-                                <td>{{ $employees->jobTitle  }}</td>
                                 <td>
-                                    <a href="{{route('family.index', $employees->id)}}" class="btn text-white" style="background-color: rgb(0, 255, 21)">
+                                    {{ $enrollments?->employee?->middleName }}
+                                    {{ $enrollments?->employee?->lastName }}
+                                    {{ $enrollments?->employee?->firstName }}
+                                </td>
+                                <td>{{ $enrollments->matricule }}</td>
+                                <td>{{ $enrollments?->functionType?->nameFunction }}</td>
+                                <td>
+                                    <a href="{{route('family.index', $enrollments->id)}}" class="btn text-white" style="background-color: rgb(0, 255, 21)">
                                         Dossier
                                     </a>
                                 </td>
                                 <td>
-                                    {{-- <a href="{{route('employee.update', $employees->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
+                                    <a href="{{route('employee.update', $enrollments->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
                                         Modifier
-                                    </a> --}}
+                                    </a>
                                 </td>
                             </tr>
                         @empty
@@ -83,7 +81,7 @@
 
             <!-- Pagination -->
             <div class="mt-4">
-                {{ $employee->links() }}
+                {{ $enrollment->links() }}
             </div>
 
         <!-- Modal delete student -->
