@@ -9,6 +9,7 @@ use Livewire\WithoutUrlPagination;
 use Livewire\Attributes\Url;
 use App\Models\Employee;
 use App\Models\Category;
+use App\Models\Enrollment;
 
 #[Layout('layouts.app')]
 class EmployeeIndex extends Component
@@ -24,14 +25,14 @@ class EmployeeIndex extends Component
     public function render()
     {
 
-        $employee = Employee::with('category')
+        $enrollment = Enrollment::with(['employee','functionType'])
                 ->search($this->search)
                 ->latest()
                 ->paginate(5);
 
             
         return view('livewire.module.employee.employee-index', [
-            'employee' => $employee,
+            'enrollment' => $enrollment,
         ]);
     }
 }

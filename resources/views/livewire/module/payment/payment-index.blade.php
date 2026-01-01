@@ -49,7 +49,9 @@
                     <tbody >
                         @forelse ($payment as $payments)
                             <tr >
-                                <td>{{$loop->iteration}}</td>
+                                <td>
+                                    {{ ($payment->currentPage() - 1) * $payment->perPage() + $loop->iteration }}
+                                </td>
                                 <td>{{ $payments->employee->middleName }} {{ $payments->employee->lastName }} {{ $payments->employee->firstName }}</td>
                                 <td>{{ $payments->employee->matricule }}</td>
                                 <td>{{ ucfirst(\Carbon\Carbon::parse($payments->motif)->locale('fr')->translatedFormat('F Y')) }}</td>

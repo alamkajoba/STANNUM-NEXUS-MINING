@@ -26,7 +26,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
             <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-users"></i>
-            Liste des catégories
+            Liste des Fonctions
         </h1>
         <div class="d-none d-sm-inline-block shadow-sm">
             <input wire:model.live="search" class="form-control" type="text" placeholder="Rechercher...">
@@ -40,7 +40,7 @@
                     <thead style="background-color: rgb(46, 13, 167);" class="text-white">
                         <tr>
                             <th>n</th>
-                            <th>Catégorie</th>
+                            <th>Fonction</th>
                             <th>Salaire</th>
                             <th>Jours de travail</th>
                             <th>Jour</th>
@@ -54,8 +54,10 @@
                     <tbody >
                         @forelse ($category as $categories)
                             <tr >
-                                <td>{{$loop->iteration}}</td>
-                                <td>{{ $categories->nameCategory }}</td>
+                                <td>
+                                    {{ ($category->currentPage() - 1) * $category->perPage() + $loop->iteration }}
+                                </td>
+                                <td>{{ $categories->nameFunction }}</td>
                                 <td>{{ $categories->amount }} $</td>
                                 <td>{{ $categories->workDay }} Jours</td>
                                 <td>{{ $categories->dayAmount }} $</td>
@@ -64,7 +66,7 @@
                                 <td>{{ $categories->transportationCost}} $</td>
                                 <td>{{ $categories->familialAllocation}} $</td>
                                 <td>
-                                    <a href="{{route('category.update', $categories->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
+                                    <a href="{{route('function.update', $categories->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
                                         Modifier
                                     </a>
                                 </td>
@@ -76,7 +78,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center text-danger">Oups! Aucune Catégorie trouvée.</td>
+                                <td colspan="10" class="text-center text-danger">Oups! Aucune Catégorie trouvée.</td>
                             </tr>
                         @endforelse
                     </tbody>
