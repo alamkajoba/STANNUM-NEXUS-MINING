@@ -32,6 +32,7 @@
                         <p><strong>Fonction :</strong> {{$enrollment?->functionType?->nameFunction}}</p>
                         <p><strong>Section :</strong> {{$enrollment?->section}}</p>
                         <p><strong>Département :</strong> {{$enrollment?->department}}</p>
+                        <p><strong>Catégorie profess :</strong> {{$enrollment?->professionalCategory}}-{{$enrollment?->echelon}}</p>
                         <p><strong>Site :</strong> {{$enrollment?->site}}</p>
                         <p><strong>Matricule :</strong> {{$enrollment?->matricule}}</p>
                     </div>
