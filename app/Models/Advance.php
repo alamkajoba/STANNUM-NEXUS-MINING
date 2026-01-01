@@ -28,4 +28,29 @@ class Advance extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Repayments recorded against this advance
+     */
+    public function repayments()
+    {
+        return $this->hasMany(AdvanceRepayment::class);
+    }
+
+    // Accessors for backward compatibility
+    public function getRemainToPayAttribute()
+    {
+        return $this->toRefund;
+    }
+
+    public function getCreditAmountAttribute()
+    {
+        return $this->amount;
+    }
+
+    // Scope to get active advances (with remaining to refund)
+    public function scopeActive($query)
+    {
+        return $query->where('toRefund', '>', 0);
+    }
 }

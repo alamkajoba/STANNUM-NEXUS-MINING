@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Employee;
 use App\Models\Deduction;
 use App\Models\Advance;
+use App\Models\AdvanceRepayment;
 use App\Models\Category;
 use App\Enums\MonthEnum;
 use App\Models\Payment;
@@ -67,7 +68,10 @@ class PaymentCreate extends Component
     public $totalAdvantage= 0.00;
     //advance
     public $remainToPay = 0.00;
+    public $remainAfterDeduction = 0.00;
     public $amountToDeduct = 0.00;
+    public $applyAdvance = true;
+    public $appliedAdvanceDeduction = 0.00;
     //deduction
     public $CNSS = 0.00;
     public $INPP = 0.00;
@@ -110,6 +114,34 @@ class PaymentCreate extends Component
         $this->category_id = $this->selectedEmployee['category_id'];
         $this->itemsEmployee = []; // Vide les suggestions
 
+        // Load any active advance for the selected employee and set remaining to display
+        $advance = Advance::where('employee_id', $this->employee_id)
+                          ->where('toRefund', '>', 0)
+                          ->first();
+
+        $this->remainToPay = $advance->toRefund ?? 0.00;
+
+        // Load current deduction percentage (default to 20% if none configured)
+        $deduction = Deduction::latest()->first();
+        $refundPercentage = $deduction->refundAdvanceAmount ?? 20;
+        $this->refund = $refundPercentage;
+
+        // Estimate refundAmount using employee category base salary for preview
+        $baseSalary = $this->selectedEmployee['category_id'] ? Employee::find($this->employee_id)?->category?->amount : 0;
+        $this->refundAmount = round(($baseSalary * $refundPercentage) / 100, 2);
+
+        // Compute estimated deduction capped by remaining advance
+        $this->amountToDeduct = min($this->refundAmount, $this->remainToPay);
+        $this->appliedAdvanceDeduction = $this->applyAdvance ? $this->amountToDeduct : 0.00;
+        $this->remainAfterDeduction = round(($this->remainToPay - $this->appliedAdvanceDeduction), 2);
+
+        // Reset computed advance-related fields for clarity if no advance
+        if (!$advance) {
+            $this->amountToDeduct = 0.00;
+            $this->refundAmount = 0.00;
+            $this->appliedAdvanceDeduction = 0.00;
+            $this->remainAfterDeduction = 0.00;
+        }
     }
 
     public function submitPayment()
@@ -135,7 +167,7 @@ class PaymentCreate extends Component
         ])->findOrFail($this->employee_id);
 
         $advance = Advance::where('employee_id', $this->employee_id)
-                  ->where('credit_amount', '>', 0)
+                  ->where('toRefund', '>', 0)
                   ->first();
 
         $this->baseSalary = $employee->category->amount;
@@ -184,22 +216,40 @@ class PaymentCreate extends Component
         $this->IPRAmount  = round(($this->brutSalary * $this->IPR) / 100, 2);
         $this->ONEMAmount = round(($this->brutSalary * $this->ONEM) / 100, 2);
 
+        // Theoretical refund amount based on the configured percentage
+        $this->refundAmount = round(($this->brutSalary * $this->refund) / 100, 2);
+
+        // Compute actual deduction capped by remaining advance
         if ($advance) {
-            // On compare le montant prévu ($this->refundAmount) avec la dette réelle ($advance->remainToPay)
-            // On prend le plus petit des deux pour ne pas prélever plus que la dette.
-            
-            $this->amountToDeduct = min($this->refundAmount, $advance->remainToPay);
+            $this->amountToDeduct = min($this->refundAmount, $advance->toRefund);
         } else {
             $this->amountToDeduct = 0;
         }
+
+        // If user chose not to apply advance refund, zero the applied deduction
+        $this->appliedAdvanceDeduction = $this->applyAdvance ? $this->amountToDeduct : 0;
 
         $this->totalDeduction = round($this->CNSSAmount 
                                 + $this->INPPAmount 
                                 + $this->IPRAmount 
                                 + $this->ONEMAmount 
-                                + $this->amountToDeduct, 2);
+                                + $this->appliedAdvanceDeduction, 2);
 
         $this->netSalary = round($this->brutSalary - $this->totalDeduction, 2);
+
+        // Debug log to help trace advance refund calculations
+        logger()->info('Payment debug', [
+            'employee_id' => $this->employee_id,
+            'refundPercentage' => $this->refund,
+            'refundAmount_theoretical' => $this->refundAmount,
+            'amountToDeduct' => $this->amountToDeduct,
+            'appliedAdvanceDeduction' => $this->appliedAdvanceDeduction,
+            'applyAdvance' => $this->applyAdvance,
+            'hasAdvance' => (bool)$advance,
+            'advance_toRefund' => $advance->toRefund ?? null,
+            'brutSalary' => $this->brutSalary,
+            'netSalary' => $this->netSalary,
+        ]);
 
         $id = Auth::id();
         $payment = Payment::create([
@@ -263,3 +313,4 @@ class PaymentCreate extends Component
         return view('livewire.module.payment.payment-create');
     }
 }
+ 
