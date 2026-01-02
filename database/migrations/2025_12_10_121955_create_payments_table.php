@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unique(['employee_id', 'motif']);
             $table->id();
             $table->date('motif');
-            $table->decimal('netSalary');
+            $table->decimal('netSalary', 15, 2);
             $table->json('slipPrint')->nullable();
             $table->softDeletes();
             $table->timestamps();

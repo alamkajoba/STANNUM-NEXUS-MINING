@@ -24,7 +24,7 @@ class PaymentIndex extends Component
     public function render()
     {
 
-        $payment = Payment::with('employee');
+        $payment = Payment::with(['employee.enrollment']);
         return view('livewire.module.payment.payment-index', [
             'payment' => $payment->latest()->paginate(5),
         ]);

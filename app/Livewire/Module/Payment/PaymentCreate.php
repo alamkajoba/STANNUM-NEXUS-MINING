@@ -198,6 +198,7 @@ class PaymentCreate extends Component
         $this->INPPAmount = round(($this->brutSalary * $this->INPP) / 100, 2);
         $this->IPRAmount  = round(($this->brutSalary * $this->IPR) / 100, 2);
         $this->ONEMAmount = round(($this->brutSalary * $this->ONEM) / 100, 2);
+        $this->deductionSalaryAmount = round(($this->brutSalary * $this->deductionSalary) / 100, 2);
 
         if ($advance) {
             // On compare le montant prévu ($this->refundAmount) avec la dette réelle ($advance->remainToPay)
@@ -212,11 +213,13 @@ class PaymentCreate extends Component
                                 + $this->INPPAmount 
                                 + $this->IPRAmount 
                                 + $this->ONEMAmount 
-                                + $this->amountToDeduct, 2);
+                                + $this->amountToDeduct
+                                + $this->deductionSalaryAmount, 2);
 
         $this->netSalary = round($this->brutSalary - $this->totalDeduction, 2);
 
         $id = Auth::id();
+
         $payment = Payment::create([
             'employee_id' => $this->employee_id, 
             'motif' => $motif, 
@@ -229,7 +232,8 @@ class PaymentCreate extends Component
                 'section' => $enrollment?->section,
                 'department' => $enrollment?->department,
                 'site' => $enrollment?->site,
-                'category' => $enrollment?->professionalCategory,
+                'professionalCategory' => $enrollment?->professionalCategory,
+                'echelon' => $enrollment?->echelon,
                 'acountNumber' => $enrollment?->acountNumber,
                 'cnssNumber' => $enrollment?->cnssNumber,
                 'childCount' => $this->childCount,

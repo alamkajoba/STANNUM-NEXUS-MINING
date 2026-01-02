@@ -83,8 +83,8 @@ class EmployeeCreate extends Component
             $this->validate([
                 'proMail' => 'nullable|email',
                 'proPhone' => 'nullable|numeric|digits_between:9,15',
-                'acountNumber' => 'nullable',
-                'cnssNumber' => 'nullable|regex:/^[0-9A-Z]{10,13}$/i',
+                'acountNumber' => 'nullable|unique:enrollments,acountNumber',
+                'cnssNumber' => 'nullable|regex:/^[0-9A-Z]{10,13}$/i|unique:enrollments,cnssNumber,',
             ]);
         }
     }
