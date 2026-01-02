@@ -261,8 +261,8 @@
 
                             <div class="mb-1">
                                 <label>Numéro de compte bancaire</label>
-                                <input wire:model="accountNumber" class="form-control mb-2" type="text">
-                                @error('accountNumber') 
+                                <input wire:model="acountNumber" class="form-control mb-2" type="text">
+                                @error('acountNumber') 
                                     <span style="color: rgb(252, 0, 0)" class="flex">
                                         Ce champ est réquis
                                     </span> 

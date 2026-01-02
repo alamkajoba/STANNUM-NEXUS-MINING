@@ -54,7 +54,6 @@ class FamilyCreate extends Component
         $this->itemsEmployee = Employee::where('firstName', 'like', '%'.$this->search.'%')
             ->orwhere('lastName', 'like', '%'.$this->search.'%')
             ->orwhere('middleName', 'like', '%'.$this->search.'%')
-            ->orwhere('matricule', 'like', '%'.$this->search.'%')
             ->limit(3)
             ->get()
             ->toArray();
@@ -67,7 +66,6 @@ class FamilyCreate extends Component
         $this->selectedEmployee = Employee::find($itemId)->toArray();
         $this->search = $this->selectedEmployee['middleName'].' '.$this->selectedEmployee['lastName'].' '.$this->selectedEmployee['firstName'];
         $this->employeeId = $this->selectedEmployee['id'];
-        $this->category_id = $this->selectedEmployee['category_id'];
         $this->itemsEmployee = []; // Vide les suggestions
 
     }

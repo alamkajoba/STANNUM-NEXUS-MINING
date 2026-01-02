@@ -6,7 +6,6 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Employee;
 use App\Models\Deduction;
 use App\Models\Advance;
 use App\Models\Category;
@@ -15,6 +14,7 @@ use App\Models\Payment;
 use Illuminate\Support\Str;
 use App\Enums\RelationTypeEnum;
 use Carbon\Carbon;
+use App\Models\Enrollment;
 
 
 #[Layout('layouts.app')]
@@ -22,8 +22,9 @@ class PaymentCreate extends Component
 {
 
     //Validate
-    #[Validate('required')]
-    public $employee_id = '';
+    public $employee_id;
+    public $enrollment_id;
+
     #[Validate('required')]
     public $motif = '';
     #[Validate('nullable')]
@@ -54,15 +55,11 @@ class PaymentCreate extends Component
     public $workDay = 0;
     public $totalAddiction = 0.00;
     //payment
-    public $baseMounthlyDay = 0.00;
     public $overtimesPay = 0.00;
     public $totalDue = 0.00;
     //advantage
-    public $housingDay = 0.00;
     public $housingMounth = 0.00;
-    public $transportationCostDay = 0.00;
     public $transportationCostMounth = 0.00;
-    public $familialAllocationDay = 0.00;
     public $familialAllocationMounth = 0.00;
     public $totalAdvantage= 0.00;
     //advance
@@ -90,12 +87,22 @@ class PaymentCreate extends Component
 
     public function searchEmployee(): void
     {
-        //Looking for items
-        $this->itemsEmployee = Employee::where('firstName', 'like', '%'.$this->search.'%')
-            ->orwhere('lastName', 'like', '%'.$this->search.'%')
-            ->orwhere('middleName', 'like', '%'.$this->search.'%')
-            ->orwhere('matricule', 'like', '%'.$this->search.'%')
-            ->limit(3)
+        if (strlen($this->search) < 1 || str_contains($this->search, ' - ')) {
+                $this->itemsEmployee = [];
+                return;
+        }
+
+        $this->itemsEmployee = Enrollment::with(['employee', 'functionType'])
+            ->where(function ($query) {
+                $query->where('matricule', 'like', '%' . $this->search . '%')
+                
+                ->orWhereHas('employee', function ($q) {
+                    $q->where('firstName', 'like', '%' . $this->search . '%')
+                    ->orWhere('lastName', 'like', '%' . $this->search . '%')
+                    ->orWhere('middleName', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->limit(5)
             ->get()
             ->toArray();
     }
@@ -103,13 +110,23 @@ class PaymentCreate extends Component
     //Selected Employee
     public function selectEmployee($itemId): void
     {
-        // Sélectionne un élément
-        $this->selectedEmployee = Employee::find($itemId)->toArray();
-        $this->search = $this->selectedEmployee['middleName'].' '.$this->selectedEmployee['lastName'].' '.$this->selectedEmployee['firstName'];
-        $this->employee_id = $this->selectedEmployee['id'];
-        $this->category_id = $this->selectedEmployee['category_id'];
-        $this->itemsEmployee = []; // Vide les suggestions
+        // Select
+        $enrollment = Enrollment::with(['employee', 'functionType'])->find($itemId);
 
+        if ($enrollment) {
+            $this->selectedEmployee = $enrollment->toArray();
+            
+            $emp = $enrollment->employee;
+            
+            $this->search = "{$enrollment->matricule} - {$emp->lastName} {$emp->firstName}";
+            
+            $this->employee_id = $enrollment->employee_id; 
+            $this->enrollment_id = $enrollment->id;
+            $this->category_id = $enrollment->category_id;
+            
+            // On ferme la liste de suggestions
+            $this->itemsEmployee = [];
+        }
     }
 
     public function submitPayment()
@@ -127,24 +144,25 @@ class PaymentCreate extends Component
 
         $deduction = Deduction::latest()->first();
 
-        $employee = Employee::with([
-            'category',
-            'familyState' => function($query) {
+        $enrollment = Enrollment::with([
+            'employee.familyState' => function($query) {
                 $query->where('relationType', RelationTypeEnum::CHILD->value);
-            }
-        ])->findOrFail($this->employee_id);
+            },
+
+            'functionType'
+        ])->where('employee_id', $this->employee_id)
+        ->first();
 
         $advance = Advance::where('employee_id', $this->employee_id)
                   ->where('credit_amount', '>', 0)
                   ->first();
 
-        $this->baseSalary = $employee->category->amount;
-        $this->childCount = $employee->familyState->count();
-        $this->dayMounth = $employee->category->workDay;
-        $this->workDay = round($employee->category->workDay - $this->restDay, 2);
-        $this->baseMounthlyDay = round($this->baseSalary / max(1, $this->dayMounth), 2);
-        $this->dayPay = round($this->baseSalary / max(1, $this->dayMounth), 2);
-        $this->overtimesPay = round($this->overtimes * $employee->category->hourAmount, 2);
+        $this->baseSalary = $enrollment?->functionType?->amount;
+        $this->childCount = $enrollment?->employee?->familyState->count();
+        $this->dayMounth = $enrollment?->functionType?->workDay;
+        $this->workDay = $this->dayMounth - $this->restDay;
+        $this->dayPay = $enrollment?->functionType?->dayAmount;
+        $this->overtimesPay = round($this->overtimes * $enrollment?->functionType?->hourAmount, 2);
 
         if($this->restDay > 0)
         {
@@ -157,12 +175,9 @@ class PaymentCreate extends Component
         
 
         
-        $this->housingMounth = $employee->category->housing;
-        $this->housingDay = round($this->housingMounth / max(1, $this->dayMounth), 2);
-        $this->transportationCostMounth = $employee->category->transportationCost;
-        $this->transportationCostDay = round($this->transportationCostMounth / max(1, $this->dayMounth), 2);
-        $this->familialAllocationMounth = round($employee->category->familialAllocation * $this->childCount, 2);
-        $this->familialAllocationDay = round($this->familialAllocationMounth / max(1, $this->dayMounth), 2);
+        $this->housingMounth = $enrollment?->functionType?->housing;
+        $this->transportationCostMounth = $enrollment?->functionType?->transportationCost;
+        $this->familialAllocationMounth = round($enrollment?->functionType?->familialAllocation * $this->childCount, 2);
         
         $this->totalDue = round(($this->baseSalary + $this->overtimesPay + $this->assudityBonus + $this->riskBonus + $this->performanceBonus + $this->justifyDayPay) - $this->restDayCost, 2);
        
@@ -210,20 +225,21 @@ class PaymentCreate extends Component
             //JSON
             'slipPrint'=>[
                 //Employee section
-                'function' => $employee?->category?->function,
-                'section' => $employee?->section,
-                'department' => $employee?->department,
-                'site' => $employee?->site,
-                'category' => $employee?->category,
-                'accountNumber' => $employee?->accountNumber,
+                'function' => $enrollment?->functionType?->nameFunction,
+                'section' => $enrollment?->section,
+                'department' => $enrollment?->department,
+                'site' => $enrollment?->site,
+                'category' => $enrollment?->professionalCategory,
+                'acountNumber' => $enrollment?->acountNumber,
+                'cnssNumber' => $enrollment?->cnssNumber,
                 'childCount' => $this->childCount,
                 'baseSalary' => $this->baseSalary,
                 'workDay' => $this->workDay,
                 //Invoice section 1 brutDue and total
                 'abscence' => $this->restDay,
                 'absencePay' => $this->restDayCost,
-                'justify' => $this->justify,
-                'justifyPay' => $this->justifyPay,
+                'justify' => $this->justifyDay,
+                'justifyPay' => $this->justifyDayPay,
                 'overtimes' => $this->overtimes,
                 'overtimesPay' => $this->overtimesPay,
                 'assuduity' => $this->assudityBonus,

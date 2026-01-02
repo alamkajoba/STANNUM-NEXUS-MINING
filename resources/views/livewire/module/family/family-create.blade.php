@@ -51,7 +51,7 @@
                                 @forelse ($itemsEmployee as $itemsEmployees)
                                     <a href="" class="list-group-item mb-2 flex bg-primary-200 hover:bg-primary-500"
                                         wire:click.prevent="selectEmployee({{$itemsEmployees['id']}})">
-                                        {{ $itemsEmployees['firstName'].' '. $itemsEmployees['middleName'].' '. $itemsEmployees['lastName'].' '.$itemsEmployees['matricule']}}
+                                        {{ $itemsEmployees['firstName'].' '. $itemsEmployees['middleName'].' '. $itemsEmployees['lastName']}}
                                     </a>
                                 @empty
                                     <div class="list-group-item mb-2 flex bg-danger-200">

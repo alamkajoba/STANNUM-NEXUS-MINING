@@ -9,10 +9,12 @@ class Payment extends Model
     protected $fillable = [
         'user_id',
         'employee_id',
+        'motf',
         'slipPrint'
     ];
 
     protected $casts = [
+        'motif' => 'date',
         'slipPrint' => 'array',
     ];
 

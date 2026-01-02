@@ -36,83 +36,123 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="">Selectionner le nom de l'Agent</label>
-                        <input 
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model.live="search"
-                            wire:keyup="searchEmployee"
-                        >
+                        <div class="position-relative mb-1">
+                            <label for="agent_search">Sélectionner le nom de l'Agent</label>
+                            <input 
+                                id="agent_search"
+                                class="form-control"
+                                type="text"
+                                placeholder="Rechercher par nom, prénom ou matricule..."
+                                wire:model.live="search"
+                                wire:keyup="searchEmployee"
+                                autocomplete="off"
+                            >
 
-                        @if (!empty($itemsEmployee))
-                            <ul class="list-group mt-2">
-                                <h5>Resultat de la recherche :</h5>
-                                @forelse ($itemsEmployee as $itemsEmployees)
-                                    <a href="" class="list-group-item mb-2 flex bg-primary-200 hover:bg-primary-500"
-                                        wire:click.prevent="selectEmployee({{$itemsEmployees['id']}})">
-                                        {{ $itemsEmployees['firstName'].' '. $itemsEmployees['middleName'].' '. $itemsEmployees['lastName'].' '.$itemsEmployees['matricule']}}
-                                    </a>
-                                @empty
-                                    <div class="list-group-item mb-2 flex bg-danger-200">
-                                        Aucun(e) Agent
-                                    </div>
-                                @endforelse
-                            </ul>
-                        @endif
+                            @if (!empty($itemsEmployee))
+                                <ul class="list-group mt-2" style="position: absolute; z-index: 1000; width: 100%;">
+                                    <li class="list-group-item disabled bg-light">
+                                        <strong>Résultat de la recherche :</strong>
+                                    </li>
+                                    @forelse ($itemsEmployee as $item)
+                                        <a href="#" 
+                                        class="list-group-item list-group-item-action mb-1"
+                                        wire:click.prevent="selectEmployee({{ $item['id'] }})">
+                                            <div class="d-flex justify-content-between">
+                                                <span>
+                                                    {{-- Accès aux données de la relation 'employee' --}}
+                                                    <strong>{{ $item['employee']['lastName'] }}</strong> 
+                                                    {{ $item['employee']['firstName'] }} 
+                                                    {{ $item['employee']['middleName'] }}
+                                                </span>
+                                                <span class="badge bg-info text-dark">
+                                                    {{ $item['matricule'] }}
+                                                </span>
+                                            </div>
+                                            <small class="text-muted">
+                                                Fonction : {{ $item['function_type']['name'] ?? 'Non définie' }}
+                                            </small>
+                                        </a>
+                                    @empty
+                                        {{-- Optionnel : Afficher un message si rien n'est trouvé après 2 caractères --}}
+                                        <li class="list-group mt-2">
+                                            <div class="list-group-item list-group-item-danger">
+                                                Aucun agent trouvé pour "{{ $search }}"
+                                            </div>
+                                        </li>
+                                    @endforelse
+                                </ul>
+                            @endif
 
-                        <label for="">Selectionner le nom de l'Agent</label>
-                        <input 
-                            class="form-control"
-                            type="month"
-                            placeholder=""
-                            wire:model="motif"
-                        >
 
-
-                        <label for="restDay">Jours d'abscence</label>
-                        <input 
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="restDay"
-                        >
-
-                        <label for="overtimes">Heures supplementaires</label>
-                        <input 
-                            class="form-control"
-                            type="number"
-                            wire:model="overtimes"
-                        >
-
-                        <label for="">Prime d'assudite</label>
-                        <input 
-                            class="form-control"
-                            type="number"
-                            step="0.01"
-                            placeholder="en USD"
-                            wire:model="assudityBonus"
-                        >
+                        </div>
+                        <div class="mb-1">
+                            <label for="">Selectionner le motif de paiement</label>
+                            <input 
+                                class="form-control"
+                                type="month"
+                                placeholder=""
+                                wire:model="motif"
+                            >
+                        </div>
+                        <div class="mb-1">
+                            <label for="restDay">Jours d'abscence</label>
+                            <input 
+                                class="form-control"
+                                type="number"
+                                placeholder=""
+                                wire:model="restDay"
+                            >
+                        </div>
+                        <div class="mb-1">
+                            <label for="restDay">Jours d'incapacité</label>
+                            <input 
+                                class="form-control"
+                                type="number"
+                                placeholder=""
+                                wire:model="justifyDay"
+                            >
+                        </div>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="">Prime de risque</label>
-                        <input 
-                            class="form-control"
-                            type="number"
-                            step="0.01"
-                            placeholder="en USD"
-                            wire:model="riskBonus"
-                        >
-
-                        <label for="">Prime de rendement</label>
-                        <input 
-                            class="form-control"
-                            type="number"
-                            step="0.01"
-                            placeholder="en USD"
-                            wire:model="performanceBonus"
-                        >
+                        <div class="mb-1">
+                            <label for="">Prime d'assudite</label>
+                            <input 
+                                class="form-control"
+                                type="number"
+                                step="0.01"
+                                placeholder="en USD"
+                                wire:model="assudityBonus"
+                            >
+                        </div>
+                        <div class="mb1">
+                            <label for="">Prime de risque</label>
+                            <input 
+                                class="form-control"
+                                type="number"
+                                step="0.01"
+                                placeholder="en USD"
+                                wire:model="riskBonus"
+                            >
+                        </div>
+                        <div class="mb1">
+                            <label for="">Prime de rendement</label>
+                            <input 
+                                class="form-control"
+                                type="number"
+                                step="0.01"
+                                placeholder="en USD"
+                                wire:model="performanceBonus"
+                            >
+                        </div>
+                        <div class="mb-1">
+                            <label for="overtimes">Heures supplementaires</label>
+                            <input 
+                                class="form-control"
+                                type="number"
+                                wire:model="overtimes"
+                            >
+                        </div>
 
                     </div>
                 </div>

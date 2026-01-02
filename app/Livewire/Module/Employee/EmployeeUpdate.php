@@ -9,6 +9,11 @@ use App\Models\Category;
 use App\Enums\GenderEnum;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
+use App\Models\FunctionType;
+use App\Models\Enrollment;
+use App\Enums\EchelonEnum;
+use App\Enums\CategoryProfEnum;
+use Illuminate\Support\Facades\DB;
 
 #[Layout('layouts.app')]
 
@@ -17,18 +22,20 @@ class EmployeeUpdate extends Component
     public $step = 1;
     public $totalSteps = 4;
     public $employeeId;
+    public $employee;
+    public $enrollment;
 
     // Étape 1 : État Civil
-    public $middleName, $lastName, $firstName, $gender, $birthDate, $birthTown;
+    public $emploee_id, $middleName, $lastName, $firstName, $gender, $birthDate, $birthTown;
     
     // Étape 2 : Contacts & Adresse
     public $phone, $emergencyPhone, $mail, $nationality, $address;
     
     // Étape 3 : Infos Pro
-    public $site, $section, $functionName, $startDate, $department, $professionalCategory, $echelon;
+    public $enrollment_id, $site, $section, $functionName, $startDate, $department, $professionalCategory, $echelon;
     
     // Étape 4 : Infos Bancaires & Sociales
-    public $proMail, $proPhone, $accountNumber, $cnssNumber;
+    public $proMail, $proPhone, $acountNumber, $cnssNumber;
     
     // Liste pour les selects
     public $functionType;
@@ -77,7 +84,7 @@ class EmployeeUpdate extends Component
             $this->validate([
                 'proMail' => 'nullable|email',
                 'proPhone' => 'nullable|numeric|digits_between:9,15',
-                'accountNumber' => 'nullable',
+                'acountNumber' => 'nullable',
                 'cnssNumber' => 'nullable|regex:/^[0-9A-Z]{10,13}$/i',
             ]);
         }
@@ -91,7 +98,7 @@ class EmployeeUpdate extends Component
             $userId = Auth::id();
 
             DB::beginTransaction();
-            $employee = Employee::create([
+            $this->employee->update([
                 'firstName' => $this->firstName, 
                 'middleName' => $this->middleName, 
                 'lastName' => $this->lastName, 
@@ -106,7 +113,7 @@ class EmployeeUpdate extends Component
                 'user_id' => $userId,
             ]);
 
-            Enrollment::create([
+            $this->enrollment->update([
                 'section' => $this->section, 
                 'department' => $this->department, 
                 'site' => $this->site, 
@@ -115,19 +122,19 @@ class EmployeeUpdate extends Component
                 'startDate' => $this->startDate,
                 'proMail' => $this->proMail, 
                 'proPhone' => $this->proPhone, 
-                'employee_id' => $employee->id, 
+                'employee_id' => $this->employee->id, 
                 'function_type_id' => $this->functionName,
-                'acountNumber' => $this->accountNumber,
+                'acountNumber' => $this->acountNumber,
                 'cnssNumber' => $this->cnssNumber
             ]);
             DB::commit();
 
-            session()->flash('success', 'Agent enregistré avec succès !');
+            session()->flash('success', 'Agent a été modifié avec succès !');
             return redirect()->route('employee.index');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            session()->flash("danger", "Une erreur est survenue lors de l'enregistrement.");
+            session()->flash("danger", "Une erreur est survenue lors de la modification.");
             dd([
                 'Message' => $e->getMessage(),
                 'Fichier' => $e->getFile(),
@@ -139,7 +146,33 @@ class EmployeeUpdate extends Component
     public function mount($id)
     {
         $this->functionType = FunctionType::all();
+        $this->employee = Employee::findOrFail($id);
+        $this->emploee_id = $this->employee->id;
+        $this->middleName = $this->employee->middleName;
+        $this->lastName = $this->employee->lastName;
+        $this->firstName = $this->employee->firstName;
+        $this->gender = $this->employee->gender;
+        $this->birthDate = $this->employee->birthDate?->format('Y-m-d');
+        $this->birthTown = $this->employee->birthTown;
+        $this->phone = $this->employee->phone;
+        $this->emergencyPhone = $this->employee->emergencyPhone;
+        $this->nationality = $this->employee->nationality;
+        $this->mail = $this->employee->mail;
+        $this->address = $this->employee->address;
 
+        $this->enrollment = Enrollment::where('employee_id', $this->emploee_id)->first();
+        $this->enrollment_id = $this->enrollment->id;
+        $this->site = $this->enrollment->site;
+        $this->section = $this->enrollment->section;
+        $this->functionName = $this->enrollment->function_type_id;
+        $this->startDate = $this->enrollment->startDate?->format('Y-m-d');
+        $this->department = $this->enrollment->department;
+        $this->professionalCategory = $this->enrollment->professionalCategory;
+        $this->echelon = $this->enrollment->echelon;
+        $this->proMail = $this->enrollment->proMail;
+        $this->proPhone = $this->enrollment->proPhone;
+        $this->acountNumber = $this->enrollment->acountNumber;
+        $this->cnssNumber = $this->enrollment->cnssNumber;
         
     }
 
