@@ -133,14 +133,14 @@ class PaymentCreate extends Component
     {
         $motif = Carbon::parse($this->motif);
 
-        // $existPayment = Payment::where('employee_id', $this->employee_id)
-        //     ->where('motif', $motif)
-        //     ->exists();
+        $existPayment = Payment::where('employee_id', $this->employee_id)
+            ->where('motif', $motif)
+            ->exists();
 
-        // if ($existPayment) {
-        //     session()->flash('danger', "Cet Agent a déjà reçu ce paiement verifiez la liste!...");
-        //     return redirect()->route('payment.index');
-        // }
+        if ($existPayment) {
+            session()->flash('danger', "Cet Agent a déjà reçu ce paiement verifiez la liste!...");
+            return redirect()->route('payment.index');
+        }
 
         $deduction = Deduction::latest()->first();
 

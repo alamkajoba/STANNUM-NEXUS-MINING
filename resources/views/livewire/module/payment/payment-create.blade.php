@@ -68,9 +68,6 @@
                                                     {{ $item['matricule'] }}
                                                 </span>
                                             </div>
-                                            <small class="text-muted">
-                                                Fonction : {{ $item['function_type']['name'] ?? 'Non définie' }}
-                                            </small>
                                         </a>
                                     @empty
                                         {{-- Optionnel : Afficher un message si rien n'est trouvé après 2 caractères --}}
