@@ -32,12 +32,17 @@
                         <p><strong>Fonction :</strong> {{$enrollment?->functionType?->nameFunction}}</p>
                         <p><strong>Section :</strong> {{$enrollment?->section}}</p>
                         <p><strong>Département :</strong> {{$enrollment?->department}}</p>
+                        <p><strong>Catégorie profess :</strong> {{$enrollment?->professionalCategory}}-{{$enrollment?->echelon}}</p>
                         <p><strong>Site :</strong> {{$enrollment?->site}}</p>
                         <p><strong>Matricule :</strong> {{$enrollment?->matricule}}</p>
                     </div>
                     <div class="col-md-6">
                         <p><strong>Date d'entrée :</strong> {{ ucfirst(\Carbon\Carbon::parse($enrollment?->motif)->locale('fr')->translatedFormat('l d F Y')) }}</p>
                         <p><strong>Type de contrat :</strong> CDI</p>
+                        <p><strong>Numéro CNSS :</strong> {{$enrollment?->cnssNumber}}</p>
+                        <p><strong>Numéro de compte bancaire :</strong> {{$enrollment?->acountNumber}}</p>
+                        <p><strong>Email profess :</strong> {{$enrollment?->employee?->mail}}</p>
+                        <p><strong>Numéro profess :</strong> {{$enrollment?->employee?->phone}}</p>
                     </div>
                 </div>
             </div>
@@ -54,7 +59,7 @@
                     <tbody>
                         {{-- SECTION CONJOINT --}}
                         @php 
-                            $conjoint = $enrollment?->familyState?->firstWhere('relationType', \App\Enums\RelationTypeEnum::CONJOINT); 
+                            $conjoint = $enrollment?->employee?->familyState?->firstWhere('relationType', \App\Enums\RelationTypeEnum::CONJOINT); 
                         @endphp
                         <tr>
                             <td><strong>{{ \App\Enums\RelationTypeEnum::CONJOINT->value }}</strong></td>
@@ -68,7 +73,7 @@
 
                         {{-- SECTION ENFANTS --}}
                         @php 
-                            $enfants = $enrollment?->familyState?->where('relationType', \App\Enums\RelationTypeEnum::CHILD); 
+                            $enfants = $enrollment?->employee?->familyState?->where('relationType', \App\Enums\RelationTypeEnum::CHILD); 
                         @endphp
                         
                         @if($enfants?->count() > 0)

@@ -36,7 +36,7 @@ class EmployeeCreate extends Component
     public $site, $section, $functionName, $startDate, $department, $professionalCategory, $echelon;
     
     // Étape 4 : Infos Bancaires & Sociales
-    public $proMail, $proPhone, $accountNumber, $cnssNumber;
+    public $proMail, $proPhone, $acountNumber, $cnssNumber;
 
 
     public function nextStep()
@@ -83,8 +83,8 @@ class EmployeeCreate extends Component
             $this->validate([
                 'proMail' => 'nullable|email',
                 'proPhone' => 'nullable|numeric|digits_between:9,15',
-                'accountNumber' => 'nullable',
-                'cnssNumber' => 'nullable|regex:/^[0-9A-Z]{10,13}$/i',
+                'acountNumber' => 'nullable|unique:enrollments,acountNumber',
+                'cnssNumber' => 'nullable|regex:/^[0-9A-Z]{10,13}$/i|unique:enrollments,cnssNumber,',
             ]);
         }
     }
@@ -145,7 +145,7 @@ class EmployeeCreate extends Component
                 'proPhone' => $this->proPhone, 
                 'employee_id' => $employee->id, 
                 'function_type_id' => $this->functionName,
-                'acountNumber' => $this->accountNumber,
+                'acountNumber' => $this->acountNumber,
                 'cnssNumber' => $this->cnssNumber
             ]);
             DB::commit();
