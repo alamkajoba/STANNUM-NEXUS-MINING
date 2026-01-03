@@ -23,7 +23,8 @@ class AdvanceIndex extends Component
     
     public function render()
     {
-        $advance = Advance::with('employee');
+        $advance = Advance::with('employee')
+                          ->where('toRefund', '>', 0); // Only show active advances
 
         return view('livewire.module.advance.advance-index',[
             'advance' => $advance->latest()->paginate(5),

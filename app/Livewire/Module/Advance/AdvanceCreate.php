@@ -12,7 +12,7 @@ use App\Models\Advance;
 #[Layout('layouts.app')]
 class AdvanceCreate extends Component
 {
-    #[Validate('required')]
+    #[Validate('required|numeric|min:0.01')]
     public $amount = 0;
 
     //Var for auto complete employee
@@ -47,10 +47,22 @@ class AdvanceCreate extends Component
 
     public function submitAdvance()
     {
-        $check = Advance::where('employee_id', $this->employee_id)->exists();
-        if($check)
-        {
-            session()->flash('danger', $this->search." a un remboursement a finir, voir la liste des avance sur salaire");
+        $employee = Employee::findOrFail($this->employee_id);
+
+        // Check for an active advance (toRefund > 0)
+        $active = Advance::where('employee_id', $this->employee_id)
+                         ->where('toRefund', '>', 0)
+                         ->exists();
+
+        if ($active) {
+            session()->flash('danger', $this->search." a déjà une avance en cours, voir la liste des avances.");
+            return redirect()->route('advance.create');
+        }
+
+        // Limit: e.g., max 50% of base salary
+        $max = $employee->category->amount;
+        if ($this->amount > $max) {
+            session()->flash('danger', 'Le montant dépasse le plafond autorisé (50% du salaire)');
             return redirect()->route('advance.create');
         }
 
@@ -61,7 +73,7 @@ class AdvanceCreate extends Component
             'toRefund' => $this->amount, 
             'user_id' => $id
         ]);
-        session()->flash('success', $this->search." a prit une avance sur salaire de :".$this->amount."$");
+        session()->flash('success', $this->search." a pris une avance sur salaire de :".$this->amount."$");
         return redirect()->route('advance.create');
     }
 
