@@ -64,11 +64,12 @@
 
                         <label for="amount">Montant</label>
                         <input 
+                            id="amount"
                             class="form-control"
                             type="number"
                             step="0.01"
                             placeholder=""
-                            wire:model="0.00"
+                            wire:model="amount"
                         >
                     </div>
 

@@ -8,6 +8,7 @@ use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Deduction;
 use App\Models\Advance;
+use App\Models\AdvanceRepayment;
 use App\Models\Category;
 use App\Enums\MonthEnum;
 use App\Models\Payment;
@@ -64,7 +65,10 @@ class PaymentCreate extends Component
     public $totalAdvantage= 0.00;
     //advance
     public $remainToPay = 0.00;
+    public $remainAfterDeduction = 0.00;
     public $amountToDeduct = 0.00;
+    public $applyAdvance = true;
+    public $appliedAdvanceDeduction = 0.00;
     //deduction
     public $CNSS = 0.00;
     public $INPP = 0.00;
@@ -184,7 +188,7 @@ class PaymentCreate extends Component
         ->first();
 
         $advance = Advance::where('employee_id', $this->employee_id)
-                  ->where('credit_amount', '>', 0)
+                  ->where('toRefund', '>', 0)
                   ->first();
 
         $this->baseSalary = $enrollment?->functionType?->amount ?? 0.00;
@@ -240,12 +244,19 @@ class PaymentCreate extends Component
         $this->ONEMAmount = round(($this->brutSalary * $this->ONEM) / 100, 2);
         $this->deductionSalaryAmount = round(($this->brutSalary * $this->deductionSalary) / 100, 2);
 
+        // Theoretical refund amount based on the configured percentage
+        $this->refundAmount = round(($this->brutSalary * $this->refund) / 100, 2);
+
+        // Compute actual deduction capped by remaining advance
         if ($advance) {
             
             $this->amountToDeduct = min($this->refundAmount, $advance->remainToPay);
         } else {
             $this->amountToDeduct = 0;
         }
+
+        // If user chose not to apply advance refund, zero the applied deduction
+        $this->appliedAdvanceDeduction = $this->applyAdvance ? $this->amountToDeduct : 0;
 
         $this->totalDeduction = round($this->CNSSAmount 
                                 + $this->INPPAmount 
@@ -321,3 +332,4 @@ class PaymentCreate extends Component
         return view('livewire.module.payment.payment-create');
     }
 }
+ 
