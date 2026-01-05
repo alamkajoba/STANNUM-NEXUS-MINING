@@ -144,7 +144,7 @@
     <div class="bottom-legal-info border-top border-dark pt-2">
         <div class="d-flex justify-content-between px-2">
             <span>Numéro CNSS : {{$payment?->employee?->enrollment?->cnssNumber}}</span>
-            <span>Email : {{$payment?->employee?->Promail}}</span>
+            <span>Email : {{$payment?->employee?->enrollment?->proMail}}</span>
         </div>
         <div class="d-flex justify-content-between px-2 mt-5">
             <span>SIGNATURE POUR RECEPTION</span>

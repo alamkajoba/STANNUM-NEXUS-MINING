@@ -27,17 +27,17 @@ class PaymentCreate extends Component
 
     #[Validate('required')]
     public $motif = '';
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0')]
     public $restDay = 0;
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0')]
     public $justifyDay = 0;
-    #[Validate('nullable')]
-    public $overtimes = 0.00; 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0')]
+    public $overtimes = 0; 
+    #[Validate('nullable|numeric|min:0|max:999999')]
     public $assudityBonus = 0.00; 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:999999')]
     public $riskBonus = 0.00; 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:999999')]
     public $performanceBonus = 0.00; 
 
     //Var for auto complete employee
@@ -129,8 +129,38 @@ class PaymentCreate extends Component
         }
     }
 
+    //Initialize to zero after update
+    public function updatedrestDay($value) {
+        if ($value === "" || $value === null) $this->restDay = 0;
+    }
+
+    public function updatedjustifyDay($value) {
+        if ($value === "" || $value === null) $this->justifyDay = 0;
+    }
+
+    public function updatedOvertimes($value) {
+        if ($value === "" || $value === null) $this->overtimes = 0;
+    }
+
+    public function updatedassudityBonus($value) {
+        if ($value === "" || $value === null) $this->assudityBonus = 0.00;
+    }
+
+    public function updatedriskBonus($value) {
+        if ($value === "" || $value === null) $this->riskBonus = 0.00;
+    }
+
+    public function updatedperformanceBonus($value) {
+        if ($value === "" || $value === null) $this->performanceBonus = 0.00;
+    }
+
     public function submitPayment()
     {
+        if ($this->enrollment_id == "") {
+            session()->flash('danger', "Selectionner un agent existant dans la base des données!...");
+            return;
+        }
+
         $motif = Carbon::parse($this->motif);
 
         $existPayment = Payment::where('employee_id', $this->employee_id)
@@ -157,27 +187,37 @@ class PaymentCreate extends Component
                   ->where('credit_amount', '>', 0)
                   ->first();
 
-        $this->baseSalary = $enrollment?->functionType?->amount;
-        $this->childCount = $enrollment?->employee?->familyState->count();
-        $this->dayMounth = $enrollment?->functionType?->workDay;
-        $this->workDay = $this->dayMounth - $this->restDay;
-        $this->dayPay = $enrollment?->functionType?->dayAmount;
-        $this->overtimesPay = round($this->overtimes * $enrollment?->functionType?->hourAmount, 2);
+        $this->baseSalary = $enrollment?->functionType?->amount ?? 0.00;
+        $this->childCount = $enrollment?->employee?->familyState->count() ?? 0;
+        $this->dayMounth = $enrollment?->functionType?->workDay ?? 0;
+        $this->workDay = (int) $this->dayMounth - (int) $this->restDay ?? 0;
+        $this->dayPay = $enrollment?->functionType?->dayAmount ?? 0.00;
+        $this->overtimesPay = round($this->overtimes * $enrollment?->functionType?->hourAmount, 2) ?? 0.00;
 
         if($this->restDay > 0)
         {
             $this->restDayCost = round($this->dayPay * $this->restDay, 2);
         }
+
+        if($this->restDay == $this->dayMounth)
+        {
+            $this->restDayCost = $this->baseSalary;
+        }
+
         if($this->justifyDay > 0)
         {
             $this->justifyDayPay = round($this->dayPay * $this->justifyDay, 2);
         }
-        
+
+        if($this->justifyDay == $this->dayMounth)
+        {
+            $this->justifyDayPay = $this->baseSalary;
+        }
 
         
-        $this->housingMounth = $enrollment?->functionType?->housing;
-        $this->transportationCostMounth = $enrollment?->functionType?->transportationCost;
-        $this->familialAllocationMounth = round($enrollment?->functionType?->familialAllocation * $this->childCount, 2);
+        $this->housingMounth = $enrollment?->functionType?->housing ?? 0.00;
+        $this->transportationCostMounth = $enrollment?->functionType?->transportationCost ?? 0.00;
+        $this->familialAllocationMounth = round($enrollment?->functionType?->familialAllocation * $this->childCount, 2) ?? 0.00;
         
         $this->totalDue = round(($this->baseSalary + $this->overtimesPay + $this->assudityBonus + $this->riskBonus + $this->performanceBonus + $this->justifyDayPay) - $this->restDayCost, 2);
        
@@ -187,7 +227,7 @@ class PaymentCreate extends Component
 
         $this->totalAddiction = round($this->overtimesPay + $this->assudityBonus + $this->riskBonus + $this->performanceBonus + $this->justifyDayPay, 2);
 
-        $this->CNSS = $deduction->CNSS;
+        $this->CNSS = $deduction->CNSS; 
         $this->INPP = $deduction->INPP;
         $this->IPR = $deduction->IPR;
         $this->ONEM = $deduction->ONEM;
@@ -201,8 +241,6 @@ class PaymentCreate extends Component
         $this->deductionSalaryAmount = round(($this->brutSalary * $this->deductionSalary) / 100, 2);
 
         if ($advance) {
-            // On compare le montant prévu ($this->refundAmount) avec la dette réelle ($advance->remainToPay)
-            // On prend le plus petit des deux pour ne pas prélever plus que la dette.
             
             $this->amountToDeduct = min($this->refundAmount, $advance->remainToPay);
         } else {

@@ -87,7 +87,6 @@
                             <input 
                                 class="form-control"
                                 type="month"
-                                placeholder=""
                                 wire:model="motif"
                             >
                         </div>
@@ -96,8 +95,9 @@
                             <input 
                                 class="form-control"
                                 type="number"
-                                placeholder=""
                                 wire:model="restDay"
+                                step="1"
+                                min="0"
                             >
                         </div>
                         <div class="mb-1">
@@ -105,8 +105,9 @@
                             <input 
                                 class="form-control"
                                 type="number"
-                                placeholder=""
                                 wire:model="justifyDay"
+                                step="1"
+                                min="0"
                             >
                         </div>
                     </div>
@@ -118,8 +119,8 @@
                                 class="form-control"
                                 type="number"
                                 step="0.01"
-                                placeholder="en USD"
                                 wire:model="assudityBonus"
+                                min="0"
                             >
                         </div>
                         <div class="mb1">
@@ -128,8 +129,8 @@
                                 class="form-control"
                                 type="number"
                                 step="0.01"
-                                placeholder="en USD"
                                 wire:model="riskBonus"
+                                min="0"
                             >
                         </div>
                         <div class="mb1">
@@ -138,8 +139,8 @@
                                 class="form-control"
                                 type="number"
                                 step="0.01"
-                                placeholder="en USD"
                                 wire:model="performanceBonus"
+                                min="0"
                             >
                         </div>
                         <div class="mb-1">
@@ -147,7 +148,9 @@
                             <input 
                                 class="form-control"
                                 type="number"
+                                step="0.01"
                                 wire:model="overtimes"
+                                min="0"
                             >
                         </div>
 

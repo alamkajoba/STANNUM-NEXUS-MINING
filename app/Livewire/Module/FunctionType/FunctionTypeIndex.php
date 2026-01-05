@@ -21,6 +21,11 @@ class FunctionTypeIndex extends Component
     #[Url(as: 'q')]
     public ?string $search = '';
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
 
