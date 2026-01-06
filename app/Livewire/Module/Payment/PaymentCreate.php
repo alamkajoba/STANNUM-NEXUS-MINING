@@ -57,7 +57,7 @@ class PaymentCreate extends Component
             return;
         }
 
-        // 1. On récupère la collection avec les relations
+        // 1. Catch collection with relations
         $enrollments = Enrollment::with(['employee', 'functionType'])
             ->where(function ($query) {
                 $query->where('matricule', 'like', '%' . $this->search . '%')
@@ -68,28 +68,28 @@ class PaymentCreate extends Component
                 });
             })
             ->limit(5)
-            ->get(); // On garde l'objet Collection ici (ne pas mettre toArray ici)
+            ->get();
 
-        // 2. On transforme en tableau simple "Livewire-friendly"
+        // 2. Simple table "Livewire-friendly"
         $this->itemsEmployee = $enrollments->map(function ($item) {
             return [
                 'id'            => $item->id,
                 'matricule'     => $item->matricule,
-                // Sécurité : on vérifie si la relation employee existe
+                // Security : if employee relation is True
                 'full_name'     => $item->employee 
                                     ? "{$item->employee->lastName} {$item->employee->firstName}" 
                                     : 'Employé inconnu',
-                // Sécurité : on extrait le montant du Cast Money en float
+                // Security : Catch amount from Cast Money and convert to float
                 'base_salary'   => $item->functionType?->amount?->getAmount()->toFloat() ?? 0,
                 'function_name' => $item->functionType?->nameFunction ?? 'N/A',
             ];
-        })->all(); // .all() ou .toArray() ici sur le résultat du map
+        })->all(); // .all() ou .toArray()
     }
 
     //Selected Employee
    public function selectEmployee($itemId): void
 {
-    // On récupère l'enrôlement avec ses relations
+    // Select enrollment with his relations
     $enrollment = Enrollment::with(['employee', 'functionType'])->find($itemId);
 
     if ($enrollment) {
@@ -97,11 +97,10 @@ class PaymentCreate extends Component
         $this->enrollment_id = $enrollment->id;
         
         $emp = $enrollment->employee;
-        // On met à jour le champ de recherche avec le nom complet
+        // Update search field with full name
         $this->search = "{$enrollment->matricule} - {$emp->lastName} {$emp->firstName}";
         
-        // --- CRUCIAL : On ne stocke qu'un tableau de données SIMPLES ---
-        // On extrait les montants en float pour éviter l'erreur "Property type not supported"
+        // Extract amount and convert to float
         $this->selectedEmployee = [
             'id' => $enrollment->id,
             'baseSalary' => $enrollment->functionType->amount->getAmount()->toFloat(),
@@ -109,10 +108,10 @@ class PaymentCreate extends Component
             'hourPay' => $enrollment->functionType->hourAmount->getAmount()->toFloat(),
         ]; 
 
-        // On réinitialise aussi les totaux si nécessaire
+        // reset totals if needed
         $this->baseSalary = $this->selectedEmployee['baseSalary'];
         
-        // On ferme la liste de suggestions
+        // close 
         $this->itemsEmployee = [];
     }
 }
@@ -152,7 +151,7 @@ class PaymentCreate extends Component
         $motif = Carbon::parse($this->motif);
         $deduction = Deduction::latest()->first();
         
-        // 1. Récupération de l'enrôlement avec les relations
+        // 1. Catch enrollment with relations
         $enrollment = Enrollment::with([
             'employee.familyState' => function($query) {
                 $query->where('relationType', RelationTypeEnum::CHILD->value);
@@ -206,26 +205,28 @@ class PaymentCreate extends Component
         // Salaire Brut Total (Base imposable)
         $brutSalary = $totalDue->plus($totalAdvantage);
 
-        // 6. Calcul des Déductions (Taxes)
-        // On utilise dividedBy(100) pour les pourcentages
+        // 6. Manage deductions
+        // use dividedBy(100) 
         $cnssAmount = $brutSalary->multipliedBy($deduction->CNSS, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
         $inppAmount = $brutSalary->multipliedBy($deduction->INPP, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
         $iprAmount  = $brutSalary->multipliedBy($deduction->IPR, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
         $onemAmount = $brutSalary->multipliedBy($deduction->ONEM, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
         $deducionSalaryAmount = $brutSalary->multipliedBy($deduction->deductionSalary, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
 
-        // 7. Gestion de l'avance
+        // 7. Manage advance
         $advance = Advance::where('employee_id', $this->employee_id)->where('toRefund', '>', 0)->first();
         $refundAmount = Money::of(0, 'USD');
         
+        //CHRISDEV
+
         // if ($advance && $this->applyAdvance) {
         //     $theoreticalRefund = $brutSalary->multipliedBy($deduction->refundAdvanceAmount, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
-        //     // On prend le minimum entre la dette restante et le pourcentage calculé
+        //     
         //     $advanceDebt = $advance->remainToPay; // Déjà un objet Money via Cast
         //     $refundAmount = $theoreticalRefund->isGreaterThan($advanceDebt) ? $advanceDebt : $theoreticalRefund;
         // }
 
-        // 8. Calcul Final
+        // 8. Final calcul
         $totalDeduction = $cnssAmount->plus($inppAmount)->plus($iprAmount)->plus($onemAmount)->plus($refundAmount);
         $netSalary = $brutSalary->minus($totalDeduction);
 
