@@ -29,6 +29,9 @@ use App\Livewire\Module\Notify\NoteNotify;
 use App\Livewire\Module\Advance\AdvanceShow;
 use App\Livewire\Module\Advance\AdvanceHistory;
 use App\Livewire\Module\Advance\EmployeeAdvanceDetail;
+use App\Livewire\Module\FunctionType\FunctionTypeIndex;
+use App\Livewire\Module\FunctionType\FunctionTypeCreate;
+use App\Livewire\Module\FunctionType\FunctionTypeUpdate;
 
 
 Route::get('/', function () {
@@ -64,7 +67,7 @@ Route::middleware('auth')->prefix('employee')->name('employee.')->group(function
 Route::middleware('auth')->prefix('function')->name('function.')->group(function () {
     Route::get('index', FunctionTypeIndex::class)->name('index');
     Route::get('create', FunctionTypeCreate::class)->name('create');
-    Route::get('update/{id}', FunctionTypeUpdate::class)->name('update');
+    Route::get('update/{functionType}', FunctionTypeUpdate::class)->name('update');
 });
 
 #FamilyState routes

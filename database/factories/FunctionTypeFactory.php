@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Brick\Money\Money;
+use Brick\Math\RoundingMode;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FunctionType>
@@ -16,18 +18,23 @@ class FunctionTypeFactory extends Factory
      */
     public function definition(): array
     {
-        $baseAmount = $this->faker->numberBetween(500, 2000); 
+        $baseAmount = $this->faker->numberBetween(2000, 6000); 
+        $baseMoney = Money::of($baseAmount, 'USD');
+        $workDays = 26;
 
         return [
             'nameFunction'       => $this->faker->jobTitle(),
-            'amount'             => $baseAmount,
-            'workDay'            => 26, // Standard mensuel
-            'dayAmount'          => $baseAmount / 26,
-            'hourAmount'         => ($baseAmount / 26) / 8, // Basé sur 8h/jour
-            'housing'            => $this->faker->randomFloat(2, 50, 150),
-            'transportationCost' => $this->faker->randomFloat(2, 200, 600),
-            'familialAllocation' => $this->faker->randomFloat(2, 10, 50),
-            'user_id'            => 1, 
+            'workDay'            => $workDays,
+            'amount'             => $baseMoney,
+            'dayAmount'          => $baseMoney->dividedBy($workDays, RoundingMode::HALF_UP),
+            'hourAmount'         => $baseMoney->dividedBy($workDays, RoundingMode::HALF_UP)
+                                            ->dividedBy(8, RoundingMode::HALF_UP),
+            
+            'housing'            => Money::of($this->faker->numberBetween(100, 500), 'USD'),
+            'transportationCost' => Money::of($this->faker->numberBetween(50, 200), 'USD'),
+            'familialAllocation' => Money::of($this->faker->numberBetween(20, 100), 'USD'),
+            
+            'user_id'            => \App\Models\User::factory(), 
         ];
     }
 }

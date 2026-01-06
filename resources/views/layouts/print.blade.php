@@ -63,21 +63,29 @@
     .bottom-legal-info { font-size: 10px; width: 100%; }
     .border-top-dark { border-top: 2px solid #000 !important; }
 
+    
     @media print {
         @page { size: A4; margin: 0; }
-        body { margin: 0; padding: 0; background: none; }
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: none; 
+            -webkit-print-color-adjust: exact !important; /* Pour Chrome/Safari */
+            print-color-adjust: exact !important;         /* Standard */
+        }
+        
         .bulletin-container { 
             width: 21cm; 
             height: 29.7cm; 
-            border: none; /* On retire la bordure extérieure à l'impression */
+            border: none; 
             padding: 1.5cm;
             box-shadow: none;
         }
-        .total-row {
+
+        /* Force l'affichage des couleurs de fond sur toutes les lignes qui en ont */
+        tr[style*="background-color"] {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
-            background-color: rgb(41, 5, 88) !important;
-            color: white !important;
         }
     }
 </style>

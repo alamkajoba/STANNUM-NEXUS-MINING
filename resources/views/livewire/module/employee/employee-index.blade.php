@@ -29,7 +29,7 @@
             Liste des agents
         </h1>
         <div class="d-none d-sm-inline-block shadow-sm">
-            <input wire:model.live="search" class="form-control" type="text" placeholder="Rechercher...">
+            <input wire:model.live.debounce.300ms="search" class="form-control" type="text" placeholder="Rechercher...">
         </div>
     </div>
 

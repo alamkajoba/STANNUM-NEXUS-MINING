@@ -180,7 +180,7 @@
 
             <!-- Heading -->
             <div style="color:white;" class="sidebar-heading">
-               Rétenues
+               Déductions
             </div>
 
             {{--Deduction--}}
@@ -189,7 +189,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDeduction"
                     aria-expanded="true" aria-controls="collapseDeduction">
                     <i style="color:white;" class="fa fa-cogs"></i>
-                    <span style="color:white">Rétenue sur salaire</span> 
+                    <span style="color:white">Déductions sur salaire</span> 
                 </a>
                 <div id="collapseDeduction" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">

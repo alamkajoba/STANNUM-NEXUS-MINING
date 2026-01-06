@@ -41,6 +41,7 @@
                         <tr>
                             <th>CNSS</th>
                             <th>INPP</th>
+                            <th>ONEM</th>
                             <th>IRP</th>
                             <th>Rétenue sur salaire</th>
                             <th>Taux remboursement Avance sur salaire</th>
@@ -52,6 +53,7 @@
                             <tr >
                                 <td>{{ $deductions->CNSS }} %</td>
                                 <td>{{ $deductions->INPP }} %</td>
+                                <td>{{ $deductions->ONEM }} %</td>
                                 <td>{{ $deductions->IPR }} %</td>
                                 <td>{{ $deductions->deductionSalary }} %</td>
                                 <td>{{ $deductions->refundAdvanceAmount}} %</td>
@@ -74,42 +76,6 @@
             <div class="mt-4">
                 {{ $deduction->links() }}
             </div>
-
-        <!-- Modal delete student -->
-        <div class="modal fade" id="deleteStudentModal" tabindex="-1" aria-labelledby="deleteStudentModal" aria-hidden="true" wire:ignore.self>
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content rounded-0">
-                    <div style="background-color: rgb(97, 97, 156)" class="modal-header text-white rounded-0">
-                        <h5 class="modal-title" id="deleteStudentModal">Confirmer l'action</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Formulaire de connexion -->
-                        <form wire:submit.prevent="destroyStudent">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Identifiant</label>
-                                <input type="text" class="form-control" wire:model.defer="user" required autocomplete="off">
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Mot de passe</label>
-                                <input type="password" class="form-control" wire:model.defer="password" required autocomplete="off">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button 
-                            wire:click="destroyStudent" 
-                            style="background-color: rgb(97, 97, 156)" 
-                            class="btn text-white"
-                        >
-                            Supprimer
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- ModalEnd -->
     </div>
 </div>
 
