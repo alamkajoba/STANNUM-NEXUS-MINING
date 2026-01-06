@@ -9,7 +9,7 @@ use Brick\Money\Money;
 class MoneyCast implements CastsAttributes
 {
     /**
-     * Transformation DE la base de données VERS le modèle (Lecture)
+     * datas to model (read)
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): ?Money
     {
@@ -17,12 +17,12 @@ class MoneyCast implements CastsAttributes
             return null;
         }
 
-        // On transforme les centimes stockés en base en objet Money USD
+        // Change centimes saved in object Money USD
         return Money::ofMinor($value, 'USD');
     }
 
     /**
-     * Transformation DU modèle VERS la base de données (Écriture)
+     * datas to model (create)
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): ?int
     {
@@ -30,12 +30,12 @@ class MoneyCast implements CastsAttributes
             return null;
         }
 
-        // Si c'est déjà un objet Money, on récupère les centimes
+        // If is already Money Object, catch centimes
         if ($value instanceof Money) {
             return $value->getMinorAmount()->toInt();
         }
 
-        // Si c'est une string (ex: venant de Livewire), on nettoie et on convertit
+        // If is string, clear and convert
         if (is_string($value)) {
             $value = preg_replace('/[^0-9.-]/', '', $value);
         }
