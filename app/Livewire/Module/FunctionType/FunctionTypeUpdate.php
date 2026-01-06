@@ -7,6 +7,8 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
 use App\Models\FunctionType;
+use Brick\Money\Money;
+use Brick\Math\RoundingMode;
 
 #[Layout('layouts.app')]
 class FunctionTypeUpdate extends Component
@@ -28,36 +30,43 @@ class FunctionTypeUpdate extends Component
 
     #[Validate('nullable|numeric|min:0')]
     public $familialAllocation = 0.00;
+
+    public FunctionType $functionType;
     
-    public $functionId;
-    
-    public function mount($id)
+    public function mount(FunctionType $functionType)
     {
-        $function = FunctionType::findOrFail($id);
-        $this->nameFunction = $function->nameFunction;
-        $this->amount = $function->amount;
-        $this->workDay = $function->workDay;
-        $this->housing = $function->housing;
-        $this->familialAllocation = $function->familialAllocation;
-        $this->transportationCost = $function->transportationCost;
-        $this->functionId = $function->id;
+        $this->functionType = $functionType;
+
+        $this->nameFunction = $functionType->nameFunction;
+        $this->workDay      = $functionType->workDay;
+
+        $this->amount             = $functionType?->amount->getAmount()->toFloat();
+        $this->housing            = $functionType?->housing->getAmount()->toFloat();
+        $this->transportationCost = $functionType?->transportationCost->getAmount()->toFloat();
+        $this->familialAllocation = $functionType?->familialAllocation->getAmount()->toFloat();
     }
 
     private function dataFunctionType(): array
     {
-        $dayAmount = $this->amount / max(1, $this->workDay);
-        $hourAmount = $dayAmount / 8;
+        $baseMoney    = Money::of($this->amount, 'USD');
+        $housing      = Money::of($this->housing, 'USD');
+        $transport    = Money::of($this->transportationCost, 'USD');
+        $allocation   = Money::of($this->familialAllocation, 'USD');
+
+
+        $dayAmount = $baseMoney->dividedBy($this->workDay, RoundingMode::HALF_UP);
+        $hourAmount = $dayAmount->dividedBy(8, RoundingMode::HALF_UP);
 
         $id = Auth::id();
         return [
             'nameFunction' => $this->nameFunction,
-            'amount' => $this->amount,
+            'amount' => $baseMoney,
             'dayAmount' => $dayAmount,
             'hourAmount' => $hourAmount,
             'workDay' => $this->workDay,
-            'familialAllocation' => $this->familialAllocation,
-            'housing' => $this->housing,
-            'transportationCost' => $this->transportationCost,
+            'familialAllocation' => $allocation,
+            'housing' => $housing,
+            'transportationCost' => $transport,
             'user_id' => $id
         ];
     }
@@ -66,8 +75,7 @@ class FunctionTypeUpdate extends Component
     {
         $this->validate();
 
-        $function = FunctionType::find($this->functionId);
-        $function->update($this->dataFunctionType());
+        $this->functionType->update($this->dataFunctionType());
         session()->flash('success', "La Fonction: ".$this->nameFunction. " a été modifiéé avec succès.");
         return redirect()->to(route('function.index'));
     }

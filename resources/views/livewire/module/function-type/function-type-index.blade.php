@@ -58,13 +58,13 @@
                                     {{ ($category->currentPage() - 1) * $category->perPage() + $loop->iteration }}
                                 </td>
                                 <td>{{ $categories->nameFunction }}</td>
-                                <td>{{ $categories->amount }} $</td>
+                                <td>{{ $categories->amount->formatTo('en_US') }}</td>
                                 <td>{{ $categories->workDay }} Jours</td>
-                                <td>{{ $categories->dayAmount }} $</td>
-                                <td>{{ $categories->hourAmount }} $</td>
-                                <td>{{ $categories->housing}} $</td>
-                                <td>{{ $categories->transportationCost}} $</td>
-                                <td>{{ $categories->familialAllocation}} $</td>
+                                <td>{{ $categories->dayAmount->formatTo('en_US') }}</td>
+                                <td>{{ $categories->hourAmount->formatTo('en_US') }}</td>
+                                <td>{{ $categories->housing->formatTo('en_US')}}</td>
+                                <td>{{ $categories->transportationCost->formatTo('en_US')}}</td>
+                                <td>{{ $categories->familialAllocation->formatTo('en_US')}}</td>
                                 <td>
                                     <a href="{{route('function.update', $categories->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
                                         Modifier

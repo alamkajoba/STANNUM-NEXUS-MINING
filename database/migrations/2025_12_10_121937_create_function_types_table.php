@@ -14,21 +14,17 @@ return new class extends Migration
         Schema::create('function_types', function (Blueprint $table) {
             $table->id();
             $table->string('nameFunction'); 
-            $table->decimal('amount', 15, 2)->default(0.00);
-            $table->decimal('dayAmount', 15, 2)->default(0.00);
-            $table->decimal('hourAmount', 15, 2)->default(0.00);
+            $table->bigInteger('amount')->default(0);
+            $table->bigInteger('dayAmount')->default(0);
+            $table->bigInteger('hourAmount')->default(0);
             $table->integer('workDay'); 
-            $table->decimal('housing', 15, 2)->default(0.00);
-            $table->decimal('transportationCost', 15, 2)->default(0.00); 
-            $table->decimal('familialAllocation', 15, 2)->default(0.00); 
+            $table->bigInteger('housing')->default(0);
+            $table->bigInteger('transportationCost')->default(0); 
+            $table->bigInteger('familialAllocation')->default(0); 
             $table->softDeletes();
             $table->timestamps();
 
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('restrict');
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
         });
     }
 

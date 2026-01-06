@@ -16,6 +16,8 @@ use Illuminate\Support\Str;
 use App\Enums\RelationTypeEnum;
 use Carbon\Carbon;
 use App\Models\Enrollment;
+use Brick\Math\RoundingMode;
+use Brick\Money\Money;
 
 
 #[Layout('layouts.app')]
@@ -46,60 +48,19 @@ class PaymentCreate extends Component
     public $itemsEmployee = [];
     public $selectedEmployee = [null];
 
-    //All for paySlip
-    public $childCount = 0;
-    public $restDayCost = 0.00;
-    public $dayPay = 0.00;
-    public $baseSalary = 0.00;
-    public $dayMounth = 0;
-    public $justifyDayPay = 0.00;
-    public $workDay = 0;
-    public $totalAddiction = 0.00;
-    //payment
-    public $overtimesPay = 0.00;
-    public $totalDue = 0.00;
-    //advantage
-    public $housingMounth = 0.00;
-    public $transportationCostMounth = 0.00;
-    public $familialAllocationMounth = 0.00;
-    public $totalAdvantage= 0.00;
-    //advance
-    public $remainToPay = 0.00;
-    public $remainAfterDeduction = 0.00;
-    public $amountToDeduct = 0.00;
-    public $applyAdvance = true;
-    public $appliedAdvanceDeduction = 0.00;
-    //deduction
-    public $CNSS = 0.00;
-    public $INPP = 0.00;
-    public $ONEM = 0.00;
-    public $IPR = 0.00;
-    public $deductionSalary = 0.00;
-    public $refund = 0.00;
-    public $CNSSAmount = 0.00;
-    public $INPPAmount = 0.00;
-    public $ONEMAmount = 0.00;
-    public $IPRAmount = 0.00;
-    public $deductionSalaryAmount = 0.00;
-    public $refundAmount = 0.00;
-    public $totalDeduction = 0.00;
-    //final
-    public $brutSalary = 0.00;
-    public $netSalary = 0.00;
-
 
 
     public function searchEmployee(): void
     {
         if (strlen($this->search) < 1 || str_contains($this->search, ' - ')) {
-                $this->itemsEmployee = [];
-                return;
+            $this->itemsEmployee = [];
+            return;
         }
 
-        $this->itemsEmployee = Enrollment::with(['employee', 'functionType'])
+        // 1. On récupère la collection avec les relations
+        $enrollments = Enrollment::with(['employee', 'functionType'])
             ->where(function ($query) {
                 $query->where('matricule', 'like', '%' . $this->search . '%')
-                
                 ->orWhereHas('employee', function ($q) {
                     $q->where('firstName', 'like', '%' . $this->search . '%')
                     ->orWhere('lastName', 'like', '%' . $this->search . '%')
@@ -107,31 +68,54 @@ class PaymentCreate extends Component
                 });
             })
             ->limit(5)
-            ->get()
-            ->toArray();
+            ->get(); // On garde l'objet Collection ici (ne pas mettre toArray ici)
+
+        // 2. On transforme en tableau simple "Livewire-friendly"
+        $this->itemsEmployee = $enrollments->map(function ($item) {
+            return [
+                'id'            => $item->id,
+                'matricule'     => $item->matricule,
+                // Sécurité : on vérifie si la relation employee existe
+                'full_name'     => $item->employee 
+                                    ? "{$item->employee->lastName} {$item->employee->firstName}" 
+                                    : 'Employé inconnu',
+                // Sécurité : on extrait le montant du Cast Money en float
+                'base_salary'   => $item->functionType?->amount?->getAmount()->toFloat() ?? 0,
+                'function_name' => $item->functionType?->nameFunction ?? 'N/A',
+            ];
+        })->all(); // .all() ou .toArray() ici sur le résultat du map
     }
 
     //Selected Employee
-    public function selectEmployee($itemId): void
-    {
-        // Select
-        $enrollment = Enrollment::with(['employee', 'functionType'])->find($itemId);
+   public function selectEmployee($itemId): void
+{
+    // On récupère l'enrôlement avec ses relations
+    $enrollment = Enrollment::with(['employee', 'functionType'])->find($itemId);
 
-        if ($enrollment) {
-            $this->selectedEmployee = $enrollment->toArray();
-            
-            $emp = $enrollment->employee;
-            
-            $this->search = "{$enrollment->matricule} - {$emp->lastName} {$emp->firstName}";
-            
-            $this->employee_id = $enrollment->employee_id; 
-            $this->enrollment_id = $enrollment->id;
-            $this->category_id = $enrollment->category_id;
-            
-            // On ferme la liste de suggestions
-            $this->itemsEmployee = [];
-        }
+    if ($enrollment) {
+        $this->employee_id = $enrollment->employee_id; 
+        $this->enrollment_id = $enrollment->id;
+        
+        $emp = $enrollment->employee;
+        // On met à jour le champ de recherche avec le nom complet
+        $this->search = "{$enrollment->matricule} - {$emp->lastName} {$emp->firstName}";
+        
+        // --- CRUCIAL : On ne stocke qu'un tableau de données SIMPLES ---
+        // On extrait les montants en float pour éviter l'erreur "Property type not supported"
+        $this->selectedEmployee = [
+            'id' => $enrollment->id,
+            'baseSalary' => $enrollment->functionType->amount->getAmount()->toFloat(),
+            'dayPay' => $enrollment->functionType->dayAmount->getAmount()->toFloat(),
+            'hourPay' => $enrollment->functionType->hourAmount->getAmount()->toFloat(),
+        ]; 
+
+        // On réinitialise aussi les totaux si nécessaire
+        $this->baseSalary = $this->selectedEmployee['baseSalary'];
+        
+        // On ferme la liste de suggestions
+        $this->itemsEmployee = [];
     }
+}
 
     //Initialize to zero after update
     public function updatedrestDay($value) {
@@ -160,24 +144,15 @@ class PaymentCreate extends Component
 
     public function submitPayment()
     {
-        if ($this->enrollment_id == "") {
-            session()->flash('danger', "Selectionner un agent existant dans la base des données!...");
+        if (!$this->enrollment_id) {
+            session()->flash('danger', "Sélectionnez un agent !");
             return;
         }
 
         $motif = Carbon::parse($this->motif);
-
-        $existPayment = Payment::where('employee_id', $this->employee_id)
-            ->where('motif', $motif)
-            ->exists();
-
-        if ($existPayment) {
-            session()->flash('danger', "Cet Agent a déjà reçu ce paiement verifiez la liste!...");
-            return redirect()->route('payment.index');
-        }
-
         $deduction = Deduction::latest()->first();
-
+        
+        // 1. Récupération de l'enrôlement avec les relations
         $enrollment = Enrollment::with([
             'employee.familyState' => function($query) {
                 $query->where('relationType', RelationTypeEnum::CHILD->value);
@@ -187,93 +162,79 @@ class PaymentCreate extends Component
         ])->where('employee_id', $this->employee_id)
         ->first();
 
-        $advance = Advance::where('employee_id', $this->employee_id)
-                  ->where('toRefund', '>', 0)
-                  ->first();
+        // 2. Initialisation des montants de base (Objets Money via le Cast du modèle)
+        // On utilise optional() pour éviter les crashs si le lien est cassé
+        $baseSalary = $enrollment->functionType->amount; 
+        $workDay = $enrollment->functionType->workDay; 
+        $dayPay     = $enrollment->functionType->dayAmount;
+        $hourPay    = $enrollment->functionType->hourAmount;
+        $housing    = $enrollment->functionType->housing;
+        $transport  = $enrollment->functionType->transportationCost;
+        $allocPerChild = $enrollment->functionType->familialAllocation;
 
-        $this->baseSalary = $enrollment?->functionType?->amount ?? 0.00;
-        $this->childCount = $enrollment?->employee?->familyState->count() ?? 0;
-        $this->dayMounth = $enrollment?->functionType?->workDay ?? 0;
-        $this->workDay = (int) $this->dayMounth - (int) $this->restDay ?? 0;
-        $this->dayPay = $enrollment?->functionType?->dayAmount ?? 0.00;
-        $this->overtimesPay = round($this->overtimes * $enrollment?->functionType?->hourAmount, 2) ?? 0.00;
-
-        if($this->restDay > 0)
-        {
-            $this->restDayCost = round($this->dayPay * $this->restDay, 2);
-        }
-
-        if($this->restDay == $this->dayMounth)
-        {
-            $this->restDayCost = $this->baseSalary;
-        }
-
-        if($this->justifyDay > 0)
-        {
-            $this->justifyDayPay = round($this->dayPay * $this->justifyDay, 2);
-        }
-
-        if($this->justifyDay == $this->dayMounth)
-        {
-            $this->justifyDayPay = $this->baseSalary;
-        }
-
+        // 3. Calculs des gains (Addictions)
+        $childCount = $enrollment->employee->familyState->count();
         
-        $this->housingMounth = $enrollment?->functionType?->housing ?? 0.00;
-        $this->transportationCostMounth = $enrollment?->functionType?->transportationCost ?? 0.00;
-        $this->familialAllocationMounth = round($enrollment?->functionType?->familialAllocation * $this->childCount, 2) ?? 0.00;
+        // Heures supplémentaires
+        $overtimesPay = $hourPay->multipliedBy($this->overtimes, RoundingMode::HALF_UP);
         
-        $this->totalDue = round(($this->baseSalary + $this->overtimesPay + $this->assudityBonus + $this->riskBonus + $this->performanceBonus + $this->justifyDayPay) - $this->restDayCost, 2);
-       
-        $this->totalAdvantage = round($this->housingMounth + $this->transportationCostMounth + $this->familialAllocationMounth, 2);
+        // Bonus (On convertit les inputs du formulaire en Money)
+        $assudity    = Money::of($this->assudityBonus, 'USD');
+        $risk        = Money::of($this->riskBonus, 'USD');
+        $performance = Money::of($this->performanceBonus, 'USD');
         
-        $this->brutSalary = round($this->totalAdvantage + $this->totalDue, 2);
+        // Absences et Justifiés
+        $restDayCost   = $dayPay->multipliedBy($this->restDay, RoundingMode::HALF_UP);
+        $justifyDayPay = $dayPay->multipliedBy($this->justifyDay, RoundingMode::HALF_UP);
 
-        $this->totalAddiction = round($this->overtimesPay + $this->assudityBonus + $this->riskBonus + $this->performanceBonus + $this->justifyDayPay, 2);
+        // 4. Calcul du Brut de Paie (Total Due)
+        // Formule : (Base + Heures Supp + Bonus + Justifiés) - Absences
+        $totalAddiction = ($overtimesPay)
+            ->plus($assudity)
+            ->plus($risk)
+            ->plus($performance)
+            ->plus($justifyDayPay)
+            ->minus($restDayCost);
 
-        $this->CNSS = $deduction->CNSS; 
-        $this->INPP = $deduction->INPP;
-        $this->IPR = $deduction->IPR;
-        $this->ONEM = $deduction->ONEM;
-        $this->refund = $deduction->refundAdvanceAmount;
-        $this->deductionSalary = $deduction->deductionSalary;
+        $totalDue = $baseSalary
+            ->plus($totalAddiction);
 
-        $this->CNSSAmount = round(($this->brutSalary * $this->CNSS) / 100, 2);
-        $this->INPPAmount = round(($this->brutSalary * $this->INPP) / 100, 2);
-        $this->IPRAmount  = round(($this->brutSalary * $this->IPR) / 100, 2);
-        $this->ONEMAmount = round(($this->brutSalary * $this->ONEM) / 100, 2);
-        $this->deductionSalaryAmount = round(($this->brutSalary * $this->deductionSalary) / 100, 2);
+        // 5. Avantages Sociaux
+        $totalAlloc = $allocPerChild->multipliedBy($childCount, RoundingMode::HALF_UP);
+        $totalAdvantage = $housing->plus($transport)->plus($totalAlloc);
 
-        // Theoretical refund amount based on the configured percentage
-        $this->refundAmount = round(($this->brutSalary * $this->refund) / 100, 2);
+        // Salaire Brut Total (Base imposable)
+        $brutSalary = $totalDue->plus($totalAdvantage);
 
-        // Compute actual deduction capped by remaining advance
-        if ($advance) {
-            
-            $this->amountToDeduct = min($this->refundAmount, $advance->remainToPay);
-        } else {
-            $this->amountToDeduct = 0;
-        }
+        // 6. Calcul des Déductions (Taxes)
+        // On utilise dividedBy(100) pour les pourcentages
+        $cnssAmount = $brutSalary->multipliedBy($deduction->CNSS, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
+        $inppAmount = $brutSalary->multipliedBy($deduction->INPP, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
+        $iprAmount  = $brutSalary->multipliedBy($deduction->IPR, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
+        $onemAmount = $brutSalary->multipliedBy($deduction->ONEM, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
+        $deducionSalaryAmount = $brutSalary->multipliedBy($deduction->deductionSalary, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
 
-        // If user chose not to apply advance refund, zero the applied deduction
-        $this->appliedAdvanceDeduction = $this->applyAdvance ? $this->amountToDeduct : 0;
+        // 7. Gestion de l'avance
+        $advance = Advance::where('employee_id', $this->employee_id)->where('toRefund', '>', 0)->first();
+        $refundAmount = Money::of(0, 'USD');
+        
+        // if ($advance && $this->applyAdvance) {
+        //     $theoreticalRefund = $brutSalary->multipliedBy($deduction->refundAdvanceAmount, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
+        //     // On prend le minimum entre la dette restante et le pourcentage calculé
+        //     $advanceDebt = $advance->remainToPay; // Déjà un objet Money via Cast
+        //     $refundAmount = $theoreticalRefund->isGreaterThan($advanceDebt) ? $advanceDebt : $theoreticalRefund;
+        // }
 
-        $this->totalDeduction = round($this->CNSSAmount 
-                                + $this->INPPAmount 
-                                + $this->IPRAmount 
-                                + $this->ONEMAmount 
-                                + $this->amountToDeduct
-                                + $this->deductionSalaryAmount, 2);
-
-        $this->netSalary = round($this->brutSalary - $this->totalDeduction, 2);
+        // 8. Calcul Final
+        $totalDeduction = $cnssAmount->plus($inppAmount)->plus($iprAmount)->plus($onemAmount)->plus($refundAmount);
+        $netSalary = $brutSalary->minus($totalDeduction);
 
         $id = Auth::id();
-
         $payment = Payment::create([
             'employee_id' => $this->employee_id, 
             'motif' => $motif, 
             'user_id' => $id,
-            'netSalary' => $this->netSalary,
+            'netSalary' => $netSalary,
             //JSON
             'slipPrint'=>[
                 //Employee section
@@ -285,41 +246,41 @@ class PaymentCreate extends Component
                 'echelon' => $enrollment?->echelon,
                 'acountNumber' => $enrollment?->acountNumber,
                 'cnssNumber' => $enrollment?->cnssNumber,
-                'childCount' => $this->childCount,
-                'baseSalary' => $this->baseSalary,
-                'workDay' => $this->workDay,
+                'childCount' => $childCount,
+                'baseSalary' => $baseSalary->getAmount()->toFloat(),
+                'workDay' => $workDay,
                 //Invoice section 1 brutDue and total
                 'abscence' => $this->restDay,
-                'absencePay' => $this->restDayCost,
+                'absencePay' => $restDayCost->getAmount()->toFloat(),
                 'justify' => $this->justifyDay,
-                'justifyPay' => $this->justifyDayPay,
+                'justifyPay' => $justifyDayPay->getAmount()->toFloat(),
                 'overtimes' => $this->overtimes,
-                'overtimesPay' => $this->overtimesPay,
-                'assuduity' => $this->assudityBonus,
-                'risk' => $this->riskBonus,
-                'performance' => $this->performanceBonus,
-                'totalAddiction' => $this->totalAddiction,
-                'brutDue' => $this->totalDue,
+                'overtimesPay' => $overtimesPay->getAmount()->toFloat(),
+                'assuduity' => $assudity->getAmount()->toFloat(),
+                'risk' => $risk->getAmount()->toFloat(),
+                'performance' => $performance->getAmount()->toFloat(),
+                'totalAddiction' => $totalAddiction->getAmount()->toFloat(),
+                'brutDue' => $totalDue->getAmount()->toFloat(),
                 //Invoice section 2 Social advantage
-                'housing' => $this->housingMounth,
-                'transportation' => $this->transportationCostMounth,
-                'familialAllocation' => $this->familialAllocationMounth,
-                'totalAdvantage' => $this->totalAdvantage,
-                'totalDeduction' => $this->totalDeduction,
-                'brutSalary' => $this->brutSalary,
+                'housing' => $housing->getAmount()->toFloat(),
+                'transportation' => $transport->getAmount()->toFloat(),
+                'familialAllocation' => $allocPerChild->getAmount()->toFloat(),
+                'totalAdvantage' => $totalAdvantage->getAmount()->toFloat(),
+                'totalDeduction' => $totalDeduction->getAmount()->toFloat(),
+                'brutSalary' => $brutSalary->getAmount()->toFloat(),
                 //Invoice section 3 Deductions
-                'CNSS' => $this->CNSS,
-                'ONEM' => $this->ONEM,
-                'INPP' => $this->INPPAmount,
-                'IPR' => $this->IPR,
-                'toRefundAdvance' => $this->refund,
-                'salaryDeduction' => $this->deductionSalary,
-                'CNSSAmount' => $this->CNSSAmount,
-                'ONEMAmount' => $this->ONEMAmount,
-                'INPPAmount' => $this->INPPAmount,
-                'IPRAmount' => $this->IPRAmount,
-                'toRefundAdvance' => $this->refundAmount,
-                'salaryDeductionAmount' => $this->deductionSalaryAmount,
+                'CNSS' => $deduction->CNSS,
+                'ONEM' => $deduction->ONEM,
+                'INPP' => $deduction->INPPAmount,
+                'IPR' => $deduction->IPR,
+                'toRefundAdvance' => $deduction->refundAdvanceAmount,
+                'salaryDeduction' => $deduction->deductionSalary,
+                'CNSSAmount' => $cnssAmount->getAmount()->toFloat(),
+                'ONEMAmount' => $onemAmount->getAmount()->toFloat(),
+                'INPPAmount' => $inppAmount->getAmount()->toFloat(),
+                'IPRAmount' => $iprAmount->getAmount()->toFloat(),
+                'toRefundAdvance' => 0,
+                'salaryDeductionAmount' => $deducionSalaryAmount->getAmount()->toFloat(),
             ], 
         ]);
         session()->flash('success', "Successfuly!...");

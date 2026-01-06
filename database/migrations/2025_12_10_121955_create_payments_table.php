@@ -15,22 +15,14 @@ return new class extends Migration
             $table->unique(['employee_id', 'motif']);
             $table->id();
             $table->date('motif');
-            $table->decimal('netSalary', 15, 2);
+            $table->bigInteger('netSalary')->default(0);
             $table->json('slipPrint')->nullable();
             $table->softDeletes();
             $table->timestamps();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('employee_id');
 
-            $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
 
-            $table->foreign('employee_id')
-                    ->references('id')
-                    ->on('employees')
-                    ->onDelete('cascade');
+            $table->foreignId('employee_id')->constrained()->onDelete('restrict');
         });
     }
 

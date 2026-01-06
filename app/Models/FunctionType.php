@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Trait\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Casts\MoneyCast;
 
 class FunctionType extends Model
 {
@@ -26,12 +27,20 @@ class FunctionType extends Model
     ];
 
     protected $casts = [
-        'amount' => 'decimal:2',
-        'dayAmount' => 'decimal:2',
-        'hourAmount' => 'decimal:2',
-        'housing' => 'decimal:2',
-        'familialAllocation' => 'decimal:2',
-        'transportationCost' => 'decimal:2',
+        'amount'             => MoneyCast::class,
+        'dayAmount'          => MoneyCast::class,
+        'hourAmount'         => MoneyCast::class,
+        'housing'            => MoneyCast::class,
+        'transportationCost' => MoneyCast::class,
+        'familialAllocation' => MoneyCast::class,
+        'workDay'            => 'integer',
+    ];
+
+    protected $attributes = [
+        'amount'             => 0,
+        'housing'            => 0,
+        'transportationCost' => 0,
+        'familialAllocation' => 0,
     ];
 
 

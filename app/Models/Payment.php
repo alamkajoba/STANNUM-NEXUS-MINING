@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Trait\Searchable;
+use App\Casts\MoneyCast;
 
 class Payment extends Model
 {
@@ -29,7 +30,11 @@ class Payment extends Model
     protected $casts = [
         'motif' => 'date',
         'slipPrint' => 'array',
-        'netSalary' => 'decimal:2',
+        'netSalary' => MoneyCast::class,
+    ];
+
+    protected $attributes = [
+        'netSalary' => 0,
     ];
 
     //RelationShips

@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use App\Models\Employee;
 use App\Models\FunctionType;
+use Brick\Money\Money;
+use Brick\Math\RoundingMode;
 
 #[Layout('layouts.app')]
 class FunctionTypeCreate extends Component
@@ -19,10 +21,10 @@ class FunctionTypeCreate extends Component
     #[Validate('required|min:3|string')]
     public $nameFunction = '';
 
-    #[Validate('required|numeric|min:0')]
+    #[Validate('required|numeric|min:1')]
     public $amount = 0.00;
 
-    #[Validate('nullable|numeric|min:1|max:31')]
+    #[Validate('nullable|numeric|between:1,31')]
     public $workDay = 1;
 
     #[Validate('nullable|numeric|min:0')]
@@ -36,20 +38,26 @@ class FunctionTypeCreate extends Component
 
     private function dataCategory(): array
     {
-        $dayAmount = $this->amount / max(1, $this->workDay);
-        $hourAmount = $dayAmount / 8;
-        $id = Auth::id();
 
-        // dd($this->amount);
+        $baseMoney    = Money::of($this->amount, 'USD');
+        $housing      = Money::of($this->housing, 'USD');
+        $transport    = Money::of($this->transportationCost, 'USD');
+        $allocation   = Money::of($this->familialAllocation, 'USD');
+
+
+        $dayAmount = $baseMoney->dividedBy($this->workDay, RoundingMode::HALF_UP);
+        $hourAmount = $dayAmount->dividedBy(8, RoundingMode::HALF_UP);
+
+        $id = Auth::id();
         return [
             'nameFunction' => $this->nameFunction,
-            'amount' => $this->amount,
+            'amount' => $baseMoney,
             'dayAmount' => $dayAmount,
             'hourAmount' => $hourAmount,
             'workDay' => $this->workDay,
-            'housing' => $this->housing,
-            'transportationCost' => $this->transportationCost,
-            'familialAllocation' => $this->familialAllocation,
+            'housing' => $housing,
+            'transportationCost' => $transport,
+            'familialAllocation' => $allocation,
             'user_id' => $id
         ];
     }
@@ -66,7 +74,7 @@ class FunctionTypeCreate extends Component
 
         if ($existCategory) {
             session()->flash('danger', "Cette Fonction existe déjà!...");
-            return redirect()->route('function.create');
+            return;
         }
 
         $employee = FunctionType::create($this->dataCategory());

@@ -59,10 +59,9 @@
                                         wire:click.prevent="selectEmployee({{ $item['id'] }})">
                                             <div class="d-flex justify-content-between">
                                                 <span>
-                                                    {{-- Accès aux données de la relation 'employee' --}}
-                                                    <strong>{{ $item['employee']['lastName'] }}</strong> 
-                                                    {{ $item['employee']['firstName'] }} 
-                                                    {{ $item['employee']['middleName'] }}
+                                                    {{-- On utilise 'full_name' car c'est la clé définie dans searchEmployee() --}}
+                                                    <strong>{{ $item['full_name'] }}</strong> 
+                                                    <small class="text-muted">({{ $item['function_name'] }})</small>
                                                 </span>
                                                 <span class="badge bg-info text-dark">
                                                     {{ $item['matricule'] }}
@@ -70,11 +69,8 @@
                                             </div>
                                         </a>
                                     @empty
-                                        {{-- Optionnel : Afficher un message si rien n'est trouvé après 2 caractères --}}
-                                        <li class="list-group mt-2">
-                                            <div class="list-group-item list-group-item-danger">
-                                                Aucun agent trouvé pour "{{ $search }}"
-                                            </div>
+                                        <li class="list-group-item list-group-item-danger">
+                                            Aucun agent trouvé pour "{{ $search }}"
                                         </li>
                                     @endforelse
                                 </ul>
