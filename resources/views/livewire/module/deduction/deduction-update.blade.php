@@ -33,6 +33,7 @@
                                 id="CNSS"
                                 class="form-control"
                                 type="number"
+                                step="0.1"
                                 placeholder=""
                                 wire:model="CNSS"
                             >
@@ -46,6 +47,7 @@
                                 id="INPP"
                                 class="form-control"
                                 type="number"
+                                step="0.1"
                                 placeholder=""
                                 wire:model="INPP"
                             >
@@ -59,6 +61,7 @@
                                 id="IRP"
                                 class="form-control"
                                 type="number"
+                                step="0.1"
                                 placeholder=""
                                 wire:model="IPR"
                             >
@@ -72,6 +75,7 @@
                                 id="ONEM"
                                 class="form-control"
                                 type="number"
+                                step="0.1"
                                 placeholder=""
                                 wire:model="ONEM"
                             >
@@ -85,6 +89,7 @@
                                 id="deductionSalary"
                                 class="form-control"
                                 type="number"
+                                step="0.1"
                                 placeholder=""
                                 wire:model="deductionSalary"
                             >
@@ -98,6 +103,7 @@
                                 id="refundAdvanceAmount"
                                 class="form-control"
                                 type="number"
+                                step="0.1"
                                 placeholder=""
                                 wire:model="refundAdvanceAmount"
                             >
