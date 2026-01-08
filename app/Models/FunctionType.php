@@ -22,6 +22,7 @@ class FunctionType extends Model
         'workDay', 
         'housing', 
         'transportationCost', 
+        'functionVehicle',
         'familialAllocation',
         'user_id'
     ];

@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             UserSeeder::class,
             DeductionSeeder::class,
-            FunctionTypeSeeder::class,
+            // FunctionTypeSeeder::class,
         ]);
     }
 }

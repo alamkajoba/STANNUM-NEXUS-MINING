@@ -26,20 +26,12 @@ return new class extends Migration
             $table->string('cnssNumber')->nullable();
             $table->string('acountNumber')->nullable();
             $table->date('startDate')->nullable();
-            $table->unsignedBigInteger('employee_id');
-            $table->unsignedBigInteger('function_type_id');
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('employee_id')
-                    ->references('id')
-                    ->on('employees')
-                    ->onDelete('restrict');
+            $table->foreignId('employee_id')->constrained()->onDelete('restrict');
                     
-            $table->foreign('function_type_id')
-                    ->references('id')
-                    ->on('function_types')
-                    ->onDelete('restrict');
+            $table->foreignId('function_type_id')->constrained()->onDelete('restrict');
         });
     }
 
