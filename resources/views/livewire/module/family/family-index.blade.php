@@ -105,7 +105,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Véhicule de fonction
-                        <span class="badge bg-success text-white rounded-pill">Actif</span>
+                        <span class="badge bg-danger text-white rounded-pill">Non actif</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Logement

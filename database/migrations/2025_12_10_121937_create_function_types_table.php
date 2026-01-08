@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\FunctionVehicleEnum;
 
 return new class extends Migration
 {
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->bigInteger('housing')->default(0);
             $table->bigInteger('transportationCost')->default(0); 
             $table->bigInteger('familialAllocation')->default(0); 
+            $table->enum('functionVehicle', FunctionVehicleEnum::cases())->default(FunctionVehicleEnum::FALSE->value); 
             $table->softDeletes();
             $table->timestamps();
 
