@@ -32,6 +32,7 @@ use App\Livewire\Module\Advance\EmployeeAdvanceDetail;
 use App\Livewire\Module\FunctionType\FunctionTypeIndex;
 use App\Livewire\Module\FunctionType\FunctionTypeCreate;
 use App\Livewire\Module\FunctionType\FunctionTypeUpdate;
+use App\Livewire\Module\Employee\IdCardPrint;
 
 
 Route::get('/', function () {
@@ -61,6 +62,7 @@ Route::middleware('auth')->prefix('employee')->name('employee.')->group(function
     Route::get('index', EmployeeIndex::class)->name('index');
     Route::get('create', EmployeeCreate::class)->name('create');
     Route::get('update/{id}', EmployeeUpdate::class)->name('update');
+    Route::get('printCard/{id}', IdCardPrint::class)->name('printCard');
 });
 
 #function routes

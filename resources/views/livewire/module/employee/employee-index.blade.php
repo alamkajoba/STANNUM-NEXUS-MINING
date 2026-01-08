@@ -69,6 +69,11 @@
                                         Modifier
                                     </a>
                                 </td>
+                                <td>
+                                    <a href="{{route('employee.printCard', $enrollments->id)}}" class="btn text-white" style="background-color: rgb(32, 157, 161)">
+                                        Carte de service
+                                    </a>
+                                </td>
                             </tr>
                         @empty
                             <tr>
