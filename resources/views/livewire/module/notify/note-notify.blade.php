@@ -16,7 +16,7 @@
 
         <input id="trix_editor" type="hidden" name="content" wire:model.defer="message_custom">
         <trix-editor input="trix_editor" class="bg-white border-gray-300 rounded-lg shadow-sm min-h-[200px]"></trix-editor>
-        <button type="submit" class="btn btn-primary mt-4">
+        <button type="submit" style="background-color: rgb(46, 13, 167);" class="btn text-white mt-4">
             Envoyer les notifications
         </button>
     </form>

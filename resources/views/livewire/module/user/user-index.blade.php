@@ -26,7 +26,7 @@
                 
                     
                 <thead>
-                    <tr style="background-color: rgb(7, 7, 99)" class="text-white">
+                    <tr style="background-color: rgb(46, 13, 167);" class="text-white">
                         <th>n</th>
                         <th>Nom</th>
                         <th>Fonction</th>

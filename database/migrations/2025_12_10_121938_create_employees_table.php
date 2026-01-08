@@ -27,15 +27,11 @@ return new class extends Migration
             $table->string('emergencyPhone')->nullable();
             $table->string('nationality'); 
             $table->softDeletes();
-            $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
             
 
-            $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('restrict');
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
 
             
         });
