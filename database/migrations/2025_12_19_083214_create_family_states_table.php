@@ -22,20 +22,12 @@ return new class extends Migration
             $table->date('birthDate');
             $table->enum('relationType', RelationTypeEnum::cases());
             $table->enum('gender', GenderEnum::cases());
-            $table->unsignedBigInteger('employee_id')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('set null');
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
 
-            $table->foreign('employee_id')
-                    ->references('id')
-                    ->on('employees')
-                    ->onDelete('set null');
+            $table->foreignId('employee_id')->constrained()->onDelete('restrict');
         });
     }
 

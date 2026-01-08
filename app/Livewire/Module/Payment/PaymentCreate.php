@@ -115,7 +115,6 @@ class PaymentCreate extends Component
         $this->itemsEmployee = [];
     }
 }
-
     //Initialize to zero after update
     public function updatedrestDay($value) {
         if ($value === "" || $value === null) $this->restDay = 0;
@@ -175,7 +174,7 @@ class PaymentCreate extends Component
         $childCount = $enrollment->employee->familyState->count();
         
         // Heures supplémentaires
-        $overtimesPay = $hourPay->multipliedBy($this->overtimes, RoundingMode::HALF_UP);
+        $overtimesPay = $hourPay->multipliedBy($this->overtimes, RoundingMode::FLOOR);
         
         // Bonus (On convertit les inputs du formulaire en Money)
         $assudity    = Money::of($this->assudityBonus, 'USD');
@@ -183,8 +182,8 @@ class PaymentCreate extends Component
         $performance = Money::of($this->performanceBonus, 'USD');
         
         // Absences et Justifiés
-        $restDayCost   = $dayPay->multipliedBy($this->restDay, RoundingMode::HALF_UP);
-        $justifyDayPay = $dayPay->multipliedBy($this->justifyDay, RoundingMode::HALF_UP);
+        $restDayCost   = $dayPay->multipliedBy($this->restDay, RoundingMode::FLOOR);
+        $justifyDayPay = $dayPay->multipliedBy($this->justifyDay, RoundingMode::FLOOR);
 
         // 4. Calcul du Brut de Paie (Total Due)
         // Formule : (Base + Heures Supp + Bonus + Justifiés) - Absences
@@ -196,10 +195,10 @@ class PaymentCreate extends Component
             ->minus($restDayCost);
 
         $totalDue = $baseSalary
-            ->plus($totalAddiction);
+            ->plus($totalAddiction, RoundingMode::FLOOR);
 
         // 5. Avantages Sociaux
-        $totalAlloc = $allocPerChild->multipliedBy($childCount, RoundingMode::HALF_UP);
+        $totalAlloc = $allocPerChild->multipliedBy($childCount, RoundingMode::FLOOR);
         $totalAdvantage = $housing->plus($transport)->plus($totalAlloc);
 
         // Salaire Brut Total (Base imposable)
@@ -207,11 +206,11 @@ class PaymentCreate extends Component
 
         // 6. Manage deductions
         // use dividedBy(100) 
-        $cnssAmount = $brutSalary->multipliedBy($deduction->CNSS, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
-        $inppAmount = $brutSalary->multipliedBy($deduction->INPP, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
-        $iprAmount  = $brutSalary->multipliedBy($deduction->IPR, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
-        $onemAmount = $brutSalary->multipliedBy($deduction->ONEM, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
-        $deducionSalaryAmount = $brutSalary->multipliedBy($deduction->deductionSalary, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
+        $cnssAmount = $brutSalary->multipliedBy($deduction->CNSS, RoundingMode::FLOOR)->dividedBy(100, RoundingMode::FLOOR);
+        $inppAmount = $brutSalary->multipliedBy($deduction->INPP, RoundingMode::FLOOR)->dividedBy(100, RoundingMode::FLOOR);
+        $iprAmount  = $brutSalary->multipliedBy($deduction->IPR, RoundingMode::FLOOR)->dividedBy(100, RoundingMode::FLOOR);
+        $onemAmount = $brutSalary->multipliedBy($deduction->ONEM, RoundingMode::FLOOR)->dividedBy(100, RoundingMode::FLOOR);
+        $deducionSalaryAmount = $brutSalary->multipliedBy($deduction->deductionSalary, RoundingMode::FLOOR)->dividedBy(100, RoundingMode::FLOOR);
 
         // 7. Manage advance
         $advance = Advance::where('employee_id', $this->employee_id)->where('toRefund', '>', 0)->first();
@@ -220,7 +219,7 @@ class PaymentCreate extends Component
         //CHRISDEV
 
         // if ($advance && $this->applyAdvance) {
-        //     $theoreticalRefund = $brutSalary->multipliedBy($deduction->refundAdvanceAmount, RoundingMode::HALF_UP)->dividedBy(100, RoundingMode::HALF_UP);
+        //     $theoreticalRefund = $brutSalary->multipliedBy($deduction->refundAdvanceAmount, RoundingMode::FLOOR)->dividedBy(100, RoundingMode::FLOOR);
         //     
         //     $advanceDebt = $advance->remainToPay; // Déjà un objet Money via Cast
         //     $refundAmount = $theoreticalRefund->isGreaterThan($advanceDebt) ? $advanceDebt : $theoreticalRefund;

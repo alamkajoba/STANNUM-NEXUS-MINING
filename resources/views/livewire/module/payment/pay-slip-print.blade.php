@@ -1,3 +1,21 @@
+<div>
+<div class="flex justify-between items-center mb-4 print:hidden" style="width: 21cm; margin: 20px auto 0 auto;">
+    <button 
+        onclick="window.print()" 
+        style="background-color: rgb(46, 13, 167);" 
+        class="btn text-white py-2 px-4 my-3 rounded shadow"
+    >
+        <i class="fas fa-print mr-2"></i> IMPRIMER LE BULLETIN
+    </button>
+
+    <a 
+        href="{{ route('payment.create')}}"
+        style="background-color: rgb(86, 92, 102);" 
+        class="btn text-white py-2 px-4 my-3 rounded shadow"
+    >
+        <i class="fas fa-file-pdf mr-2"></i> Retour
+    </a>
+</div>
 <div class="bulletin-container bg-white">
     <div class="content-wrapper">
         <div class="header-section">
@@ -154,5 +172,6 @@
             <strong>Ceci est un bulletin généré par l'ordinateur et la signature n'est pas requise</strong>
         </div> --}}
     </div>
+</div>
 </div>
 

@@ -45,8 +45,8 @@ class FunctionTypeCreate extends Component
         $allocation   = Money::of($this->familialAllocation, 'USD');
 
 
-        $dayAmount = $baseMoney->dividedBy($this->workDay, RoundingMode::HALF_UP);
-        $hourAmount = $dayAmount->dividedBy(8, RoundingMode::HALF_UP);
+        $dayAmount = $baseMoney->dividedBy($this->workDay, RoundingMode::FLOOR);
+        $hourAmount = $dayAmount->dividedBy(8, RoundingMode::FLOOR);
 
         $id = Auth::id();
         return [

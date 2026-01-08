@@ -66,6 +66,9 @@
     
     @media print {
         @page { size: A4; margin: 0; }
+        .print\:hidden {
+            display: none !important;
+        }
         body { 
             margin: 0; 
             padding: 0; 
@@ -98,7 +101,7 @@
 
     
 
-        <script>
+        {{-- <script>
             // Attend que toute la page (images, styles) soit chargée
             window.onload = function() {
                 // Un petit délai de 500ms pour s'assurer que le rendu CSS est fini
@@ -106,6 +109,6 @@
                     window.print();
                 }, 500);
             };
-        </script>
+        </script> --}}
 </body>
 </html>

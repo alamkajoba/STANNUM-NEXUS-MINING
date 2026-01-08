@@ -8,6 +8,7 @@ use App\Models\Employee;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\InternalNotifyMessage;
 use App\Models\Category;
+use App\Models\FunctionType;
 
 #[Layout('layouts.app')]
 class NoteNotify extends Component
@@ -30,7 +31,7 @@ class NoteNotify extends Component
         if ($this->target === 'all') {
             $employee = Employee::all();
         } else {
-            $employee = Employee::where('category_id', $this->target)->get();
+            $employee = Employee::where('function_type_id', $this->target)->get();
         }
 
         if ($employee->isEmpty()) {
@@ -49,7 +50,7 @@ class NoteNotify extends Component
 
     public function mount()
     {
-        $this->collection = Category::all();
+        $this->collection = FunctionType::all();
     }
 
     public function render()

@@ -41,7 +41,7 @@
                         <p><strong>Type de contrat :</strong> CDI</p>
                         <p><strong>Numéro CNSS :</strong> {{$enrollment?->cnssNumber}}</p>
                         <p><strong>Numéro de compte bancaire :</strong> {{$enrollment?->acountNumber}}</p>
-                        <p><strong>Email profess :</strong> {{$enrollment?->employee?->mail}}</p>
+                        <p><strong>Email profess :</strong> {{$enrollment?->proMail}}</p>
                         <p><strong>Numéro profess :</strong> {{$enrollment?->employee?->phone}}</p>
                     </div>
                 </div>

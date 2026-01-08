@@ -21,12 +21,7 @@ return new class extends Migration
             $table->float('deductionSalary')->nullable();
             $table->softDeletes();
             $table->timestamps();
-
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
         });
     }
 
