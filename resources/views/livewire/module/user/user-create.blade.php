@@ -46,17 +46,29 @@
                         >
 
                         @if (!empty($itemsEmployee))
-                            <ul class="list-group mt-2">
-                                <h5>Resultat de la recherche :</h5>
-                                @forelse ($itemsEmployee as $itemsEmployees)
-                                    <a href="" class="list-group-item mb-2 flex bg-primary-200 hover:bg-primary-500"
-                                        wire:click.prevent="selectEmployee({{$itemsEmployees['id']}})">
-                                        {{ $itemsEmployees['firstName'].' '. $itemsEmployees['middleName'].' '. $itemsEmployees['lastName'].' '.$itemsEmployees['matricule']}}
+                            <ul class="list-group mt-2" style="position: absolute; z-index: 1000; width: 100%;">
+                                <li class="list-group-item disabled bg-light">
+                                    <strong>Résultat de la recherche :</strong>
+                                </li>
+                                @forelse ($itemsEmployee as $item)
+                                    <a href="#" 
+                                    class="list-group-item list-group-item-action mb-1"
+                                    wire:click.prevent="selectEmployee({{ $item['id'] }})">
+                                        <div class="d-flex justify-content-between">
+                                            <span>
+                                                {{-- On utilise 'full_name' car c'est la clé définie dans searchEmployee() --}}
+                                                <strong>{{ $item['full_name'] }}</strong> 
+                                                <small class="text-muted">({{ $item['function_name'] }})</small>
+                                            </span>
+                                            <span class="badge bg-info text-dark">
+                                                {{ $item['matricule'] }}
+                                            </span>
+                                        </div>
                                     </a>
                                 @empty
-                                    <div class="list-group-item mb-2 flex bg-danger-200">
-                                        Aucun Agent
-                                    </div>
+                                    <li class="list-group-item list-group-item-danger">
+                                        Aucun agent trouvé pour "{{ $search }}"
+                                    </li>
                                 @endforelse
                             </ul>
                         @endif

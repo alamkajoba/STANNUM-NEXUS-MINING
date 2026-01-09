@@ -51,70 +51,70 @@ class PaymentCreate extends Component
 
 
     public function searchEmployee(): void
-    {
-        if (strlen($this->search) < 1 || str_contains($this->search, ' - ')) {
-            $this->itemsEmployee = [];
-            return;
+        {
+            if (strlen($this->search) < 1 || str_contains($this->search, ' - ')) {
+                $this->itemsEmployee = [];
+                return;
+            }
+
+            // 1. Catch collection with relations
+            $enrollments = Enrollment::with(['employee', 'functionType'])
+                ->where(function ($query) {
+                    $query->where('matricule', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('employee', function ($q) {
+                        $q->where('firstName', 'like', '%' . $this->search . '%')
+                        ->orWhere('lastName', 'like', '%' . $this->search . '%')
+                        ->orWhere('middleName', 'like', '%' . $this->search . '%');
+                    });
+                })
+                ->limit(5)
+                ->get();
+
+            // 2. Simple table "Livewire-friendly"
+            $this->itemsEmployee = $enrollments->map(function ($item) {
+                return [
+                    'id'            => $item->id,
+                    'matricule'     => $item->matricule,
+                    // Security : if employee relation is True
+                    'full_name'     => $item->employee 
+                                        ? "{$item->employee->lastName} {$item->employee->firstName}" 
+                                        : 'Employé inconnu',
+                    // Security : Catch amount from Cast Money and convert to float
+                    'base_salary'   => $item->functionType?->amount?->getAmount()->toFloat() ?? 0,
+                    'function_name' => $item->functionType?->nameFunction ?? 'N/A',
+                ];
+            })->all(); // .all() ou .toArray()
         }
 
-        // 1. Catch collection with relations
-        $enrollments = Enrollment::with(['employee', 'functionType'])
-            ->where(function ($query) {
-                $query->where('matricule', 'like', '%' . $this->search . '%')
-                ->orWhereHas('employee', function ($q) {
-                    $q->where('firstName', 'like', '%' . $this->search . '%')
-                    ->orWhere('lastName', 'like', '%' . $this->search . '%')
-                    ->orWhere('middleName', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->limit(5)
-            ->get();
+        //Selected Employee
+    public function selectEmployee($itemId): void
+    {
+        // Select enrollment with his relations
+        $enrollment = Enrollment::with(['employee', 'functionType'])->find($itemId);
 
-        // 2. Simple table "Livewire-friendly"
-        $this->itemsEmployee = $enrollments->map(function ($item) {
-            return [
-                'id'            => $item->id,
-                'matricule'     => $item->matricule,
-                // Security : if employee relation is True
-                'full_name'     => $item->employee 
-                                    ? "{$item->employee->lastName} {$item->employee->firstName}" 
-                                    : 'Employé inconnu',
-                // Security : Catch amount from Cast Money and convert to float
-                'base_salary'   => $item->functionType?->amount?->getAmount()->toFloat() ?? 0,
-                'function_name' => $item->functionType?->nameFunction ?? 'N/A',
-            ];
-        })->all(); // .all() ou .toArray()
+        if ($enrollment) {
+            $this->employee_id = $enrollment->employee_id; 
+            $this->enrollment_id = $enrollment->id;
+            
+            $emp = $enrollment->employee;
+            // Update search field with full name
+            $this->search = "{$enrollment->matricule} - {$emp->lastName} {$emp->firstName}";
+            
+            // Extract amount and convert to float
+            $this->selectedEmployee = [
+                'id' => $enrollment->id,
+                'baseSalary' => $enrollment->functionType->amount->getAmount()->toFloat(),
+                'dayPay' => $enrollment->functionType->dayAmount->getAmount()->toFloat(),
+                'hourPay' => $enrollment->functionType->hourAmount->getAmount()->toFloat(),
+            ]; 
+
+            // reset totals if needed
+            $this->baseSalary = $this->selectedEmployee['baseSalary'];
+            
+            // close 
+            $this->itemsEmployee = [];
+        }
     }
-
-    //Selected Employee
-   public function selectEmployee($itemId): void
-{
-    // Select enrollment with his relations
-    $enrollment = Enrollment::with(['employee', 'functionType'])->find($itemId);
-
-    if ($enrollment) {
-        $this->employee_id = $enrollment->employee_id; 
-        $this->enrollment_id = $enrollment->id;
-        
-        $emp = $enrollment->employee;
-        // Update search field with full name
-        $this->search = "{$enrollment->matricule} - {$emp->lastName} {$emp->firstName}";
-        
-        // Extract amount and convert to float
-        $this->selectedEmployee = [
-            'id' => $enrollment->id,
-            'baseSalary' => $enrollment->functionType->amount->getAmount()->toFloat(),
-            'dayPay' => $enrollment->functionType->dayAmount->getAmount()->toFloat(),
-            'hourPay' => $enrollment->functionType->hourAmount->getAmount()->toFloat(),
-        ]; 
-
-        // reset totals if needed
-        $this->baseSalary = $this->selectedEmployee['baseSalary'];
-        
-        // close 
-        $this->itemsEmployee = [];
-    }
-}
     //Initialize to zero after update
     public function updatedrestDay($value) {
         if ($value === "" || $value === null) $this->restDay = 0;
