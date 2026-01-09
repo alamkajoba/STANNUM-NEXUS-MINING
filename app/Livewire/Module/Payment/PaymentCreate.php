@@ -147,6 +147,15 @@ class PaymentCreate extends Component
             return;
         }
 
+        $payment = Payment::where('enrollment_id', $this->enrollment_id)
+                            ->where('motif', $this->motif);
+
+
+        if ($payment) {
+            session()->flash('danger', "L'agent a déjà eu ce salaire vérifiez la liste");
+            return;
+        }
+
         $motif = Carbon::parse($this->motif);
         $deduction = Deduction::latest()->first();
         
