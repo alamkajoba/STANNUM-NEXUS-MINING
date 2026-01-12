@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>STANNUM NEXUX MINING</title>
+    <title>{{ config('app.name') }}</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{asset('vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
@@ -18,5 +18,7 @@
     <link href="{{asset('css/sb-admin-2.min.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <script src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+
+    <link rel="icon" type="image/x-icon" href="{{asset('img/finallogo.jpeg')}}">
 
 </head>
