@@ -25,8 +25,8 @@
     <!-- Header -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
-            <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-users"></i>
-            Rétenues sur salaire
+            <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-cogs"></i>
+            Déductions salariales
         </h1>
         <div class="d-none d-sm-inline-block shadow-sm">
             {{-- <input wire:model.live="search" class="form-control" type="text" placeholder="Rechercher..."> --}}
@@ -42,7 +42,7 @@
                             <th>CNSS</th>
                             <th>INPP</th>
                             <th>ONEM</th>
-                            <th>IRP</th>
+                            <th>IPR</th>
                             <th>Rétenue sur salaire</th>
                             <th>Taux remboursement Avance sur salaire</th>
                             <th colspan="3">Actions</th>

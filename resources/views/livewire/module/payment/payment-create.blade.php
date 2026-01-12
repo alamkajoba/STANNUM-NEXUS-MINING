@@ -21,7 +21,10 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Paiement</h1>
+        <h1 class="h3 mb-0 text-gray-800">
+            <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-credit-card"></i>
+            Paiement
+        </h1>
         <a href="{{route('payment.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">
             Voir la liste
         </a>
@@ -110,7 +113,7 @@
 
                     <div class="col-md-6">
                         <div class="mb-1">
-                            <label for="">Prime d'assudite</label>
+                            <label for="">Prime d'assiduité</label>
                             <input 
                                 class="form-control"
                                 type="number"

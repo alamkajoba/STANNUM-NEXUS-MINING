@@ -25,7 +25,7 @@
     <!-- Header -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
-            <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-users"></i>
+            <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-cogs"></i>
             Liste des Fonctions
         </h1>
         <div class="d-none d-sm-inline-block shadow-sm">
@@ -78,7 +78,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="10" class="text-center text-danger">Oups! Aucune Catégorie trouvée.</td>
+                                <td colspan="10" class="text-center text-danger">Oups! Aucune Fonction trouvée.</td>
                             </tr>
                         @endforelse
                     </tbody>

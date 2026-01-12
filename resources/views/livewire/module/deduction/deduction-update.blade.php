@@ -2,8 +2,8 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
-            <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-users"></i>
-            Retenues sur salaire en pourcentage
+            <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-cogs"></i>
+            Déductions salariales en pourcentage
         </h1>
         <div>
             <a href="{{ route('deduction.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">Voir la liste</a>

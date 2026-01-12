@@ -54,9 +54,9 @@
                     <table class="w-100 inner-table">
                         <tr><td>Catégorie profess :</td><td class="fw-bold">{{ $payment?->slipPrint['professionalCategory']}}-{{$payment?->slipPrint['echelon'] }}</td></tr>
                         <tr><td>Salaire de base :</td><td class="fw-bold">  {{ $payment?->slipPrint['baseSalary']  }}</td></tr>
-                        <tr><td>Indemnite Chairman :</td><td>-</td></tr>
+                        <tr><td>Indemnité Chairman :</td><td>-</td></tr>
                         <tr><td>Annuité :</td><td>-</td></tr>
-                        <tr><td>Indemnite Rétention :</td><td>-</td></tr>
+                        <tr><td>Indemnité Rétention :</td><td>-</td></tr>
                         <tr><td>Jours du mois :</td><td>{{ $payment?->slipPrint['workDay'] }}</td></tr>
                         <tr><td>Absence :</td><td>{{ $payment?->slipPrint['abscence'] }}</td></tr>
                         <tr><td>Date d'engagement:</td><td>{{ ucfirst(\Carbon\Carbon::parse($payment?->employee?->enrollment->startDate)->locale('fr')->translatedFormat('F Y')) }}</td></tr>
@@ -131,7 +131,7 @@
                             <tr><td>INPP :</td><td class="text-end">{{$payment?->slipPrint['INPP']}}%</td><td class="text-end">  {{$payment?->slipPrint['INPPAmount'] }}</td></tr>
                             <tr><td>ONEM :</td><td class="text-end">{{$payment?->slipPrint['ONEM']}}%</td><td class="text-end">  {{$payment?->slipPrint['ONEMAmount'] }}</td></tr>
                             <tr><td>IPR :</td><td class="text-end">{{$payment?->slipPrint['IPR']}}%</td><td class="text-end">  {{$payment?->slipPrint['IPRAmount'] }}</td></tr>
-                            <tr><td>Retenue :</td><td class="text-end">{{$payment?->slipPrint['salaryDeduction']}} %</td><td class="text-end">  {{$payment?->slipPrint['salaryDeductionAmount'] }}</td></tr>
+                            <tr><td>Rétenue :</td><td class="text-end">{{$payment?->slipPrint['salaryDeduction']}} %</td><td class="text-end">  {{$payment?->slipPrint['salaryDeductionAmount'] }}</td></tr>
                         </tbody>
                     </table>
                 </td>

@@ -1,6 +1,6 @@
 <div class="mt-4" wire:ignore>
 
-    <form wire:submit.prevent="submit">
+    <form>
         <div class="mb-4">
             <label class="block text-sm font-control text-gray-700 mb-2">Envoyer à :</label>
             <select wire:model="target" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary">
