@@ -61,20 +61,22 @@
                 <div id="collapseAdvance" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        @can('liste avance sur salaire')
+                        @can('liste avance sur salair')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('advance.index') }}">
                                 Liste des Avances
                             </a>
                         @endcan
-                        @can('effectuer une avance sur salaire')
+                        @can('effectuer une avance sur salair')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('advance.create')}}">
                                 Effectuer une avance
                             </a>
                         @endcan
                         <hr style="color:rgb(46, 13, 167);">
+                        @can('effectuer une avance sur salair')
                         <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('advance.history') }}">
                             Historique des remboursement
-                        </a> 
+                        </a>
+                        @endcan 
                     </div>
                 </div>
             </li>
@@ -189,14 +191,14 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDeduction"
                     aria-expanded="true" aria-controls="collapseDeduction">
                     <i style="color:white;" class="fa fa-cogs"></i>
-                    <span style="color:white">Déductions sur salaire</span> 
+                    <span style="color:white">Déductions salariales</span> 
                 </a>
                 <div id="collapseDeduction" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         @can('voir les deduction')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('deduction.index') }}">
-                                Rétenue sur salaire
+                                Déductions salariales
                             </a>   
                         @endcan
 
