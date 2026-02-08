@@ -23,55 +23,45 @@ new #[Layout('layouts.guest')] class extends Component
     }
 }; ?>
 
-<div>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form wire:submit="login">
-        <div>
-            <center>
-                <img src="{{asset('img/finallogo.jpeg')}}" height="100px" width="200px" alt="">
-            </center>
-        </div>
-
+<div class="auth-container">
+    <div class="auth-card">
         
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="identifiant" :value="__('Identifiant')" />
-            <x-text-input wire:model="form.identifiant" id="identifiant" class="block mt-1 w-full" type="text" name="identifiant" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('form.identifiant')" class="mt-2" />
+        <div class="auth-form-section">
+            <div class="form-header">
+                <h1>Connexion</h1>
+                <p>Accédez à votre espace entreprise</p>
+            </div>
+
+            <form wire:submit.prevent="login">
+                <div class="input-group">
+                    <label for="email">Identifiant</label>
+                    <input wire:model="form.identifiant" type="identifiant" id="identifiant" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" wire:model="form.password" required>
+                </div>
+
+                <div class="form-footer">
+                    <label class="remember-me">
+                        <input type="checkbox"> Se souvenir de moi
+                    </label>
+                    <a href="#" class="forgot-link">Mot de passe oublié ?</a>
+                </div>
+
+                <button type="submit" class="btn-login">Se connecter</button>
+            </form>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Mot de passe')" />
-
-            <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
+        <div class="auth-image-section">
+            <div class="image-overlay">
+                <h2>Alvine Business</h2>
+                <p>Innover, Sécuriser, Connecter.</p>
+            </div>
         </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember" class="inline-flex items-center">
-                <input wire:model="form.remember" id="remember" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Se souvenir de moi') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}" wire:navigate>
-                    {{ __('Mot de passe oublie ?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Connexion') }}
-            </x-primary-button>
-        </div>
-    </form>
+        
+    </div>
 </div>
+
