@@ -12,36 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
+            $table->unique(['employee_id', 'motif']);
             $table->id();
-            $table->string('motif'); 
-            $table->integer('restDay');  
-            $table->integer('overtimes'); 
-            $table->decimal('overtimesPay', 15, 2)->default(0.00);
-            $table->decimal('assudityBonus', 15, 2)->default(0.00);
-            $table->decimal('totalAmount', 15, 2)->default(0.00);
-            $table->decimal('netAmount', 15, 2)->default(0.00);
-            $table->decimal('riskBonus', 15, 2)->default(0.00);
-            $table->decimal('performanceBonus', 10, 2)->default(0.00);
-            $table->float('CNSS'); 
-            $table->float('INPP');  
-            $table->float('ONEM'); 
-            $table->float('IPR'); 
-            $table->float('refundAdvanceAmount');   
-            $table->float('deductionSalary'); 
+            $table->date('motif');
+            $table->bigInteger('netSalary')->default(0);
+            $table->json('slipPrint')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('employee_id');
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
 
-            $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('cascade');
-
-            $table->foreign('employee_id')
-                    ->references('id')
-                    ->on('employees')
-                    ->onDelete('cascade');
+            $table->foreignId('employee_id')->constrained()->onDelete('restrict');
         });
     }
 

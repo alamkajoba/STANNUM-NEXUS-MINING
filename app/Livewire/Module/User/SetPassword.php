@@ -12,7 +12,7 @@ use Livewire\Attributes\Layout;
 class SetPassword extends Component
 {
     public string $identifiant;
-    public string $password;
+    public string $password = '';
 
     //Upload datas
     public function mount()

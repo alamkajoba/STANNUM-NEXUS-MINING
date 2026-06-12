@@ -3,36 +3,38 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Trait\Searchable;
+use App\Casts\MoneyCast;
 
 class Payment extends Model
 {
+
+    use Searchable;
+
+    protected $searchableColumns = [
+        'motif',
+    ];
+
+    protected $searchInRelations = [
+        'employee' => ['firstName', 'middleName', 'lastName'],
+    ];
+
     protected $fillable = [
-        'employee_id', 
-        'motif', 
-        'totalAmount', 
-        'netAmount', 
-        'restDay', 
-        'overtimes',
-        'overtimesPay ',
-        'assudityBonus',  
-        'riskBonus', 
-        'performanceBonus', 
-        'CNSS', 
-        'INPP', 
-        'ONEM', 
-        'IPR',
-        'refundAdvanceAmount',  
-        'deductionSalary',
-        'user_id'
+        'user_id',
+        'employee_id',
+        'motif',
+        'netSalary',
+        'slipPrint'
     ];
 
     protected $casts = [
-        'totalAmount' => 'decimal:2', 
-        'netAmount' => 'decimal:2', 
-        'overtimesPay' => 'decimal:2', 
-        'assudityBonus' => 'decimal:2',  
-        'riskBonus' => 'decimal:2',
-        'performanceBonus' => 'decimal:2', 
+        'motif' => 'date',
+        'slipPrint' => 'array',
+        'netSalary' => MoneyCast::class,
+    ];
+
+    protected $attributes = [
+        'netSalary' => 0,
     ];
 
     //RelationShips

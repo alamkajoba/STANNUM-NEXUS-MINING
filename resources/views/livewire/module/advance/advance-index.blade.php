@@ -37,7 +37,7 @@
     <div class="card-body">
         <div class="table-responsive ">
                 <table class="table table-bordered" id="dataTable" width="100%" >
-                    <thead style="background-color: rgb(46, 13, 167);" class="text-white">
+                    <thead style="background-color: rgb(30, 18, 72);" class="text-white">
                         <tr>
                             <th>n</th>
                             <th>Agent</th>
@@ -55,18 +55,12 @@
                                 <td>{{ $advances->employee->matricule }}</td>
                                 <td>{{ $advances->amount }} $</td>
                                 <td>{{ $advances->toRefund }} $</td>
-                                <td>
-                                    <div>
-                                        {{-- <a href="#" class="btn text-white" style="background-color: rgb(97, 97, 156)">
-                                            <i style="color:rgb(255, 255, 255);" class="fas fa-fw fa-print"></i>
-                                            Imprimer
-                                        </a> --}}
-                                    </div>
-                                </td>
+                                <td>                                    
+                                </td> 
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center text-danger">Oups! Aucun(e) abonné(e) trouvé.</td>
+                                <td colspan="9" class="text-center text-danger">Oups! Aucune avance trouvée.</td>
                             </tr>
                         @endforelse
                     </tbody>

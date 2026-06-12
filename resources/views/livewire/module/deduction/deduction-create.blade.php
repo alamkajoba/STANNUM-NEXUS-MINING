@@ -2,8 +2,8 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
-            <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-users"></i>
-            Retenues sur salaire en pourcentage
+            <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-cogs"></i>
+            Déductions salariales en pourcentage
         </h1>
         <div>
             <a href="{{ route('deduction.index')}}" style="background-color: rgb(46, 13, 167);" class="btn text-white">Voir la liste</a>
@@ -27,80 +27,87 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="CNSS">CNSS</label>
-                        <input 
-                            required
-                            id="CNSS"
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="CNSS"
-                        >
-                        @error('CNSS')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
-
-                        <label for="INPP">INPP</label>
-                        <input 
-                            required
-                            id="INPP"
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="INPP"
-                        >
-                        @error('INPP')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
-
-                        <label for="IPR">Impot Professionnel sur Remuneration</label>
-                        <input 
-                            required
-                            id="IRP"
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="IPR"
-                        >
-                        @error('IPR')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
-
-                        <label for="workDay">ONEM</label>
-                        <input 
-                            id="ONEM"
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="ONEM"
-                        >
-                        @error('ONEM')
-                            <span class="text-danger">Indamnite transport</span>
-                        @enderror
-
-                        <label for="deductionSalary">Retenue sur salaire</label>
-                        <input 
-                            id="deductionSalary"
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="deductionSalary"
-                        >
-                        @error('deductionSalary')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
-
-                        <label for="refundAmount">Taux remboursement avance sur salaire</label>
-                        <input 
-                            id="refundAmount"
-                            class="form-control"
-                            type="text"
-                            placeholder=""
-                            wire:model="refundAdvanceAmount"
-                        >
-                        @error('refundAmount')
-                            <span class="text-danger">Verifiez ce champ</span>
-                        @enderror
+                        <div class="mb-1">
+                            <label for="CNSS">CNSS</label>
+                            <input 
+                                required
+                                id="CNSS"
+                                class="form-control"
+                                type="number"
+                                placeholder=""
+                                wire:model="CNSS"
+                            >
+                            @error('CNSS')
+                                <span style="color: rgb(252, 0, 0)" class="flex">La valeur doit être comprise entre 0 et 99.99</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1">
+                            <label for="INPP">INPP</label>
+                            <input 
+                                required
+                                id="INPP"
+                                class="form-control"
+                                type="number"
+                                placeholder=""
+                                wire:model="INPP"
+                            >
+                            @error('INPP')
+                                <span style="color: rgb(252, 0, 0)" class="flex">La valeur doit être comprise entre 0 et 99.99</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1">
+                            <label for="IPR">Impot Professionnel sur Rémuneration</label>
+                            <input 
+                                required
+                                id="IRP"
+                                class="form-control"
+                                type="number"
+                                placeholder=""
+                                wire:model="IPR"
+                            >
+                            @error('IPR')
+                                <span style="color: rgb(252, 0, 0)" class="flex">La valeur doit être comprise entre 0 et 99.99</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1">
+                            <label for="workDay">ONEM</label>
+                            <input 
+                                id="ONEM"
+                                class="form-control"
+                                type="number"
+                                placeholder=""
+                                wire:model="ONEM"
+                            >
+                            @error('ONEM')
+                                <span style="color: rgb(252, 0, 0)" class="flex">La valeur doit être comprise entre 0 et 99.99</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1">
+                            <label for="deductionSalary">Rétenue sur salaire</label>
+                            <input 
+                                id="deductionSalary"
+                                class="form-control"
+                                type="number"
+                                placeholder=""
+                                wire:model="deductionSalary"
+                            >
+                            @error('deductionSalary')
+                                <span style="color: rgb(252, 0, 0)" class="flex">La valeur doit être comprise entre 0 et 99.99</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1">
+                            <label for="refundAmount">Taux remboursement avance sur salaire</label>
+                            <input 
+                                id="refundAmount"
+                                class="form-control"
+                                type="number"
+                                placeholder=""
+                                wire:model="refundAdvanceAmount"
+                            >
+                            @error('refundAmount')
+                                <span style="color: rgb(252, 0, 0)" class="flex">La valeur doit être comprise entre 0 et 99.99</span>
+                            @enderror
+                        </div>
                     </div>
 
                     <div class="col-md-6">

@@ -26,7 +26,7 @@
                 
                     
                 <thead>
-                    <tr style="background-color: rgb(7, 7, 99)" class="text-white">
+                    <tr style="background-color: rgb(46, 13, 167);" class="text-white">
                         <th>n</th>
                         <th>Nom</th>
                         <th>Fonction</th>
@@ -48,7 +48,7 @@
                     @empty
                         <tr>
                             <td colspan="5" class="px-6 py-2.5 text-danger whitespace-nowrap text">
-                                Oups! Aucun Produit trouvé.
+                                Oups! La liste est vide.
                             </td>
                         </tr>
                     @endforelse

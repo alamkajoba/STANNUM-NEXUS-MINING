@@ -30,6 +30,7 @@
         padding: 1.5cm; /* Marges intérieures */
         box-sizing: border-box;
     }
+    
 
     .header-section { display: flex; justify-content: space-between; margin-bottom: 10px; }
     .logo-area img { height: 70px; }
@@ -62,15 +63,32 @@
     .bottom-legal-info { font-size: 10px; width: 100%; }
     .border-top-dark { border-top: 2px solid #000 !important; }
 
+    
     @media print {
         @page { size: A4; margin: 0; }
-        body { margin: 0; padding: 0; background: none; }
+        .print\:hidden {
+            display: none !important;
+        }
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: none; 
+            -webkit-print-color-adjust: exact !important; /* Pour Chrome/Safari */
+            print-color-adjust: exact !important;         /* Standard */
+        }
+        
         .bulletin-container { 
             width: 21cm; 
             height: 29.7cm; 
-            border: none; /* On retire la bordure extérieure à l'impression */
+            border: none; 
             padding: 1.5cm;
             box-shadow: none;
+        }
+
+        /* Force l'affichage des couleurs de fond sur toutes les lignes qui en ont */
+        tr[style*="background-color"] {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
     }
 </style>
@@ -83,14 +101,14 @@
 
     
 
-    {{-- <script>
-        // Attend que toute la page (images, styles) soit chargée
-        window.onload = function() {
-            // Un petit délai de 500ms pour s'assurer que le rendu CSS est fini
-            setTimeout(function() {
-                window.print();
-            }, 500);
-        };
-    </script> --}}
+        {{-- <script>
+            // Attend que toute la page (images, styles) soit chargée
+            window.onload = function() {
+                // Un petit délai de 500ms pour s'assurer que le rendu CSS est fini
+                setTimeout(function() {
+                    window.print();
+                }, 500);
+            };
+        </script> --}}
 </body>
 </html>

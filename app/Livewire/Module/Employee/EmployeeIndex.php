@@ -9,6 +9,7 @@ use Livewire\WithoutUrlPagination;
 use Livewire\Attributes\Url;
 use App\Models\Employee;
 use App\Models\Category;
+use App\Models\Enrollment;
 
 #[Layout('layouts.app')]
 class EmployeeIndex extends Component
@@ -21,18 +22,22 @@ class EmployeeIndex extends Component
     #[Url(as: 'q')]
     public ?string $search = '';
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
 
-        $employee = Employee::with('category')
-            ->where('firstName', 'like', '%' . $this->search . '%')
-            ->orWhere('middleName', 'like', '%' . $this->search . '%')
-            ->orWhere('lastName', 'like', '%' . $this->search . '%')
-            ->orWhere('matricule', 'like', '%' . $this->search . '%');
+        $enrollment = Enrollment::with(['employee','functionType'])
+                ->search($this->search)
+                ->latest()
+                ->paginate(5);
 
             
         return view('livewire.module.employee.employee-index', [
-            'employee' => $employee->latest()->paginate(5),
+            'enrollment' => $enrollment,
         ]);
     }
 }

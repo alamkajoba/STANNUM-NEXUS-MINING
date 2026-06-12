@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employees', function (Blueprint $table) {
-            //Personnal info and profil
+            
             $table->id();
             $table->string('firstName'); 
             $table->string('middleName'); 
@@ -26,28 +26,14 @@ return new class extends Migration
             $table->string('mail')->nullable(); 
             $table->string('emergencyPhone')->nullable();
             $table->string('nationality'); 
-
-            //Professional info
-            $table->string('matricule');
-            $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('user_id');
-            $table->string('proMail')->nullable();
-            $table->string('proPhone')->nullable();
-            $table->string('jobTitle');
-            $table->string('affectation');
+            $table->softDeletes();
             $table->timestamps();
 
             
 
-            $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
 
-            $table->foreign('category_id')
-                    ->references('id')
-                    ->on('categories')
-                    ->onDelete('cascade');
+            
         });
     }
 

@@ -25,7 +25,7 @@
     <!-- Header -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
-            <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-users"></i>
+            <i style="color:rgb(0, 0, 0);" class="fas fa-fw fa-credit-card"></i>
             Liste des paiements
         </h1>
         <div class="d-none d-sm-inline-block shadow-sm">
@@ -37,24 +37,24 @@
     <div class="card-body">
         <div class="table-responsive ">
                 <table class="table table-bordered" id="dataTable" width="100%" >
-                    <thead style="background-color: rgb(46, 13, 167);" class="text-white">
+                    <thead style="background-color: rgb(30, 18, 72);" class="text-white">
                         <tr>
                             <th>n</th>
                             <th>Agent</th>
                             <th>Matricule</th>
                             <th>Motif</th>
-                            <th>Net a payer</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody >
                         @forelse ($payment as $payments)
                             <tr >
-                                <td>{{$loop->iteration}}</td>
-                                <td>{{ $payments->employee->middleName }} {{ $payments->employee->lastName }} {{ $payments->employee->firstName }}</td>
-                                <td>{{ $payments->employee->matricule }}</td>
-                                <td>{{ $payments->motif }}</td>
-                                <td>{{ $payments->netAmount }} $</td>
+                                <td>
+                                    {{ ($payment->currentPage() - 1) * $payment->perPage() + $loop->iteration }}
+                                </td>
+                                <td>{{ $payments->employee?->middleName }} {{ $payments->employee?->lastName }} {{ $payments->employee?->firstName }}</td>
+                                <td>{{ $payments->employee?->enrollment?->matricule }}</td>
+                                <td>{{ ucfirst(\Carbon\Carbon::parse($payments->motif)->locale('fr')->translatedFormat('F Y')) }}</td>
                                 <td>
                                     <div>
                                         <a href="{{route('payment.print', $payments->id)}}" class="btn text-white" style="background-color: rgb(46, 13, 167);">
@@ -66,7 +66,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center text-danger">Oups! Aucun(e) abonné(e) trouvé.</td>
+                                <td colspan="9" class="text-center text-danger">Oups! Aucun paiement trouvé.</td>
                             </tr>
                         @endforelse
                     </tbody>

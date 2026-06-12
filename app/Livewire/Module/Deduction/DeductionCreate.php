@@ -15,22 +15,22 @@ class DeductionCreate extends Component
 
     public $convertName;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $CNSS = 0;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $INPP = 0;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $IPR = 0;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $ONEM = 0;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $refundAdvanceAmount = 0;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|numeric|min:0|max:99.99')]
     public $deductionSalary = 0;
 
     private function dataDeduction(): array
@@ -52,7 +52,7 @@ class DeductionCreate extends Component
         $this->validate();
 
         $employee = Deduction::create($this->dataDeduction());
-        session()->flash('success', "La deduction a été créé avec succès.");
+        session()->flash('success', "La déduction a été créée avec succès.");
         return redirect()->to(route('deduction.index'));
     }
 

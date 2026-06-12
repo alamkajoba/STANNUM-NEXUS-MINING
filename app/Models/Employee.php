@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use App\Trait\Searchable;
 
 class Employee extends Model
 {
+    use Notifiable;
+    
     protected $fillable = [
         //Personnal info and profil
         'firstName', 
@@ -19,21 +23,29 @@ class Employee extends Model
         'mail', 
         'address', 
         'nationality',
-        
-        //Personnal info and profil
-        'matricule', 
-        'proMail',
-        'category_id', 
         'user_id',
-        'proPhone',
-        'jobTitle',
-        'affectation',
+    ];
+    protected $casts = [
+        'birthDate' => 'date',
     ];
 
-    //RelationShips
-    public function category()
+    public function routeNotificationForMail($notification)
     {
-        return $this->belongsTo(Category::class);
+        return $this->proMail; 
+    }
+
+    // public function routeNotificationForVonage($notification)
+    // {
+    //     //(format international : 243...)
+    //     return $this->proPhone; 
+    // }
+
+    //RelationShips
+    
+
+    public function enrollment()
+    {
+        return $this->hasOne(Enrollment::class);
     }
 
     public function payment()
@@ -49,6 +61,11 @@ class Employee extends Model
     public function advance()
     {
         return $this->hasOne(Advance::class);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
     }
 
     public function user()

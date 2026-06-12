@@ -29,7 +29,7 @@
             Liste des agents
         </h1>
         <div class="d-none d-sm-inline-block shadow-sm">
-            <input wire:model.live="search" class="form-control" type="text" placeholder="Rechercher...">
+            <input wire:model.live.debounce.300ms="search" class="form-control" type="text" placeholder="Rechercher...">
         </div>
     </div>
 
@@ -37,42 +37,47 @@
     <div class="card-body">
         <div class="table-responsive ">
                 <table class="table table-bordered" id="dataTable" width="100%" >
-                    <thead style="background-color: rgb(46, 13, 167);" class="text-white">
+                    <thead style="background-color: rgb(30, 18, 72);" class="text-white">
                         <tr>
                             <th>n</th>
                             <th>Nom  Postnom  Prénom</th>
                             <th>Matricule</th>
-                            <th>Departement</th>
-                            <th>Poste</th>
+                            <th>Fonction</th>
                             <th colspan="3">Actions</th>
                         </tr>
                     </thead>
                     <tbody >
-                        @forelse ($employee as $employees)
+                        @forelse ($enrollment as $enrollments)
                             <tr >
-                                <td>{{$loop->iteration}}</td>
                                 <td>
-                                    {{ $employees->middleName }}
-                                    {{ $employees->lastName }}
-                                    {{ $employees->firstName }}
+                                    {{ ($enrollment->currentPage() - 1) * $enrollment->perPage() + $loop->iteration }}
                                 </td>
-                                <td>{{ $employees->matricule }}</td>
-                                <td>{{ $employees->category->nameCategory }}</td>
-                                <td>{{ $employees->jobTitle  }}</td>
                                 <td>
-                                    <a href="{{route('family.index', $employees->id)}}" class="btn text-white" style="background-color: rgb(0, 255, 21)">
+                                    {{ $enrollments?->employee?->middleName }}
+                                    {{ $enrollments?->employee?->lastName }}
+                                    {{ $enrollments?->employee?->firstName }}
+                                </td>
+                                <td>{{ $enrollments->matricule }}</td>
+                                <td>{{ $enrollments?->functionType?->nameFunction }}</td>
+                                <td>
+                                    <a href="{{route('family.index', $enrollments->id)}}" class="btn text-white" style="background-color: rgb(0, 255, 21)">
                                         Dossier
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="{{route('employee.update', $employees->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
+                                    <a href="{{route('employee.update', $enrollments->id)}}" class="btn text-white" style="background-color: rgb(158, 155, 155)">
                                         Modifier
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{route('employee.printCard', $enrollments->id)}}" class="btn text-white" style="background-color: rgb(32, 157, 161)">
+                                        Carte de service
                                     </a>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center text-danger">Oups! Aucun(e) abonné(e) trouvé.</td>
+                                <td colspan="9" class="text-center text-danger">Oups! Aucun Agent trouvé.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -81,7 +86,7 @@
 
             <!-- Pagination -->
             <div class="mt-4">
-                {{ $employee->links() }}
+                {{ $enrollment->links() }}
             </div>
 
         <!-- Modal delete student -->

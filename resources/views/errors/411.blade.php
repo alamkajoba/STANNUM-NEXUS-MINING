@@ -16,7 +16,7 @@
     </style>
 </head>
 <body>
-    <p><img height="200px" src="{{ asset('img/logo.png')}}" alt=""></p>
+    <p><img height="200px" src="{{ asset('img/finallogo.jpeg')}}" alt=""></p>
     <h1>Erreur 411</h1>
     <p></p>
 </body>

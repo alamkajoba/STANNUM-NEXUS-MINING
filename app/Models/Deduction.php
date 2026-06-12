@@ -15,4 +15,13 @@ class Deduction extends Model
         'deductionSalary',
         'user_id'
     ];
+
+    protected $casts = [
+        'CNSS' => 'float',
+        'INPP' => 'float',
+        'ONEM' => 'float',
+        'IPR'  => 'float',
+        'refundAdvanceAmount' => 'float',
+        'deductionSalary'     => 'float',
+    ];
 }

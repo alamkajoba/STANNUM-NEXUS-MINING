@@ -1,7 +1,11 @@
 <div class="card shadow-sm">
-    <div style="background-color: rgb(46, 13, 167);" class="card-header text-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Dossier Agent : {{$fullName}}</h5>
-        <span style="color: rgb(46, 13, 167);" class="badge bg-light">MATRICULE: {{$matricule}}</span>
+    <div style="background-color: rgb(30, 18, 72);" class="card-header text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Dossier Agent : {{$enrollment?->employee?->middleName}}_{{$enrollment?->employee?->lastName}}_{{$enrollment?->employee?->firstName}}</h5>
+        <span class="badge bg-light">
+            <a href="{{route('employee.index')}}" class="btn text-white" style="background-color: rgb(112, 147, 163)">
+                Retour
+            </a>
+        </span>
     </div>
     
     <div class="card-body">
@@ -13,7 +17,7 @@
                 <button class="nav-link" id="famille-tab" data-bs-toggle="tab" data-bs-target="#famille">Famille</button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" id="avantages-tab" data-bs-toggle="tab" data-bs-target="#avantages">Categorie et Avantages</button>
+                <button class="nav-link" id="avantages-tab" data-bs-toggle="tab" data-bs-target="#avantages">Salaire et Avantages</button>
             </li>
             <li class="nav-item">
                 <button class="nav-link" id="autres-tab" data-bs-toggle="tab" data-bs-target="#autres">Autres infos</button>
@@ -25,12 +29,20 @@
             <div class="tab-pane fade show active" id="poste">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Intitulé du poste :</strong> Analyste Développeur</p>
-                        <p><strong>Département :</strong> Informatique</p>
+                        <p><strong>Fonction :</strong> {{$enrollment?->functionType?->nameFunction}}</p>
+                        <p><strong>Section :</strong> {{$enrollment?->section}}</p>
+                        <p><strong>Département :</strong> {{$enrollment?->department}}</p>
+                        <p><strong>Catégorie profess :</strong> {{$enrollment?->professionalCategory}}-{{$enrollment?->echelon}}</p>
+                        <p><strong>Site :</strong> {{$enrollment?->site}}</p>
+                        <p><strong>Matricule :</strong> {{$enrollment?->matricule}}</p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Date d'entrée :</strong> 12/05/2022</p>
+                        <p><strong>Date d'entrée :</strong> {{ ucfirst(\Carbon\Carbon::parse($enrollment?->motif)->locale('fr')->translatedFormat('l d F Y')) }}</p>
                         <p><strong>Type de contrat :</strong> CDI</p>
+                        <p><strong>Numéro CNSS :</strong> {{$enrollment?->cnssNumber}}</p>
+                        <p><strong>Numéro de compte bancaire :</strong> {{$enrollment?->acountNumber}}</p>
+                        <p><strong>Email profess :</strong> {{$enrollment?->proMail}}</p>
+                        <p><strong>Numéro profess :</strong> {{$enrollment?->employee?->phone}}</p>
                     </div>
                 </div>
             </div>
@@ -45,33 +57,63 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{-- SECTION CONJOINT --}}
+                        @php 
+                            $conjoint = $enrollment?->employee?->familyState?->firstWhere('relationType', \App\Enums\RelationTypeEnum::CONJOINT); 
+                        @endphp
                         <tr>
-                            <td>Conjoint(e)</td>
-                            <td>Marie Dupont</td>
-                            <td>15/03/1988</td>
+                            <td><strong>{{ \App\Enums\RelationTypeEnum::CONJOINT->value }}</strong></td>
+                            @if($conjoint)
+                                <td>{{ $conjoint->middleName }} {{ $conjoint->firstName }}</td>
+                                <td>{{ $conjoint->birthDate->format('d/m/Y') }}</td>
+                            @else
+                                <td colspan="2" class="text-muted">Aucun(e) conjoint(e) enregistré(e)</td>
+                            @endif
                         </tr>
-                        <tr>
-                            <td>Enfant</td>
-                            <td>Lucas Dupont</td>
-                            <td>20/10/2015</td>
-                        </tr>
+
+                        {{-- SECTION ENFANTS --}}
+                        @php 
+                            $enfants = $enrollment?->employee?->familyState?->where('relationType', \App\Enums\RelationTypeEnum::CHILD); 
+                        @endphp
+                        
+                        @if($enfants?->count() > 0)
+                            @foreach($enfants as $enfant)
+                                <tr>
+                                    <td>{{ \App\Enums\RelationTypeEnum::CHILD->value }}</td>
+                                    <td>{{ $enfant->firstName }} {{ $enfant->lastName }}</td>
+                                    <td>{{ $enfant->birthDate->format('d/m/Y') }}</td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td>{{ \App\Enums\RelationTypeEnum::CHILD->value }}</td>
+                                <td colspan="2" class="text-muted">Aucun enfant enregistré</td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
-
             <div class="tab-pane fade" id="avantages">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Salaire brut
+                        <span>USD {{$enrollment?->functionType?->amount}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Allocation familliale par enfant
+                        <span>USD {{$enrollment?->functionType?->familialAllocation}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
                         Véhicule de fonction
-                        <span class="badge bg-success rounded-pill">Actif</span>
+                        <span class="badge bg-danger text-white rounded-pill">Non actif</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Ticket Restaurant (9€)
-                        <span class="badge bg-success rounded-pill">Actif</span>
+                        Logement
+                        <span>USD {{$enrollment?->functionType?->housing}}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Prime de fin d'année
-                        <span class="badge bg-secondary rounded-pill">Annuel</span>
+                        Transport
+                        <span>USD {{$enrollment?->functionType?->transportationCost}}</span>
                     </li>
                 </ul>
             </div>
@@ -86,6 +128,6 @@
         </div>
     </div>
     <div class="card-footer text-end">
-        <button class="btn btn-outline-secondary btn-sm">Modifier le dossier</button>
+        {{-- <button class="btn btn-outline-secondary btn-sm">Modifier le dossier</button> --}}
     </div>
 </div>

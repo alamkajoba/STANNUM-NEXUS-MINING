@@ -15,21 +15,12 @@ return new class extends Migration
             $table->id();
             $table->decimal('amount', 15, 2)->default(0.00);
             $table->decimal('toRefund', 15, 2)->default(0.00);
+            $table->softDeletes();
             $table->timestamps();
 
-            //foreign key
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('employee_id'); 
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
 
-            $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('cascade');
-
-            $table->foreign('employee_id')
-                    ->references('id')
-                    ->on('employees')
-                    ->onDelete('cascade');
+            $table->foreignId('employee_id')->constrained()->onDelete('restrict');
         });
     }
 

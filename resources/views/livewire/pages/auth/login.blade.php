@@ -23,55 +23,123 @@ new #[Layout('layouts.guest')] class extends Component
     }
 }; ?>
 
-<div>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form wire:submit="login">
-        <div>
-            <center>
-                <img src="{{asset('img/stannumlogo.jpeg')}}" height="100px" width="200px" alt="">
-            </center>
-        </div>
-
+<div class="auth-container">
+    <div class="auth-card">
         
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="identifiant" :value="__('Identifiant')" />
-            <x-text-input wire:model="form.identifiant" id="identifiant" class="block mt-1 w-full" type="text" name="identifiant" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('form.identifiant')" class="mt-2" />
+        <div class="auth-form-section">
+            <div class="form-header">
+                <h1>Connexion</h1>
+                <p>Accédez à votre espace entreprise</p>
+            </div>
+
+            <form wire:submit.prevent="login">
+                <div class="input-group">
+                    <label for="identifiant">Identifiant</label>
+                    <input wire:model="form.identifiant" type="text" id="identifiant" name="identifiant" required autocomplete="username" autofocus>
+                    @error('form.identifiant')
+                        <span class="input-error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" wire:model="form.password" required autocomplete="current-password">
+                    @error('form.password')
+                        <span class="input-error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-footer">
+                    <label class="remember-me">
+                        <input wire:model="form.remember" type="checkbox" id="remember"> Se souvenir de moi
+                    </label>
+                    <a href="#" class="forgot-link">Mot de passe oublié ?</a>
+                </div>
+
+                <button type="submit" class="btn-login">Se connecter</button>
+            </form>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Mot de passe')" />
-
-            <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember" class="inline-flex items-center">
-                <input wire:model="form.remember" id="remember" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Se souvenir de moi') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}" wire:navigate>
-                    {{ __('Mot de passe oublie ?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Connexion') }}
-            </x-primary-button>
-        </div>
-    </form>
+       
+        
+    </div>
 </div>
+
+
+
+
+
+
+{{-- 
+
+
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <div class="row">
+                        
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <x-auth-session-status class="mb-4" :status="session('status')" />
+
+                                <div class="text-center">
+                                    <img src="{{ asset('img/finallogo.jpeg') }}" class="mb-4" style="height: 60px;" alt="Logo">
+                                    <h1 class="h4 text-gray-900 mb-4">Bienvenue !</h1>
+                                </div>
+
+                                <form wire:submit="login" class="user">
+                                    <div class="form-group mb-3">
+                                        <label class="small mb-1 text-gray-600">Identifiant</label>
+                                        <input wire:model="form.identifiant" type="text" class="form-control form-control-user" placeholder="Votre identifiant..." required autofocus>
+                                        <x-input-error :messages="$errors->get('form.identifiant')" class="mt-2" />
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="small mb-1 text-gray-600">Mot de passe</label>
+                                        <input wire:model="form.password" type="password" class="form-control form-control-user" placeholder="Mot de passe" required>
+                                        <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <div class="custom-control custom-checkbox small">
+                                            <input wire:model="form.remember" type="checkbox" class="custom-control-input" id="customCheck">
+                                            <label class="custom-control-label" for="customCheck">Se souvenir de moi</label>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-user btn-block w-100 py-2" style="background-color: #5a5c69; border: none;">
+                                        Connexion
+                                    </button>
+                                </form>
+
+                                <hr>
+
+                                <div class="text-center">
+                                    @if (Route::has('password.request'))
+                                        <a class="small text-muted" href="{{ route('password.request') }}" wire:navigate>
+                                            Mot de passe oublié ?
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 d-none d-lg-block bg-login-image" 
+                             style="background: url('{{ asset('img/votre-photo-mining.jpg') }}'); background-size: cover; background-position: center;">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <small class="text-muted">Copyright ©2025 - 2026 | STANNUM NEXUS MINING | Powered by Alvine Business</small>
+            </div>
+        </div>
+    </div>
+</div> --}}

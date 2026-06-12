@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 use App\Livewire\Module\Employee\EmployeeIndex;
 use App\Livewire\Module\Employee\EmployeeCreate;
 use App\Livewire\Module\Employee\EmployeeUpdate;
-use App\Livewire\Module\Category\CategoryIndex;
-use App\Livewire\Module\Category\CategoryCreate;
-use App\Livewire\Module\Category\CategoryUpdate;
 use App\Livewire\Module\Deduction\DeductionIndex;
 use App\Livewire\Module\Deduction\DeductionCreate;
 use App\Livewire\Module\Deduction\DeductionUpdate;
@@ -27,6 +24,18 @@ use App\Livewire\Module\User\UserCreate;
 use App\Livewire\Module\User\UserUpdate;
 use App\Livewire\Module\User\AssignPermission;
 use App\Livewire\Module\User\SetPassword;
+use App\Livewire\Module\Notify\PayNotify;
+use App\Livewire\Module\Notify\NoteNotify;
+use App\Livewire\Module\Advance\AdvanceShow;
+use App\Livewire\Module\Advance\AdvanceHistory;
+use App\Livewire\Module\Advance\EmployeeAdvanceDetail;
+use App\Livewire\Module\Attendance\AttendanceIndex;
+use App\Http\Controllers\AttendancePdfController;
+use App\Livewire\Module\FunctionType\FunctionTypeIndex;
+use App\Livewire\Module\FunctionType\FunctionTypeCreate;
+use App\Livewire\Module\FunctionType\FunctionTypeUpdate;
+use App\Livewire\Module\Employee\IdCardPrint;
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -55,13 +64,14 @@ Route::middleware('auth')->prefix('employee')->name('employee.')->group(function
     Route::get('index', EmployeeIndex::class)->name('index');
     Route::get('create', EmployeeCreate::class)->name('create');
     Route::get('update/{id}', EmployeeUpdate::class)->name('update');
+    Route::get('printCard/{id}', IdCardPrint::class)->name('printCard');
 });
 
-#Category routes
-Route::middleware('auth')->prefix('category')->name('category.')->group(function () {
-    Route::get('index', CategoryIndex::class)->name('index');
-    Route::get('create', CategoryCreate::class)->name('create');
-    Route::get('update/{id}', CategoryUpdate::class)->name('update');
+#function routes
+Route::middleware('auth')->prefix('function')->name('function.')->group(function () {
+    Route::get('index', FunctionTypeIndex::class)->name('index');
+    Route::get('create', FunctionTypeCreate::class)->name('create');
+    Route::get('update/{functionType}', FunctionTypeUpdate::class)->name('update');
 });
 
 #FamilyState routes
@@ -75,6 +85,9 @@ Route::middleware('auth')->prefix('family')->name('family.')->group(function () 
 Route::middleware('auth')->prefix('advance')->name('advance.')->group(function () {
     Route::get('index', AdvanceIndex::class)->name('index');
     Route::get('create', AdvanceCreate::class)->name('create');
+    Route::get('show/{id}', AdvanceShow::class)->name('show');
+    Route::get('history', AdvanceHistory::class)->name('history');
+    Route::get('employee/{employeeId}', EmployeeAdvanceDetail::class)->name('employee');
 });
 
 
@@ -84,6 +97,18 @@ Route::middleware('auth')->prefix('payment')->name('payment.')->group(function (
     Route::get('create', PaymentCreate::class)->name('create');
     Route::get('update/{id}', PaymentUpdate::class)->name('update');
     Route::get('print/{id}', PaySlipPrint::class)->name('print');
+});
+
+#Attendance routes
+Route::middleware('auth')->prefix('attendance')->name('attendance.')->group(function () {
+    Route::get('index', AttendanceIndex::class)->name('index');
+    Route::get('pdf', [AttendancePdfController::class, 'generate'])->name('pdf');
+});
+
+#Notify routes
+Route::middleware('auth')->prefix('notify')->name('notify.')->group(function () {
+    Route::get('payNotify', PayNotify::class)->name('payNotify');
+    Route::get('noteNotify', NoteNotify::class)->name('noteNotify');
 });
 
 
