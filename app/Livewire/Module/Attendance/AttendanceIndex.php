@@ -51,7 +51,7 @@ class AttendanceIndex extends Component
 
         $this->loadAttendancesMap();
 
-        // Initialize temporary selections from existing attendances
+      
         foreach ($this->employees as $emp) {
             foreach ($this->weekDates as $wd) {
                 $this->attendanceSelections[$emp['id']][$wd] = $this->attendancesMap[$emp['id']][$wd] ?? null;
@@ -120,7 +120,7 @@ class AttendanceIndex extends Component
         $this->loadAttendancesMap();
     }
 
-    // Set temporary selection for an employee on a specific date (not persisted yet)
+   
     public function markAttendance(int $employeeId, string $date, string $status): void
     {
         if (! in_array($status, ['present', 'absent', 'justified'])) {
@@ -134,14 +134,14 @@ class AttendanceIndex extends Component
         $this->attendanceSelections[$employeeId][$date] = $status;
     }
 
-    // Persist the week's selections for a single employee
+   
     public function saveRow(int $employeeId): void
     {
         if (! isset($this->attendanceSelections[$employeeId])) {
             return;
         }
 
-        // If row is already locked, prevent saving
+       
         if (! empty($this->lockedRows[$employeeId])) {
             session()->flash('danger', 'La semaine est verrouillée et ne peut plus être modifiée.');
             return;
@@ -260,7 +260,7 @@ class AttendanceIndex extends Component
 
     public function render()
     {
-        // keep recent attendances for reference on the page
+       
         $attendances = Attendance::with('employee')
             ->orderByDesc('date')
             ->paginate(10);
