@@ -1388,7 +1388,7 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
+                "source": "https://github.com/laravel/framework/tree/v12.49.0"
             },
             "time": "2026-01-28T03:40:49+00:00"
         },
@@ -8940,5 +8940,5 @@
         "php": "^8.2"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

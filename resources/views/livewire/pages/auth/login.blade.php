@@ -35,18 +35,24 @@ new #[Layout('layouts.guest')] class extends Component
 
             <form wire:submit.prevent="login">
                 <div class="input-group">
-                    <label for="email">Identifiant</label>
-                    <input wire:model="form.identifiant" type="identifiant" id="identifiant" required>
+                    <label for="identifiant">Identifiant</label>
+                    <input wire:model="form.identifiant" type="text" id="identifiant" name="identifiant" required autocomplete="username" autofocus>
+                    @error('form.identifiant')
+                        <span class="input-error">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="input-group">
                     <label for="password">Mot de passe</label>
-                    <input type="password" id="password" wire:model="form.password" required>
+                    <input type="password" id="password" name="password" wire:model="form.password" required autocomplete="current-password">
+                    @error('form.password')
+                        <span class="input-error">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-footer">
                     <label class="remember-me">
-                        <input type="checkbox"> Se souvenir de moi
+                        <input wire:model="form.remember" type="checkbox" id="remember"> Se souvenir de moi
                     </label>
                     <a href="#" class="forgot-link">Mot de passe oublié ?</a>
                 </div>
@@ -55,12 +61,7 @@ new #[Layout('layouts.guest')] class extends Component
             </form>
         </div>
 
-        <div class="auth-image-section">
-            <div class="image-overlay">
-                <h2>Alvine Business</h2>
-                <p>Innover, Sécuriser, Connecter.</p>
-            </div>
-        </div>
+       
         
     </div>
 </div>

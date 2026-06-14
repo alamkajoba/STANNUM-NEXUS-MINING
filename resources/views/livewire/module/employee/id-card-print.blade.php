@@ -1,7 +1,7 @@
 <div>
     <div class="id-card">
         <div class="header">
-            <div class="company-logo"><img height="50px" src="{{asset('img/finallogo.jpeg')}}" alt="finallogo"></div>
+            <div class="company-logo"><img height="50px" src="{{asset('img/thot1.jpg')}}" alt="finallogo"></div>
             <div class="access-level">CARTE DE SERVICE</div>
         </div>
 

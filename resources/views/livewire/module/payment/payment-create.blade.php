@@ -33,7 +33,7 @@
 
 
     <div class="justify-content-between card-header">
-        <form wire:submit="submitPayment()">
+        <form wire:submit.prevent="submitPayment">
             @csrf
             
             <div class="container">

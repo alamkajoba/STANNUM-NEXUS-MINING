@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use App\Enums\RelationTypeEnum;
 use Carbon\Carbon;
 use App\Models\Enrollment;
+use App\Models\Attendance;
 use Brick\Math\RoundingMode;
 use Brick\Money\Money;
 
@@ -147,17 +148,21 @@ class PaymentCreate extends Component
             return;
         }
 
-        $payment = Payment::where('enrollment_id', $this->enrollment_id)
-                            ->where('motif', $this->motif);
+        $motif = Carbon::parse($this->motif);
+        $paymentExists = Payment::where('employee_id', $this->employee_id)
+                            ->whereDate('motif', $motif)
+                            ->exists();
 
-
-        if ($payment) {
+        if ($paymentExists) {
             session()->flash('danger', "L'agent a déjà eu ce salaire vérifiez la liste");
             return;
         }
 
-        $motif = Carbon::parse($this->motif);
         $deduction = Deduction::latest()->first();
+        if (! $deduction) {
+            session()->flash('danger', "Aucune règle de déduction configurée.");
+            return;
+        }
         
         // 1. Catch enrollment with relations
         $enrollment = Enrollment::with([
@@ -190,7 +195,22 @@ class PaymentCreate extends Component
         $risk        = Money::of($this->riskBonus, 'USD');
         $performance = Money::of($this->performanceBonus, 'USD');
         
-        // Absences et Justifiés
+        // Absences et Justifiés: compute from Attendance records for the month of motif
+        $periodStart = $motif->copy()->startOfMonth();
+        $periodEnd = $motif->copy()->endOfMonth();
+
+        $attendanceRows = Attendance::where('employee_id', $this->employee_id)
+            ->whereBetween('date', [$periodStart->format('Y-m-d'), $periodEnd->format('Y-m-d')])
+            ->get();
+
+        $absencesCount = $attendanceRows->where('status', 'absent')->count();
+        $justifiedCount = $attendanceRows->where('status', 'justified')->count();
+        $presentCount = $attendanceRows->where('status', 'present')->count();
+
+        // override any manual input with computed values
+        $this->restDay = $absencesCount;
+        $this->justifyDay = $justifiedCount;
+
         $restDayCost   = $dayPay->multipliedBy($this->restDay, RoundingMode::FLOOR);
         $justifyDayPay = $dayPay->multipliedBy($this->justifyDay, RoundingMode::FLOOR);
 
@@ -235,64 +255,81 @@ class PaymentCreate extends Component
         // }
 
         // 8. Final calcul
-        $totalDeduction = $cnssAmount->plus($inppAmount)->plus($iprAmount)->plus($onemAmount)->plus($refundAmount);
+        $totalDeduction = $cnssAmount
+            ->plus($inppAmount)
+            ->plus($iprAmount)
+            ->plus($onemAmount)
+            ->plus($deducionSalaryAmount)
+            ->plus($refundAmount);
+
         $netSalary = $brutSalary->minus($totalDeduction);
 
         $id = Auth::id();
-        $payment = Payment::create([
-            'employee_id' => $this->employee_id, 
-            'motif' => $motif, 
-            'user_id' => $id,
-            'netSalary' => $netSalary,
-            //JSON
-            'slipPrint'=>[
-                //Employee section
-                'function' => $enrollment?->functionType?->nameFunction,
-                'section' => $enrollment?->section,
-                'department' => $enrollment?->department,
-                'site' => $enrollment?->site,
-                'professionalCategory' => $enrollment?->professionalCategory,
-                'echelon' => $enrollment?->echelon,
-                'acountNumber' => $enrollment?->acountNumber,
-                'cnssNumber' => $enrollment?->cnssNumber,
-                'childCount' => $childCount,
-                'baseSalary' => $baseSalary->getAmount()->toFloat(),
-                'workDay' => $workDay,
-                //Invoice section 1 brutDue and total
-                'abscence' => $this->restDay,
-                'absencePay' => $restDayCost->getAmount()->toFloat(),
-                'justify' => $this->justifyDay,
-                'justifyPay' => $justifyDayPay->getAmount()->toFloat(),
-                'overtimes' => $this->overtimes,
-                'overtimesPay' => $overtimesPay->getAmount()->toFloat(),
-                'assuduity' => $assudity->getAmount()->toFloat(),
-                'risk' => $risk->getAmount()->toFloat(),
-                'performance' => $performance->getAmount()->toFloat(),
-                'totalAddiction' => $totalAddiction->getAmount()->toFloat(),
-                'brutDue' => $totalDue->getAmount()->toFloat(),
-                //Invoice section 2 Social advantage
-                'housing' => $housing->getAmount()->toFloat(),
-                'transportation' => $transport->getAmount()->toFloat(),
-                'familialAllocation' => $allocPerChild->getAmount()->toFloat(),
-                'totalAdvantage' => $totalAdvantage->getAmount()->toFloat(),
-                'totalDeduction' => $totalDeduction->getAmount()->toFloat(),
-                'brutSalary' => $brutSalary->getAmount()->toFloat(),
-                //Invoice section 3 Deductions
-                'CNSS' => $deduction->CNSS,
-                'ONEM' => $deduction->ONEM,
-                'INPP' => $deduction->INPPAmount,
-                'IPR' => $deduction->IPR,
-                'toRefundAdvance' => $deduction->refundAdvanceAmount,
-                'salaryDeduction' => $deduction->deductionSalary,
-                'CNSSAmount' => $cnssAmount->getAmount()->toFloat(),
-                'ONEMAmount' => $onemAmount->getAmount()->toFloat(),
-                'INPPAmount' => $inppAmount->getAmount()->toFloat(),
-                'IPRAmount' => $iprAmount->getAmount()->toFloat(),
-                'toRefundAdvance' => 0,
-                'salaryDeductionAmount' => $deducionSalaryAmount->getAmount()->toFloat(),
-            ], 
-        ]);
-        session()->flash('success', "Successfuly!...");
+        try {
+            $payment = Payment::create([
+                'employee_id' => $this->employee_id,
+                'motif' => $motif,
+                'user_id' => $id,
+                'netSalary' => $netSalary,
+                //JSON
+                'slipPrint' => [
+                    //Employee section
+                    'function' => $enrollment?->functionType?->nameFunction,
+                    'section' => $enrollment?->section,
+                    'department' => $enrollment?->department,
+                    'site' => $enrollment?->site,
+                    'professionalCategory' => $enrollment?->professionalCategory,
+                    'echelon' => $enrollment?->echelon,
+                    'acountNumber' => $enrollment?->acountNumber,
+                    'cnssNumber' => $enrollment?->cnssNumber,
+                    'childCount' => $childCount,
+                    'baseSalary' => $baseSalary->getAmount()->toFloat(),
+                    'workDay' => $workDay,
+                    //Invoice section 1 brutDue and total
+                    'abscence' => $this->restDay,
+                    'absencePay' => $restDayCost->getAmount()->toFloat(),
+                    'justify' => $this->justifyDay,
+                    'justifyPay' => $justifyDayPay->getAmount()->toFloat(),
+                    'overtimes' => $this->overtimes,
+                    'overtimesPay' => $overtimesPay->getAmount()->toFloat(),
+                    'assuduity' => $assudity->getAmount()->toFloat(),
+                    'risk' => $risk->getAmount()->toFloat(),
+                    'performance' => $performance->getAmount()->toFloat(),
+                    'totalAddiction' => $totalAddiction->getAmount()->toFloat(),
+                    'brutDue' => $totalDue->getAmount()->toFloat(),
+                    //Invoice section 2 Social advantage
+                    'housing' => $housing->getAmount()->toFloat(),
+                    'transportation' => $transport->getAmount()->toFloat(),
+                    'familialAllocation' => $allocPerChild->getAmount()->toFloat(),
+                    'totalAdvantage' => $totalAdvantage->getAmount()->toFloat(),
+                    'totalDeduction' => $totalDeduction->getAmount()->toFloat(),
+                    'brutSalary' => $brutSalary->getAmount()->toFloat(),
+                    //Invoice section 3 Deductions
+                    'CNSS' => $deduction->CNSS,
+                    'ONEM' => $deduction->ONEM,
+                    'INPP' => $deduction->INPP,
+                    'IPR' => $deduction->IPR,
+                    'toRefundAdvance' => $deduction->refundAdvanceAmount,
+                    'salaryDeduction' => $deduction->deductionSalary,
+                    'CNSSAmount' => $cnssAmount->getAmount()->toFloat(),
+                    'ONEMAmount' => $onemAmount->getAmount()->toFloat(),
+                    'INPPAmount' => $inppAmount->getAmount()->toFloat(),
+                    'IPRAmount' => $iprAmount->getAmount()->toFloat(),
+                    'refundAdvanceAmount' => $refundAmount->getAmount()->toFloat(),
+                    'salaryDeductionAmount' => $deducionSalaryAmount->getAmount()->toFloat(),
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Payment create failed: ' . $e->getMessage(), [
+                'employee_id' => $this->employee_id,
+                'enrollment_id' => $this->enrollment_id,
+                'motif' => (string) $motif,
+            ]);
+            session()->flash('danger', 'Erreur lors de la création du paiement. Vérifiez les logs.');
+            return;
+        }
+
+        session()->flash('success', 'Paiement effectué avec succès !');
         return redirect()->route('payment.print', $payment->id);
 
     }
