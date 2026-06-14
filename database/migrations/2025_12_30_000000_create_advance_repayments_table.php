@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('advance_repayments', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount', 15, 2);
+            $table->bigInteger('amount')->unsigned()->default(0);
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
 

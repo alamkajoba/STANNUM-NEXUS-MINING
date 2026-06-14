@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use Illuminate\Database\Eloquent\Model;
 
 class Advance extends Model
@@ -14,10 +15,15 @@ class Advance extends Model
     ];
 
     protected $casts = [
-        'amount' => 'decimal:2',
-        'toRefund' => 'decimal:2',
+        'amount' => MoneyCast::class,
+        'toRefund' => MoneyCast::class,
     ];
 
+    protected $attributes = [
+        'amount' => 0,
+        'toRefund' => 0,
+    ];
+    
     //RelationShips
     public function employee()
     {
