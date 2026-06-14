@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Module\Advance;
 
-use Livewire\Component;
-use Livewire\Attributes\Validate;
-use Livewire\Attributes\Layout;
-use App\Models\Employee;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Advance;
+use App\Models\Employee;
+use App\Models\Enrollment;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class AdvanceCreate extends Component
@@ -22,27 +23,69 @@ class AdvanceCreate extends Component
     public $employee_id;
 
     public function searchEmployee(): void
-    {
-        //Looking for items
-        $this->itemsEmployee = Employee::where('firstName', 'like', '%'.$this->search.'%')
-            ->orwhere('lastName', 'like', '%'.$this->search.'%')
-            ->orwhere('middleName', 'like', '%'.$this->search.'%')
-            ->orwhere('matricule', 'like', '%'.$this->search.'%')
-            ->limit(3)
-            ->get()
-            ->toArray();
-    }
+        {
+            if (strlen($this->search) < 1 || str_contains($this->search, ' - ')) {
+                $this->itemsEmployee = [];
+                return;
+            }
+
+            // 1. Catch collection with relations
+            $enrollments = Enrollment::with(['employee', 'functionType'])
+                ->where(function ($query) {
+                    $query->where('matricule', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('employee', function ($q) {
+                        $q->where('firstName', 'like', '%' . $this->search . '%')
+                        ->orWhere('lastName', 'like', '%' . $this->search . '%')
+                        ->orWhere('middleName', 'like', '%' . $this->search . '%');
+                    });
+                })
+                ->limit(5)
+                ->get();
+
+            // 2. Simple table "Livewire-friendly"
+            $this->itemsEmployee = $enrollments->map(function ($item) {
+                return [
+                    'id'            => $item->id,
+                    'matricule'     => $item->matricule,
+                    // Security : if employee relation is True
+                    'full_name'     => $item->employee 
+                                        ? "{$item->employee->lastName} {$item->employee->firstName}" 
+                                        : 'Employé inconnu',
+                    // Security : Catch amount from Cast Money and convert to float
+                    'base_salary'   => $item->functionType?->amount?->getAmount()->toFloat() ?? 0,
+                    'function_name' => $item->functionType?->nameFunction ?? 'N/A',
+                ];
+            })->all(); // .all() ou .toArray()
+        }
 
     //Selected Employee
     public function selectEmployee($itemId): void
     {
-        // Sélectionne un élément
-        $this->selectedEmployee = Employee::find($itemId)->toArray();
-        $this->search = $this->selectedEmployee['middleName'].' '.$this->selectedEmployee['lastName'].' '.$this->selectedEmployee['firstName'];
-        $this->employee_id = $this->selectedEmployee['id'];
-        $this->category_id = $this->selectedEmployee['category_id'];
-        $this->itemsEmployee = []; // Vide les suggestions
+        // Select enrollment with his relations
+        $enrollment = Enrollment::with(['employee', 'functionType'])->find($itemId);
 
+        if ($enrollment) {
+            $this->employee_id = $enrollment->employee_id; 
+            $this->enrollment_id = $enrollment->id;
+            
+            $emp = $enrollment->employee;
+            // Update search field with full name
+            $this->search = "{$enrollment->matricule} - {$emp->lastName} {$emp->firstName}";
+            
+            // Extract amount and convert to float
+            $this->selectedEmployee = [
+                'id' => $enrollment->id,
+                'baseSalary' => $enrollment->functionType->amount->getAmount()->toFloat(),
+                'dayPay' => $enrollment->functionType->dayAmount->getAmount()->toFloat(),
+                'hourPay' => $enrollment->functionType->hourAmount->getAmount()->toFloat(),
+            ]; 
+
+            // reset totals if needed
+            $this->baseSalary = $this->selectedEmployee['baseSalary'];
+            
+            // close 
+            $this->itemsEmployee = [];
+        }
     }
 
     public function submitAdvance()
@@ -56,13 +99,6 @@ class AdvanceCreate extends Component
 
         if ($active) {
             session()->flash('danger', $this->search." a déjà une avance en cours, voir la liste des avances.");
-            return redirect()->route('advance.create');
-        }
-
-        // Limit: e.g., max 50% of base salary
-        $max = $employee->category->amount;
-        if ($this->amount > $max) {
-            session()->flash('danger', 'Le montant dépasse le plafond autorisé (50% du salaire)');
             return redirect()->route('advance.create');
         }
 

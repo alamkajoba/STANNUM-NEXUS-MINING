@@ -31,7 +31,7 @@ class PaymentCreate extends Component
 
     #[Validate('required')]
     public $motif = '';
-    #[Validate('nullable|numeric|min:0')]
+    #[Validate('required|numeric|min:0')]
     public $restDay = 0;
     #[Validate('nullable|numeric|min:0')]
     public $justifyDay = 0;

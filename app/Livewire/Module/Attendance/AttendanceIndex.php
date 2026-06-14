@@ -262,7 +262,7 @@ class AttendanceIndex extends Component
     {
        
         $attendances = Attendance::with('employee')
-            ->orderByDesc('date')
+            ->orderBy('date')
             ->paginate(10);
 
         return view('livewire.module.attendance.attendance-index', [

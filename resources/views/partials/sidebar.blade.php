@@ -61,18 +61,18 @@
                 <div id="collapseAdvance" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        @can('liste avance sur salair')
+                        @can('liste avance sur salaire')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('advance.index') }}">
                                 Liste des Avances
                             </a>
                         @endcan
-                        @can('effectuer une avance sur salair')
+                        @can('effectuer une avance sur salaire')
                             <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('advance.create')}}">
                                 Effectuer une avance
                             </a>
                         @endcan
                         <hr style="color:rgb(46, 13, 167);">
-                        @can('effectuer une avance sur salair')
+                        @can('effectuer une avance sur salaire')
                         <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('advance.history') }}">
                             Historique des remboursement
                         </a>
