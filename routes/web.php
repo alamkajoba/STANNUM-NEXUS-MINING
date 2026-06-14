@@ -29,6 +29,8 @@ use App\Livewire\Module\Notify\NoteNotify;
 use App\Livewire\Module\Advance\AdvanceShow;
 use App\Livewire\Module\Advance\AdvanceHistory;
 use App\Livewire\Module\Advance\EmployeeAdvanceDetail;
+use App\Livewire\Module\Attendance\AttendanceIndex;
+use App\Http\Controllers\AttendancePdfController;
 use App\Livewire\Module\FunctionType\FunctionTypeIndex;
 use App\Livewire\Module\FunctionType\FunctionTypeCreate;
 use App\Livewire\Module\FunctionType\FunctionTypeUpdate;
@@ -95,6 +97,12 @@ Route::middleware('auth')->prefix('payment')->name('payment.')->group(function (
     Route::get('create', PaymentCreate::class)->name('create');
     Route::get('update/{id}', PaymentUpdate::class)->name('update');
     Route::get('print/{id}', PaySlipPrint::class)->name('print');
+});
+
+#Attendance routes
+Route::middleware('auth')->prefix('attendance')->name('attendance.')->group(function () {
+    Route::get('index', AttendanceIndex::class)->name('index');
+    Route::get('pdf', [AttendancePdfController::class, 'generate'])->name('pdf');
 });
 
 #Notify routes

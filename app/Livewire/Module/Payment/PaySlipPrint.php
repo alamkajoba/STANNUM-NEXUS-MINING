@@ -14,7 +14,7 @@ class PaySlipPrint extends Component
 
     public function mount($id)
     {
-        $this->payment = Payment::with(['user','employee.enrollment'])->find($id);
+        $this->payment = Payment::with(['user','employee.enrollment'])->findOrFail($id);
     }
 
     public function render()

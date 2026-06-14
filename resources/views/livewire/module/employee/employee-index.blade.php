@@ -37,7 +37,7 @@
     <div class="card-body">
         <div class="table-responsive ">
                 <table class="table table-bordered" id="dataTable" width="100%" >
-                    <thead style="background-color: rgb(46, 13, 167);" class="text-white">
+                    <thead style="background-color: rgb(30, 18, 72);" class="text-white">
                         <tr>
                             <th>n</th>
                             <th>Nom  Postnom  Prénom</th>

@@ -91,12 +91,12 @@ class EmployeeCreate extends Component
 
     public function generateNextMatricule($employee)
     {
-        return 'SNM' . str_pad($employee, 3, '0', STR_PAD_LEFT);
+        return 'TH-E' . str_pad($employee, 3, '0', STR_PAD_LEFT);
     }
 
     public function saveEmployee()
     {
-
+        
         //Check if exist
         $this->convertFirstName = Str::lower(trim($this->firstName));
         $this->convertMiddleName = Str::lower(trim($this->middleName));

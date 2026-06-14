@@ -1,5 +1,5 @@
 <div class="card shadow-sm">
-    <div style="background-color: rgb(46, 13, 167);" class="card-header text-white d-flex justify-content-between align-items-center">
+    <div style="background-color: rgb(30, 18, 72);" class="card-header text-white d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Dossier Agent : {{$enrollment?->employee?->middleName}}_{{$enrollment?->employee?->lastName}}_{{$enrollment?->employee?->firstName}}</h5>
         <span class="badge bg-light">
             <a href="{{route('employee.index')}}" class="btn text-white" style="background-color: rgb(112, 147, 163)">

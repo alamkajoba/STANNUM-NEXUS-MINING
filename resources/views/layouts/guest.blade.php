@@ -29,23 +29,47 @@
             .auth-card {
                 background: white;
                 width: 100%;
-                max-width: 1000px;
+                max-width: 620px;
                 display: flex;
+                flex-direction: column;
                 border-radius: var(--radius);
                 overflow: hidden;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 14px 60px rgba(15, 23, 42, 0.12);
             }
 
             /* Section Formulaire */
             .auth-form-section {
                 flex: 1;
-                padding: 60px;
+                padding: 48px 42px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .auth-brand {
+                display: inline-flex;
+                flex-direction: column;
+                gap: 6px;
+                margin-bottom: 32px;
+                font-size: 0.9rem;
+                color: #374151;
+            }
+
+            .auth-brand span {
+                font-size: 1.1rem;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+            }
+
+            .auth-brand small {
+                color: var(--text-muted);
             }
 
             .form-header h1 {
-                font-size: 2rem;
+                font-size: 2.05rem;
                 color: var(--text-main);
-                margin-bottom: 8px;
+                margin-bottom: 10px;
+                letter-spacing: -0.02em;
             }
 
             .form-header p {
@@ -77,31 +101,70 @@
             .input-group input:focus {
                 outline: none;
                 border-color: var(--primary-color);
-                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+            }
+
+            .input-error {
+                display: block;
+                margin-top: 8px;
+                color: #dc2626;
+                font-size: 0.82rem;
+            }
+
+            .remember-me {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: var(--text-main);
+            }
+
+            .remember-me input {
+                width: 16px;
+                height: 16px;
+            }
+
+            .forgot-link {
+                color: var(--primary-color);
+                text-decoration: none;
+            }
+
+            .forgot-link:hover {
+                text-decoration: underline;
             }
 
             .form-footer {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                font-size: 0.85rem;
-                margin-bottom: 30px;
+                font-size: 0.9rem;
+                margin-bottom: 32px;
+                gap: 16px;
+                flex-wrap: wrap;
             }
 
             .btn-login {
                 width: 100%;
-                padding: 14px;
+                padding: 14px 18px;
                 background-color: rgb(46, 13, 167);
                 color: white;
                 border: none;
-                border-radius: 8px;
-                font-weight: 600;
+                border-radius: 12px;
+                font-weight: 700;
                 cursor: pointer;
-                transition: background 0.3s;
+                transition: background 0.25s ease, transform 0.15s ease;
             }
 
             .btn-login:hover {
                 background-color: var(--primary-hover);
+                transform: translateY(-1px);
+            }
+
+            .auth-note {
+                margin-top: 24px;
+                color: var(--text-muted);
+                font-size: 0.88rem;
+                line-height: 1.6;
+                max-width: 34rem;
             }
 
             /* Section Image */

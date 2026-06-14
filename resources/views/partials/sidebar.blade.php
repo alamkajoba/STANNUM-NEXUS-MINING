@@ -1,4 +1,4 @@
-<ul style="background-color: rgb(46, 13, 167);" class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul style="background-color: rgb(30, 18, 72);" class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             {{-- <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
@@ -35,12 +35,12 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         @can('effectuer un paiement')
-                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('payment.create') }}">
+                            <a style="color:rgb(15, 6, 47);" class="collapse-item" href="{{ route('payment.create') }}">
                                 Effectuer un paiement
                             </a>
                         @endcan
                         @can('voir un  paiement')
-                            <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('payment.index') }}">
+                            <a style="color:rgb(15, 6, 47);" class="collapse-item" href="{{ route('payment.index') }}">
                                 Liste des paiements 
                             </a>
                         @endcan
@@ -117,6 +117,9 @@
                                 Situation Famille
                             </a> 
                         @endcan
+                        <a style="color:rgb(46, 13, 167);" class="collapse-item" href="{{ route('attendance.index') }}">
+                            Présences / Absences
+                        </a>
                     </div>
                 </div>
             </li>

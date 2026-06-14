@@ -19,6 +19,6 @@
     <link rel="stylesheet" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <script src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
 
-    <link rel="icon" type="image/x-icon" href="{{asset('img/finallogo.jpeg')}}">
+    <link rel="icon" type="image/x-icon" href="{{asset('img/thot1.jpg')}}">
 
 </head>
